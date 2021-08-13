@@ -4,6 +4,7 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
+import {Request, Response} from "express";
 
 export interface AuthInterface{
     /**
@@ -14,14 +15,14 @@ export interface AuthInterface{
      * @return IdentityInterface the authenticated user identity. If authentication information is not provided, null will be returned.
      * @throws UnauthorizedHttpException if authentication information is provided but is invalid.
      */
-     authenticate(user, request, response);
+     authenticate(user:any, request:Request, response:Response):any;
 
     /**
      * Generates challenges upon authentication failure.
      * For example, some appropriate HTTP headers may be generated.
      * @param Response $response
      */
-     challenge(response);
+     challenge(response:Response):Response;
 
     /**
      * Handles authentication failure.
@@ -29,5 +30,5 @@ export interface AuthInterface{
      * @param Response $response
      * @throws UnauthorizedHttpException
      */
-     handleFailure(response);
+     handleFailure(response:Response):Response;
 }

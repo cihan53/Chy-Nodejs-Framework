@@ -7,7 +7,7 @@
 
 import {Component} from "./Component";
 import {RouteDefinition} from "../model/RouteDefinition";
-
+import {Request, Response} from "express";
 export class Controller extends Component {
 
 
@@ -31,7 +31,7 @@ export class Controller extends Component {
      * This method is invoked right before an action is executed.
      * @param $action
      */
-    public async beforeAction(route: RouteDefinition, req, res) {
+    public async beforeAction(route: RouteDefinition, req:Request, res:Response) {
         if (route.id == "" || route.id == "/")
             this.id = this.defaultAction
 
@@ -46,7 +46,7 @@ export class Controller extends Component {
      * This method is invoked right after an action is executed.
      * @param action
      */
-    public afterAction(action, req, res) {
+    public afterAction(action:any, req:Request, res:Response) {
 
     }
 }

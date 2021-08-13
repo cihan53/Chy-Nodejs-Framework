@@ -13,7 +13,7 @@ export interface IdentityInterface {
      * Null should be returned if such an identity cannot be found
      * or the identity is not in an active state (disabled, deleted, etc.)
      */
-    findIdentity(id)
+    findIdentity(id: number): any
 
     /**
      * Finds an identity by the given token.
@@ -24,13 +24,13 @@ export interface IdentityInterface {
      * @param token
      * @param type
      */
-     findIdentityByAccessToken(token, type);
+    findIdentityByAccessToken(token: any, type: string): any;
 
     /**
      * Returns an ID that can uniquely identify a user identity.
      * @return string|int an ID that uniquely identifies a user identity.
      */
-     getId();
+    getId(): number;
 
     /**
      * Returns a key that can be used to check the validity of a given identity ID.
@@ -48,7 +48,7 @@ export interface IdentityInterface {
      * @return string|null a key that is used to check the validity of a given identity ID.
      * @see validateAuthKey()
      */
-     getAuthKey();
+    getAuthKey(): string;
 
     /**
      * Validates the given auth key.
@@ -57,6 +57,6 @@ export interface IdentityInterface {
      * @return bool|null whether the given auth key is valid.
      * @see getAuthKey()
      */
-     validateAuthKey($authKey);
+    validateAuthKey(authKey: string): (boolean | null);
 
 }

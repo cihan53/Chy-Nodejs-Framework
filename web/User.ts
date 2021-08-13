@@ -15,18 +15,8 @@ export class User extends Component {
     /**
      * @var string the class name of the [[identity]] object.
      */
-    public identityClass;
-
-    /**
-     * @var int the number of seconds in which the user will be logged out automatically if the user
-     * remains inactive. If this property is not set, the user will be logged out after
-     * the current session expires (c.f. [[Session::timeout]]).
-     * Note that this will not work if [[enableAutoLogin]] is `true`.
-     */
-    public authTimeout;
-
-
-    private _identity;
+    public identityClass: any;
+    private _identity: any;
 
 
     get identity() {
@@ -53,7 +43,7 @@ export class User extends Component {
         return this.getIdentity() === null;
     }
 
-    public getIdentity( autoRenew = true) {
+    public getIdentity(autoRenew = true) {
         return this._identity;
     }
 
@@ -77,7 +67,7 @@ export class User extends Component {
      * @param token
      * @param type
      */
-    public async loginByAccessToken(token, type = null) {
+    public async loginByAccessToken(token: any, type:any = null) {
 
         let $class = this.identityClass;
         this.identity = await $class.findIdentityByAccessToken(token, type)
@@ -95,7 +85,7 @@ export class User extends Component {
         return !this.getIsGuest()
     }
 
-    public beforeLogin($identity, $cookieBased, $duration) {
+    public beforeLogin(identity: any, cookieBased: boolean, duration: number) {
 
         return true;
     }

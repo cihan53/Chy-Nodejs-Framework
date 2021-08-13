@@ -10,6 +10,7 @@ import {RouteDefinition} from '../model/RouteDefinition';
 
 export const post = (path: string): MethodDecorator => {
     // `target` equals our class, `propertyKey` equals our decorated method name
+    // @ts-ignore
     return (target, propertyKey: string): void => {
         // In case this is the first route to be registered the `routes` metadata is likely to be undefined at this point.
         // To prevent any further validation simply set it to an empty array here.

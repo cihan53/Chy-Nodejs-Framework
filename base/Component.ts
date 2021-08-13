@@ -16,10 +16,12 @@ export class Component extends BaseObject {
      */
     private _events = [];
 
+
     /**
      * @var Behavior[]|null the attached behaviors (behavior name => behavior). This is `null` when not initialized.
      */
-    private _behaviors: Array<ActionFilter>;
+
+    private _behaviors: Array<ActionFilter> = [];
 
 
     /**
@@ -30,7 +32,7 @@ export class Component extends BaseObject {
     }
 
 
-    get getBehaviors() {
+    get getBehaviors(): any {
         return this._behaviors;
     }
 
@@ -52,7 +54,7 @@ export class Component extends BaseObject {
     }
 
 
-    private attachBehaviorInternal(name, behavior) {
+    private attachBehaviorInternal(name: any, behavior: any) {
         if (!this._behaviors.hasOwnProperty(name)) {
             let beh = Utils.createObject(new behavior[name].class, behavior[name])
             beh.init()
