@@ -1,11 +1,12 @@
 {
   "name": "chyz",
-  "version": "1.0.7",
+  "version": "1.0.7+1",
   "description": "Nodejs MicroServis Framework",
   "main": "dist/chyz.js",
   "scripts": {
     "dev": "nodemon chyz.ts",
     "debug": "ts-node chyz.ts",
+    "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postversion": "git push && git push --tags"
   },
