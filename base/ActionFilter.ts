@@ -4,9 +4,8 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {InvalidConfigException} from "./InvalidConfigException";
-
-var _ = require('lodash');
+// @ts-ignore
+import _ from 'lodash';
 
 export class ActionFilter {
 
