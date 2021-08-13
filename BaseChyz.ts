@@ -21,17 +21,33 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
-    public logConfig: any = require('./log/config/log4js.json') ?? {}
-    public controllerpath: string = "Controllers"
+    private _logConfig: any = require('./log/config/log4js.json') ?? {}
+    private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
     private static components: any = {}
 
     // public ac: any = new AccessControl();
 
 
-    constructor() {
+    get logConfig(): any {
+        return this._logConfig;
+    }
+
+    set logConfig(value: any) {
+        this._logConfig = value;
+    }
+
+    get controllerpath(): string {
+        return this._controllerpath;
+    }
+
+    set controllerpath(value: string) {
+        this._controllerpath = value;
+    }
+
+    init() {
         this.logProvider().level = log4js.levels.ALL;
-        this.logProvider().configure(this.logConfig);
+        this.logProvider().configure(this._logConfig);
 
         /**
          * set request id
@@ -166,8 +182,8 @@ export default class BaseChyz {
      */
     async loadController() {
         let articlesEndpoints: string[] = [];
-        fs.readdirSync(`${this.controllerpath}/`).forEach((file: string) => {
-            let controller = require(`../${this.controllerpath}/${file}`);
+        fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
+            let controller = require(`../${this._controllerpath}/${file}`);
 
 
             // This is our instantiated class
