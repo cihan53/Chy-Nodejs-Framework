@@ -4,38 +4,41 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
+import {User} from "../web/User";
+
 var _ = require('lodash');
 import {Component} from "../base/Component";
 import {InvalidConfigException} from "../base/InvalidConfigException";
+import {Request, Response} from "express";
 
 export class AccessRule extends Component {
 
     /**
      * @var bool whether this is an 'allow' rule or 'deny' rule.
      */
-    public allow;
+    public allow:any;
     /**
      * @var array list of action IDs that this rule applies to. The comparison is case-sensitive.
      * If not set or empty, it means this rule applies to all actions.
      */
-    public actions;
+    public actions:any;
 
     /**
      *  @var array list of the controller IDs that this rule applies to.
      */
-    public controllers;
+    public controllers:any;
 
     /**
      * - `?`: matches a guest user (not authenticated yet)
      * - `@`: matches an authenticated user
      */
 
-    public roles;
+    public roles:any;
 
     /**
      * @var array list of RBAC (Role-Based Access Control) permissions that this rules applies to.
      */
-    public permissions;
+    public permissions:any;
 
     /**
      * @var array list of user IP addresses that this rule applies to. An IP address
@@ -45,10 +48,10 @@ export class AccessRule extends Component {
      * 20-bit private network block in RFC1918.
      * If not set or empty, it means this rule applies to all IP addresses.
      */
-    public ips;
+    public ips:any;
 
 
-    public allows(action, user, request) {
+    public allows(action:any, user:User, request:Request) {
         if (
             this.matchAction(action)
             && this.matchRole(user)
@@ -72,7 +75,7 @@ export class AccessRule extends Component {
      * @param Action $action the action
      * @return bool whether the rule applies to the action
      */
-    protected matchAction(action) {
+    protected matchAction(action:any) {
         return _.isEmpty(this.actions) || this.actions.includes(action.id);
     }
 
@@ -80,7 +83,7 @@ export class AccessRule extends Component {
      * @param Controller $controller the controller
      * @return bool whether the rule applies to the controller
      */
-    protected matchController($controller) {
+    protected matchController(controller:any) {
         //     if (empty($this->controllers)) {
         //         return true;
         //     }
@@ -95,7 +98,7 @@ export class AccessRule extends Component {
         return false;
     }
 
-    protected matchRole(user) {
+    protected matchRole(user:any) {
         let items = _.isEmpty(this.roles) ? [] : this.roles;
 
         if (!_.isEmpty(this.permissions)) {

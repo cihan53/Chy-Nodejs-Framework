@@ -1,8 +1,8 @@
 require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import {Request, Response} from "express";
-import * as express from 'express';
+import {NextFunction, Request, Response} from "express";
+import express from 'express';
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
 
@@ -13,14 +13,6 @@ const _ = require('lodash');
 
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
-
-
-function runAsyncWrapper(callback) {
-    return function (req, res, next) {
-        callback(req, res, next)
-            .catch(next)
-    }
-}
 
 
 export default class BaseChyz {
@@ -73,8 +65,6 @@ export default class BaseChyz {
          * Load Controller
          */
         this.loadController();
-
-
 
 
     }
@@ -139,17 +129,17 @@ export default class BaseChyz {
         BaseChyz.logs().warn(...arguments)
     }
 
-    public static t(text) {
+    public static t(text: string) {
         return text;
     }
 
 
-    public errorLogger(error, req, res, next) { // for logging errors
+    public errorLogger(error: any, req: any, res: any, next: any) { // for logging errors
         BaseChyz.error(error)
         next(error) // forward to next middleware
     }
 
-    public errorResponder(error, req, res, next) { // responding to client
+    public errorResponder(error: any, req: any, res: any, next: any) { // responding to client
         if (error.type == 'redirect')
             res.redirect('/error')
         else if (error.type == 'time-out') // arbitrary condition check
@@ -159,7 +149,7 @@ export default class BaseChyz {
     }
 
 
-    public errorHandler(err:any, req:any, res:any, next:any) {
+    public errorHandler(err: any, req: any, res: any, next: any) {
         if (res.headersSent) {
             return next(err)
         }
@@ -167,7 +157,7 @@ export default class BaseChyz {
         res.json('error', {error: err})
     }
 
-    public static getComponent(key:any) {
+    public static getComponent(key: any) {
         return BaseChyz.components[key] ?? null
     }
 
@@ -201,21 +191,16 @@ export default class BaseChyz {
                     BaseChyz.logs().debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
 
                     BaseChyz.express[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
-                        runAsyncWrapper(async (req: Request, res: Response, next) => {
+                        (req: Request, res: Response,) => {
                             // @ts-ignore
                             BaseChyz.logs().debug("Request ID ", req.reqId)
+                            // @ts-ignore
                             instance[route.methodName](req, res);
                             instance.afterAction(route, req, res)
 
-                            // try {
-                            //     //await instance.beforeAction(route, req, res)
-                            //
-                            // } catch (e) {
-                            //     BaseChyz.error(e)
-                            //     res.status(e.statusCode)
-                            //     res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-                            // }
-                        }));
+                        })
+
+
                 });
             }
         })
@@ -232,7 +217,7 @@ export default class BaseChyz {
 
 
         // Use middleware to set the default Content-Type
-        BaseChyz.express.use(async function (req, res, next) {
+        BaseChyz.express.use(async (req: Request, res: Response, next: NextFunction) => {
             // @ts-ignore
             req.reqId = Utils.uniqueId("chyzzzz_")
             res.header('Content-Type', 'application/json');
@@ -243,7 +228,8 @@ export default class BaseChyz {
             let action = c.length > 1 ? c[1] : "";
 
             BaseChyz.logs().debug(`Call Request1 ${prefix}/${action}`)
-            let controller
+            // @ts-ignore
+            let controller: Controller = null
             for (const _controller of BaseChyz.controllers) {
                 if (_controller.id == prefix) {
                     controller = _controller;
@@ -276,7 +262,6 @@ export default class BaseChyz {
 
 
     }
-
 
 
     public Start() {

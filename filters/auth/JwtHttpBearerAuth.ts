@@ -8,6 +8,8 @@ import BaseChyz from "../../BaseChyz";
 import {HttpBearerAuth} from "./HttpBearerAuth";
 import {InvalidConfigException} from "../../base/InvalidConfigException";
 import {UnauthorizedHttpException} from "../../base/UnauthorizedHttpException";
+import {Response,Request} from "express";
+import {User} from "../../web/User";
 
 const JsonWebToken = require("jsonwebtoken");
 
@@ -17,7 +19,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
      * itself. By default it's assumes that component of ID "jwt" has been configured.
      */
     public jwt = 'jwt'
-    public auth = null;
+    public auth:any = null;
 
     /**
      * @throws InvalidConfigException
@@ -33,7 +35,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     }
 
 
-    public async authenticate(user, request, response) // BC signature
+    public async authenticate(user:User, request:Request, response:Response) // BC signature
     {
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
@@ -71,7 +73,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     /**
      * @throws UnauthorizedHttpException
      */
-    public fail(response): void {
+    public fail(response:Response): void {
         this.challenge(response)
         this.handleFailure(response);
     }

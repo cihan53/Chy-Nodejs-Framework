@@ -8,6 +8,7 @@
 import {AuthMethod} from "./AuthMethod";
 import {User} from "../../web/User";
 import Utils from "../../requiments/Utils";
+import {Request, Response} from "express";
 
 export class HttpHeaderAuth extends AuthMethod {
     /**
@@ -15,16 +16,18 @@ export class HttpHeaderAuth extends AuthMethod {
      */
     public header = 'X-Api-Key';
 
+
     /**
      * @var string a pattern to use to extract the HTTP authentication value
      */
-    public pattern:string;
+
+    public pattern!: string;
 
 
-    async authenticate(user: User, request, response) {
+    async authenticate(user: User, request:Request, response:Response) {
         let key = Object.keys(request.headers).find(key => key.toLowerCase() === this.header.toLowerCase())
         if (key) {
-            let authHeader = request.headers[key];
+            let authHeader:any = request.headers[key];
             if (!Utils.isEmpty(authHeader)) {
                 if (this.pattern) {
                     //preg_match

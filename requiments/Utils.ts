@@ -7,8 +7,8 @@
 // import _ from "lodash";
 const _ = require('lodash');
 
-const createObject = (object, params) => {
-    let newParams = {}
+const createObject = (object:any, params:any) => {
+    let newParams:any = {}
     Object.keys(params).forEach((param) => {
         newParams[param] = {}
         Object.assign(newParams[param], {
@@ -20,7 +20,7 @@ const createObject = (object, params) => {
     return Object.create(object, newParams);
 }
 
-const findKeyValue = (object, findKey) => {
+const findKeyValue = (object:any, findKey:string) => {
     let key = Object.keys(object).find(key => key.toLowerCase() === findKey.toLowerCase())
     if (key) {
         return object[key];

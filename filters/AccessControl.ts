@@ -10,14 +10,14 @@ import {ActionFilter} from "../base/ActionFilter";
 import {AccessRule} from "./AccessRule";
 import {User} from "../web/User";
 import Utils from "../requiments/Utils";
+import {NextFunction, Request, Response} from "express";
 
 var _ = require('lodash');
 
 
 export class AccessControl extends ActionFilter {
 
-    //ts-ignore
-    public user: User = undefined;
+    public user: User = new User;
     public rules: any;
 
     public init() {
@@ -27,7 +27,7 @@ export class AccessControl extends ActionFilter {
             this.user = Utils.cloneDeep(BaseChyz.getComponent("user")) ?? new User();
         }
 
-        this.rules.forEach((rule, index) => {
+        this.rules.forEach((rule:any, index:number) => {
             if (rule === Object(rule)) {
                 this.rules[index] = Utils.createObject(new AccessRule(), rule);
             }
@@ -35,9 +35,11 @@ export class AccessControl extends ActionFilter {
     }
 
 
-    public beforeAction(action, request) {
+    public beforeAction(action:any, request:Request) {
         let allow;
+        // @ts-ignore
         let user = request.user ?? this.user;
+        // @ts-ignore
         user.identity = request.identity;
 
         for (const rulesKey in this.rules) {

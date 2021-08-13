@@ -11,9 +11,9 @@ import BaseChyz from "../BaseChyz";
 
 export class DbConnection extends Component {
 
-    public database: string
-    public username: string
-    public password: string
+    public database!: string;
+    public username!: string
+    public password!: string
     public options?: object
 
     private _db: any
