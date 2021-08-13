@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 export class ActionFilter {
 
-    public only;
+    public only: any;
 
     /**
      * @var array list of action IDs that this filter should not apply to.
@@ -23,13 +23,13 @@ export class ActionFilter {
 
     }
 
-    public beforeFilter(action) {
+    public beforeFilter(action: any) {
         if (!this.isActive(action)) {
             return;
         }
     }
 
-    protected isActive(action) {
+    protected isActive(action:any) {
         let id = action.id;
         let onlyMatch: boolean = false;
         let exceptMatch: boolean = false;

@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "Nodejs MicroServis Framework",
   "main": "chyz.ts",
-  "type": "module",
+
   "scripts": {
     "dev": "nodemon chyz.ts",
     "debug": "ts-node chyz.ts",

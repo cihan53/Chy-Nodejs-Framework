@@ -16,8 +16,8 @@ var _ = require('lodash');
 
 export class AccessControl extends ActionFilter {
 
-
-    public user: User;
+    //ts-ignore
+    public user: User = undefined;
     public rules: any;
 
     public init() {
