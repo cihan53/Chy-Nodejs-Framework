@@ -1,0 +1,55 @@
+{
+  "appenders": {
+    "access": {
+      "type": "dateFile",
+      "filename": "log/access.log",
+      "pattern": "-yyyy-MM-dd",
+      "category": "http",
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-ddThh.mm.ss.SSS}] [%p] %c [%l] [%f] - %m"
+      }
+    },
+    "app": {
+      "type": "file",
+      "filename": "log/app.log",
+      "maxLogSize": 10485760,
+      "numBackups": 3,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-ddThh.mm.ss.SSS}] [%p] %c [%l] [%f] - %m"
+      }
+    },
+    "errorFile": {
+      "type": "file",
+      "filename": "log/errors.log",
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-ddThh.mm.ss.SSS}] [%p] %c [%l] [%f] - %m"
+      }
+    },
+    "errors": {
+      "type": "logLevelFilter",
+      "level": "ERROR",
+      "appender": "errorFile",
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-ddThh.mm.ss.SSS}] [%p] %c [%l] [%f] - %m"
+      }
+    },
+    "console": {
+      "type": "stdout"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": ["console","app" ,"errors" ],
+      "level": "ALL",
+      "enableCallStack": true
+    },
+    "http": {
+      "level": "INFO",
+      "appenders": [ "access" ]
+    }
+  }
+}
