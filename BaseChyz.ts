@@ -104,6 +104,9 @@ export default class BaseChyz {
 
 
     app(config: any = {}) {
+
+        this.init();
+
         let components = Utils.findKeyValue(config, "components")
         if (components) {
             for (const componentsKey in components) {
@@ -183,7 +186,7 @@ export default class BaseChyz {
     async loadController() {
         let articlesEndpoints: string[] = [];
         fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
-            let controller = require(`../${this._controllerpath}/${file}`);
+            let controller = require(`${this._controllerpath}/${file}`);
 
 
             // This is our instantiated class
