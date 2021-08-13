@@ -159,7 +159,7 @@ export default class BaseChyz {
     }
 
 
-    public errorHandler(err, req, res, next) {
+    public errorHandler(err:any, req:any, res:any, next:any) {
         if (res.headersSent) {
             return next(err)
         }
@@ -167,7 +167,7 @@ export default class BaseChyz {
         res.json('error', {error: err})
     }
 
-    public static getComponent(key) {
+    public static getComponent(key:any) {
         return BaseChyz.components[key] ?? null
     }
 
