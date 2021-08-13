@@ -21,7 +21,7 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
-    public logConfig: any = require('./log/config/log4js.json')
+    public logConfig: any = require('./log/config/log4js.json') ?? {}
     public controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
     private static components: any = {}
