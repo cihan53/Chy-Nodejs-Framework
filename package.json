@@ -1,23 +1,23 @@
 {
-  "name": "edis-manager-node",
-  "version": "1.0.0",
-  "description": "Entranet ve Erken Deprem Bildirim Sistemi (EDİS) entegrasyonu",
-  "main": "index.js",
+  "name": "chyz",
+  "version": "1.0.3",
+  "description": "Nodejs MicroServis Framework",
+  "main": "chyz.ts",
   "scripts": {
-    "dev": "nodemon index.ts",
-    "debug": "ts-node index.ts",
+    "dev": "nodemon chyz.ts",
+    "debug": "ts-node chyz.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cihan53/edis-manager-node.git"
+    "url": "git+https://github.com/cihan53/Chy-Nodejs-Framework.git"
   },
-  "author": "",
+  "author": "Cihan Ozturk",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cihan53/edis-manager-node/issues"
+    "url": "https://github.com/cihan53/Chy-Nodejs-Framework/issues"
   },
-  "homepage": "https://github.com/cihan53/edis-manager-node#readme",
+  "homepage": "https://github.com/cihan53/Chy-Nodejs-Framework#readme",
   "dependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "body-parser": "^1.19.0",
@@ -40,5 +40,10 @@
     "nodemon": "^2.0.12",
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5"
-  }
+  },
+  "keywords": [
+    "Framework",
+    "RespAPI",
+    "microservice"
+  ]
 }
