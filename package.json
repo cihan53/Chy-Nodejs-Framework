@@ -1,9 +1,8 @@
 {
   "name": "chyz",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Nodejs MicroServis Framework",
-  "main": "chyz.ts",
-  "type": "module",
+  "main": "dist/chyz.js",
   "scripts": {
     "dev": "nodemon chyz.ts",
     "debug": "ts-node chyz.ts",
