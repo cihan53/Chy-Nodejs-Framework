@@ -15,7 +15,7 @@ index.ts<br>
 yarn start 
 
 ##index.ts alanlar düzenlenmeli.
-[code]
+```js
 let config = {
     components: {
         db:{
@@ -37,6 +37,6 @@ let config = {
     }
 }
 Chyz.app(config).Start();
-[/code]
+```
 
 
