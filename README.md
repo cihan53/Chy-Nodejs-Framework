@@ -1,17 +1,17 @@
-Hızlı şekilde microservis hazırlama için geliştirmeye başladım
+Hızlı şekilde microservis hazırlama için geliştirmeye başladım<br>
 
-Temel olarak yii2 php framework'ten örnekler alındı
+Temel olarak yii2 php framework'ten örnekler alındı<br>
 
-Temel olarak basit bir Controller geliştirildi, ayrıca authentication geliştirildi.
+Temel olarak basit bir Controller geliştirildi, ayrıca authentication geliştirildi.<br>
 
-Klasör Yapısı
-*---Controllers  
-*---Models
-*---Log
-*---Framework
-index.ts
+Klasör Yapısı<br>
+*---Controllers  <br>
+*---Models<br>
+*---Log<br>
+*---Framework<br>
+index.ts<br>
 
-`##Başlangıç
+`##Başlangıç<br>
 yarn start 
 
 ##index.ts alanlar düzenlenmeli.
