@@ -186,7 +186,7 @@ export default class BaseChyz {
     async loadController() {
         let articlesEndpoints: string[] = [];
         fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
-            let controller = require(`${this._controllerpath}/${file}`);
+            let controller = require(`../../../${this._controllerpath}/${file}`);
 
 
             // This is our instantiated class
