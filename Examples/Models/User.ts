@@ -53,16 +53,17 @@ export class User implements IdentityInterface {
          return identity;
     }
 
-    getAuthKey() {
+    getAuthKey(): string {
+        return "";
     }
 
-    getId() {
+    getId(): number {
+        return 0;
     }
 
-    validateAuthKey($authKey) {
+    validateAuthKey(authKey: string): boolean | null {
+        return undefined;
     }
-
-
 }
 
 
