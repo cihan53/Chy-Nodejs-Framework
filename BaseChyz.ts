@@ -1,3 +1,5 @@
+import {NotFoundHttpException} from "./base/NotFoundHttpException";
+
 require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
@@ -274,6 +276,7 @@ export default class BaseChyz {
                 }
             }
 
+            if(controller==null)  throw new NotFoundHttpException("Not found URL")
 
             let actionId = action == "/" || action == "" ? controller.defaultAction : action;
             let route: RouteDefinition = {
