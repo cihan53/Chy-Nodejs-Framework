@@ -11,6 +11,7 @@
     "experimentalDecorators": true
   },
   "exclude": [
-    "node_modules","**/Examples/*"
+    "node_modules",
+    "**/Examples/*"
   ]
 }

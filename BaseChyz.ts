@@ -124,9 +124,7 @@ export default class BaseChyz {
         return log4js;
     }
 
-    static getVersion(): string {
-        return '1.0.0-dev'
-    }
+
 
     static logs(...args: any[]) {
         return log4js.getLogger(this.name);
@@ -186,7 +184,8 @@ export default class BaseChyz {
     async loadController() {
         let articlesEndpoints: string[] = [];
         fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
-            let controller = require(`../../../${this._controllerpath}/${file}`);
+            let controller = require(`${this._controllerpath}/${file}`);
+            // let controller = require(`../../../${this._controllerpath}/${file}`);
 
 
             // This is our instantiated class
