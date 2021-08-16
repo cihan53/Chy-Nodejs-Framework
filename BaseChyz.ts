@@ -119,6 +119,9 @@ export default class BaseChyz {
 
     app(config: any = {}) {
 
+        /**
+         * Config set
+         */
         this.config = config;
 
         this.init();
