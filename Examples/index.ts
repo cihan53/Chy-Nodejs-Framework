@@ -14,6 +14,8 @@ import {DbConnection} from "../base/DbConnection";
 
 
 let config = {
+    port: 3000,
+    controllerpath:"../Controllers",
     components: {
         db:{
             class:DbConnection,
