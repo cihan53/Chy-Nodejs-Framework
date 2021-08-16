@@ -17,7 +17,7 @@ import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
 import Utils from "../../requiments/Utils";
 
 @controller("/site")
-export class SiteController extends Controller {
+class SiteController extends Controller {
 
     public myCheck(token) {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
@@ -93,3 +93,4 @@ export class SiteController extends Controller {
         return res.send("Post Controller")
     }
 }
+module.exports=SiteController
