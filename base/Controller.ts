@@ -15,7 +15,7 @@ export class Controller extends Component {
      * @var string the ID of this controller.
      */
     public id:string;
-    public defaultAction:string = 'index';
+    public defaultAction = 'index';
 
     constructor(  config: any) {
         super();
