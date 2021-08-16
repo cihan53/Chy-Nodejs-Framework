@@ -16,6 +16,7 @@ var methodOverride = require('method-override')
 
 
 export default class BaseChyz {
+    private config:any;
     static app: string;
     static express = express()
     private _port: number = 3001;
@@ -73,6 +74,19 @@ export default class BaseChyz {
 
 
         /**
+         * server port setting
+         */
+        if(this.config.hasOwnProperty("port"))
+            this.port= this.config.port;
+
+        /**
+         * controller path
+         */
+        if(this.config.controllerpath){
+            this.controllerpath = this.config.controllerpath
+        }
+
+        /**
          * Express Server
          */
         this.middleware()
@@ -104,6 +118,8 @@ export default class BaseChyz {
 
 
     app(config: any = {}) {
+
+        this.config = config;
 
         this.init();
 
