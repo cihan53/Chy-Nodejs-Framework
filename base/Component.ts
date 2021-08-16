@@ -40,7 +40,7 @@ export class Component extends BaseObject {
      * Makes sure that the behaviors declared in [[behaviors()]] are attached to this component.
      */
     public ensureBehaviors() {
-        if (this._behaviors === undefined) {
+        if (this._behaviors.length == 0) {
             this._behaviors = [];
             if (this.behaviors().length > 0) {
                 this.behaviors().forEach(behavior => {
