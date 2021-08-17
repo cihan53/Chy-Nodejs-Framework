@@ -40,7 +40,7 @@ export class User extends Component {
     }
 
     public getIsGuest() {
-        return this.getIdentity() === null;
+        return this.getIdentity() === null ;
     }
 
     public getIdentity(autoRenew = true) {

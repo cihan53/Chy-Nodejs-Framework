@@ -18,7 +18,7 @@ var methodOverride = require('method-override')
 
 
 export default class BaseChyz {
-    private config:any;
+    private config: any;
     static app: string;
     static express = express()
     private _port: number = 3001;
@@ -78,13 +78,13 @@ export default class BaseChyz {
         /**
          * server port setting
          */
-        if(this.config.hasOwnProperty("port"))
-            this.port= this.config.port;
+        if (this.config.hasOwnProperty("port"))
+            this.port = this.config.port;
 
         /**
          * controller path
          */
-        if(this.config.controllerpath){
+        if (this.config.controllerpath) {
             this.controllerpath = this.config.controllerpath
         }
 
@@ -144,7 +144,6 @@ export default class BaseChyz {
     public logProvider() {
         return log4js;
     }
-
 
 
     static logs(...args: any[]) {
@@ -254,6 +253,15 @@ export default class BaseChyz {
         BaseChyz.express.use(this.errorResponder)
         BaseChyz.express.use(this.errorHandler)
 
+        // CORS
+        BaseChyz.express.use(function (req, res, next) {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader("Access-Control-Allow-Credentials", "true");
+            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
+            next();
+        });
+
 
         // Use middleware to set the default Content-Type
         BaseChyz.express.use(async (req: Request, res: Response, next: NextFunction) => {
@@ -276,19 +284,22 @@ export default class BaseChyz {
                 }
             }
 
-            if(controller==null)  throw new NotFoundHttpException("Not found URL")
 
-            let actionId = action == "/" || action == "" ? controller.defaultAction : action;
-            let route: RouteDefinition = {
-                id: actionId,
-                path: req.path,
-                // @ts-ignore
-                requestMethod: req.method.toLowerCase() ?? "get",
-                methodName: ""
-            }
-
-            BaseChyz.logs().debug(`Call Request id ${controller.id}`)
             try {
+                if (controller == null) {
+                    throw new NotFoundHttpException("Not found URL")
+                }
+
+                let actionId = action == "/" || action == "" ? controller.defaultAction : action;
+                let route: RouteDefinition = {
+                    id: actionId,
+                    path: req.path,
+                    // @ts-ignore
+                    requestMethod: req.method.toLowerCase() ?? "get",
+                    methodName: ""
+                }
+
+                BaseChyz.logs().debug(`Call Request id ${controller.id}`)
                 await controller.beforeAction(route, req, res)
                 next();
             } catch (e) {

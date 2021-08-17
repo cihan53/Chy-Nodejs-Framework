@@ -15,7 +15,7 @@ import {DbConnection} from "../base/DbConnection";
 
 let config = {
     port: 3000,
-    controllerpath:"../Controllers",
+    controllerpath:"C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
     components: {
         db:{
             class:DbConnection,
