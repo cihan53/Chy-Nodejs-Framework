@@ -17,7 +17,7 @@ var _ = require('lodash');
 
 export class AccessControl extends ActionFilter {
 
-    public user: User = new User;
+    public user: any = null;
     public rules: any;
 
     public init() {
@@ -40,13 +40,15 @@ export class AccessControl extends ActionFilter {
         // @ts-ignore
         let user = request.user ?? this.user;
         // @ts-ignore
-        user.identity = request.identity;
+        user.identity = request.identity ?? null;
 
         for (const rulesKey in this.rules) {
             if ((allow = this.rules[rulesKey].allows(action, user, request))) {
                 return true;
             } else if (allow === false) {
                 this.denyAccess(user);
+
+                return false;
             }
         }
         this.denyAccess(user);
