@@ -229,6 +229,20 @@ export default class BaseChyz {
                     BaseChyz.logs().debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
 
                     BaseChyz.express[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
+                        async (req: Request, res: Response, next: NextFunction) => {
+                            try {
+                                BaseChyz.logs().debug(`Call Request id ${instance.id}`)
+                                await instance.beforeAction(route, req, res)
+                                next()
+                            } catch (e) {
+                                BaseChyz.logs().error(e);
+
+                                res.status(e.statusCode)
+                                res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
+                                // next(e)
+                            }
+
+                        },
                         (req: Request, res: Response,) => {
                             // @ts-ignore
                             BaseChyz.logs().debug("Request ID ", req.reqId)
@@ -264,52 +278,52 @@ export default class BaseChyz {
 
 
         // Use middleware to set the default Content-Type
-        BaseChyz.express.use(async (req: Request, res: Response, next: NextFunction) => {
-            // @ts-ignore
-            req.reqId = Utils.uniqueId("chyzzzz_")
-            res.header('Content-Type', 'application/json');
-
-            let c = _.trimStart(req.path, "/");
-            c = c.split("/");
-            let prefix = c[0];
-            let action = c.length > 1 ? c[1] : "";
-
-            BaseChyz.logs().debug(`Call Request1 ${prefix}/${action}`)
-            // @ts-ignore
-            let controller: Controller = null
-            for (const _controller of BaseChyz.controllers) {
-                if (_controller.id == prefix) {
-                    controller = _controller;
-                    break;
-                }
-            }
-
-
-            try {
-                if (controller == null) {
-                    throw new NotFoundHttpException("Not found URL")
-                }
-
-                let actionId = action == "/" || action == "" ? controller.defaultAction : action;
-                let route: RouteDefinition = {
-                    id: actionId,
-                    path: req.path,
-                    // @ts-ignore
-                    requestMethod: req.method.toLowerCase() ?? "get",
-                    methodName: ""
-                }
-
-                BaseChyz.logs().debug(`Call Request id ${controller.id}`)
-                await controller.beforeAction(route, req, res)
-                next();
-            } catch (e) {
-                BaseChyz.error(e)
-                res.status(e.statusCode)
-                res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-                // next(e)
-            }
-
-        });
+        // BaseChyz.express.use(async (req: Request, res: Response, next: NextFunction) => {
+        //     // @ts-ignore
+        //     req.reqId = Utils.uniqueId("chyzzzz_")
+        //     res.header('Content-Type', 'application/json');
+        //
+        //     let c = _.trimStart(req.path, "/");
+        //     c = c.split("/");
+        //     let prefix = c[0];
+        //     let action = c.length > 1 ? c[1] : "";
+        //
+        //     BaseChyz.logs().debug(`Call Request1 ${prefix}/${action}`)
+        //     // @ts-ignore
+        //     let controller: Controller = null
+        //     for (const _controller of BaseChyz.controllers) {
+        //         if (_controller.id == prefix) {
+        //             controller = _controller;
+        //             break;
+        //         }
+        //     }
+        //
+        //
+        //     try {
+        //         if (controller == null) {
+        //             throw new NotFoundHttpException("Not found URL")
+        //         }
+        //
+        //         let actionId = action == "/" || action == "" ? controller.defaultAction : action;
+        //         let route: RouteDefinition = {
+        //             id: actionId,
+        //             path: req.path,
+        //             // @ts-ignore
+        //             requestMethod: req.method.toLowerCase() ?? "get",
+        //             methodName: ""
+        //         }
+        //
+        //         BaseChyz.logs().debug(`Call Request id ${controller.id}`)
+        //         await controller.beforeAction(route, req, res)
+        //         next();
+        //     } catch (e) {
+        //         BaseChyz.error(e)
+        //         res.status(e.statusCode)
+        //         res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
+        //         // next(e)
+        //     }
+        //
+        // });
 
 
     }
