@@ -38,7 +38,7 @@ export class Controller extends Component {
 
         this.ensureBehaviors()
         for (const name of Object.keys(this.getBehaviors)) {
-            await this.getBehaviors[name].beforeAction(route, req, res)
+            await this.getBehaviors[name].beforeFilter(route, req, res);
         }
 
     }

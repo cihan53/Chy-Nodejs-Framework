@@ -6,12 +6,14 @@
  */
 
 import {Configurable} from "./Configurable";
+import BaseChyz from "../BaseChyz";
 
 export class BaseObject implements Configurable {
 
 
-    public  init()
-    {
+    public init() {
+
+        BaseChyz.debug("BaseObject init.....",)
 
     }
 }

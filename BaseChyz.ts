@@ -269,6 +269,9 @@ export default class BaseChyz {
 
         // CORS
         BaseChyz.express.use(function (req, res, next) {
+            // @ts-ignore
+            req.reqId = Utils.uniqueId("chyzzzz_")
+            res.setHeader('Content-Type', 'application/json');
             res.setHeader("Access-Control-Allow-Origin", "*");
             res.setHeader("Access-Control-Allow-Credentials", "true");
             res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");

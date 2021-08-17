@@ -32,11 +32,11 @@ class SiteController extends Controller {
             // },
             'access': {
                 'class': AccessControl,
-                'only': ['login', 'logout', 'signup'],
+                'only': ['login', 'logout','index'  ],
                 'rules': [
                     {
-                        'allow': true,
-                        'actions': ['login', 'index','signup'],
+                        'allow': false,
+                        'actions': ['login', 'index' ],
                         'roles': ['?'],
                     },
                     {
@@ -49,7 +49,7 @@ class SiteController extends Controller {
         }]
     }
 
-    @get("/")
+    @get("index")
     Index(req: Request, res: Response) {
 
         BaseChyz.logs().info("Site Controller Burası", this.id)
@@ -77,8 +77,6 @@ class SiteController extends Controller {
     @get("signup")
     logout2(req: Request, res: Response) {
 
-
-        Utils.sleep(5);
 
         return res.send("Logout Controller")
     }
