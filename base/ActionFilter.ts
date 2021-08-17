@@ -5,9 +5,11 @@
  * Github:https://github.com/cihan53/
  */
 // @ts-ignore
-import _ from 'lodash';
+import {NextFunction, Request, Response} from "express";
+import Utils from "../requiments/Utils";
+import {Behavior} from "./Behavior";
 
-export class ActionFilter {
+export class ActionFilter extends Behavior {
 
     public only: any;
 
@@ -20,21 +22,30 @@ export class ActionFilter {
 
     public init() {
 
-
     }
 
-    public beforeFilter(action: any) {
-        if (!this.isActive(action)) {
+    public async beforeFilter(route: any, req: Request, res: Response) {
+        if (!this.isActive(route.id)) {
             return;
         }
+
+        await this.beforeAction(route, req, res)
     }
 
-    protected isActive(action:any) {
+    protected isActive(action: any) {
         let id = action.id;
         let onlyMatch: boolean = false;
         let exceptMatch: boolean = false;
-        if (_.isEmpty(this.only)) {
+        if (Utils.isEmpty(this.only)) {
             onlyMatch = true;
+        } else {
+            onlyMatch = false;
+            for (const onlyKey of this.only) {
+                if (Utils.matchWildcard(action, onlyKey)) {
+                    onlyMatch = true;
+                    break;
+                }
+            }
         }
 
         for (const exceptKey in this.except) {
@@ -46,5 +57,15 @@ export class ActionFilter {
         }
 
         return !exceptMatch && onlyMatch;
+    }
+
+    /**
+     * This method is invoked right before an action is to be executed (after all possible filters.)
+     * You may override this method to do last-minute preparation for the action.
+     * @param Action $action the action to be executed.
+     * @return bool whether the action should continue to be executed.
+     */
+    public async beforeAction(route: any, req: Request, res: Response) {
+        return true;
     }
 }

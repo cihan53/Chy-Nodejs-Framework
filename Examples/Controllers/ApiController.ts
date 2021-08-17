@@ -62,31 +62,9 @@ class ApiController extends Controller {
         return res.send("Post Controller")
     }
 
-    @get("logout")
-    logout(req: Request, res: Response) {
-
-        // @ts-ignore
-        let identity = req.user ?? BaseChyz.getComponent("user").getIdentity();
-        // console.log("logout2", identity.id)
-        console.log(identity)
-
-        BaseChyz.logs().info("Logout Controller")
-        return res.send("Logout Controller")
-    }
-
-    @get("logout2")
-    logout2(req: Request, res: Response) {
 
 
-        Utils.sleep(5);
 
-        BaseChyz.logs().info("Logout Controller")
-
-
-        let identity = BaseChyz.getComponent("user").getIdentity();
-        console.log("logout2", identity.id)
-        return res.send("Logout Controller")
-    }
 
     error(req: Request, res: Response) {
         BaseChyz.logs().info("Error Sayfası")

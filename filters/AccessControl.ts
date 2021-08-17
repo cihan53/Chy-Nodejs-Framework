@@ -35,7 +35,7 @@ export class AccessControl extends ActionFilter {
     }
 
 
-    public beforeAction(action:any, request:Request) {
+    public async beforeAction(action:any, request:Request) {
         let allow;
         // @ts-ignore
         let user = request.user ?? this.user;
