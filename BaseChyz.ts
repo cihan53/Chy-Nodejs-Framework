@@ -1,10 +1,10 @@
+require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import express, {NextFunction, Request, Response} from "express";
+import express from "express";
+import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
-
-require('dotenv-flow').config();
 
 
 const log4js = require("log4js");
@@ -25,7 +25,7 @@ export default class BaseChyz {
     private _logConfig: any = require('./log/config/log4js.json') ?? {}
     private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
-    private static components: any = {}
+    public static components: any = {}
 
     // public ac: any = new AccessControl();
 
@@ -130,6 +130,7 @@ export default class BaseChyz {
         if (components) {
             for (const componentsKey in components) {
                 let comp = components[componentsKey];
+                BaseChyz.debug("Create Component ", componentsKey)
                 BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
                 BaseChyz.components[componentsKey]?.init();
             }
@@ -241,13 +242,16 @@ export default class BaseChyz {
                             }
 
                         },
-                        (req: Request, res: Response,) => {
+                        (req: Request, res: Response, next: NextFunction) => {
                             // @ts-ignore
                             BaseChyz.logs().debug("Request ID ", req.reqId)
-                            // @ts-ignore
-                            instance[route.methodName](req, res);
-                            instance.afterAction(route, req, res)
-
+                            try {
+                                // @ts-ignore
+                                instance[route.methodName](req, res);
+                                instance.afterAction(route, req, res)
+                            } catch (e) {
+                                next(e)
+                            }
                         })
 
 
@@ -265,8 +269,14 @@ export default class BaseChyz {
         BaseChyz.express.use(this.errorResponder)
         BaseChyz.express.use(this.errorHandler)
 
+        BaseChyz.express.use(function (err: any, req: any, res: any, next: any) {
+            // logic
+            BaseChyz.error(err)
+        })
+
         // CORS
         BaseChyz.express.use(function (req, res, next) {
+            console.log("ciasisdaisdaisdaisdaisdai")
             // @ts-ignore
             req.reqId = Utils.uniqueId("chyzzzz_")
             res.setHeader('Content-Type', 'application/json');
