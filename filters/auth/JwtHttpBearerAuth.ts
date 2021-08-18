@@ -57,9 +57,9 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
 
         if (token !== null) {
             if (this.auth != null) {
-                identity = await this.auth(token)
+                identity = await this.auth(autHeader[1])
             } else {
-                identity = await user.loginByAccessToken(token, "JwtHttpBearerAuth")
+                identity = await user.loginByAccessToken(autHeader[1], "JwtHttpBearerAuth")
             }
         }
 
