@@ -1,12 +1,10 @@
-import {NotFoundHttpException} from "./base/NotFoundHttpException";
-
-require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import {NextFunction, Request, Response} from "express";
-import express from 'express';
+import express, {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
+
+require('dotenv-flow').config();
 
 
 const log4js = require("log4js");
@@ -16,7 +14,7 @@ const _ = require('lodash');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 
-
+export {Request, Response} from "express";
 export default class BaseChyz {
     private config: any;
     static app: string;

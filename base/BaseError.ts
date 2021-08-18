@@ -10,6 +10,7 @@ export class BaseError extends Error {
 
     constructor(message: string) {
         super(message);
+        this.message=message;
         this.name = this.constructor.name // good practice
         this.statusCode = 500 // error code for responding to client
     }
