@@ -7,6 +7,6 @@
 
 import BaseChyz from "./BaseChyz";
 
-const Chyz = new BaseChyz();
+const Chyz:BaseChyz = new BaseChyz();
 
 export default Chyz;
