@@ -238,7 +238,7 @@ export default class BaseChyz {
 
                                 res.status(e.statusCode)
                                 res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-                                // next(e)
+                                next(e)
                             }
 
                         },
