@@ -1,7 +1,7 @@
 require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import express, { ErrorRequestHandler } from "express";
+import express, {ErrorRequestHandler} from "express";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
@@ -14,7 +14,7 @@ const _ = require('lodash');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 
-export {Request, Response,NextFunction} from "express";
+export {Request, Response, NextFunction} from "express";
 export default class BaseChyz {
     private config: any;
     static app: string;
@@ -238,16 +238,22 @@ export default class BaseChyz {
 
                                 res.status(e.statusCode)
                                 res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-                                next(e)
+                                // next(e)
                             }
 
                         },
-                        (req: Request, res: Response, next: NextFunction) => {
-                            // @ts-ignore
-                            BaseChyz.debug("Request ID ", req.reqId)
-                            // @ts-ignore
-                            instance[route.methodName](req, res,next);
-                            instance.afterAction(route, req, res);
+                        async (req: Request, res: Response, next: NextFunction) => {
+                            try {
+                                // @ts-ignore
+                                BaseChyz.debug("Request ID ", req.reqId)
+                                // @ts-ignore
+                                await instance[route.methodName](req, res, next);
+                                instance.afterAction(route, req, res);
+                            } catch (e) {
+                                res.status(e.statusCode)
+                                res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
+
+                            }
                         })
 
 
@@ -266,9 +272,8 @@ export default class BaseChyz {
         BaseChyz.express.use(this.errorHandler)
 
 
-
         // CORS
-        BaseChyz.express.use(function (req:any, res:Response, next:any) {
+        BaseChyz.express.use(function (req: any, res: Response, next: any) {
             // @ts-ignore
             req.reqId = Utils.uniqueId("chyzzzz_")
             res.setHeader('Content-Type', 'application/json');
