@@ -250,9 +250,10 @@ export default class BaseChyz {
                                 await instance[route.methodName](req, res, next);
                                 instance.afterAction(route, req, res);
                             } catch (e) {
+                                BaseChyz.error(e)
+                                // next(e)
                                 res.status(e.statusCode)
                                 res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-
                             }
                         })
 
