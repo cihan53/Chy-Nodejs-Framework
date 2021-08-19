@@ -13,7 +13,14 @@ export class BaseError extends Error {
         this.message=message;
         this.name = this.constructor.name // good practice
         this.statusCode = 500 // error code for responding to client
+        Error.captureStackTrace(this)
+    }
+
+    toString(){
+        return `${this.name}[${this.statusCode}] ${this.message}`
+    }
+    toJSON(){
+        return {code: this?.statusCode, name: this.name, message: this.message}
     }
 }
 
-// BaseError.prototype = new Error();

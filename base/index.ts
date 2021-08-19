@@ -1,6 +1,5 @@
 export * from "./ActionFilter"
 export * from "./BaseObject"
-export * from "./BaseError"
 export * from "./Behavior"
 export * from "./Component"
 export * from "./Configurable"

@@ -6,9 +6,8 @@
  */
 
 import {BaseError} from "./BaseError";
-
 export class ForbiddenHttpException extends BaseError {
-    constructor ( public message: string) {
+    constructor ( message: string) {
         super(message);
     }
 }

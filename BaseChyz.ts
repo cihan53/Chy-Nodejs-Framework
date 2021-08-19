@@ -1,7 +1,7 @@
 require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
@@ -14,7 +14,7 @@ const _ = require('lodash');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 
-export {Request, Response} from "express";
+export {Request, Response,NextFunction} from "express";
 export default class BaseChyz {
     private config: any;
     static app: string;
@@ -179,7 +179,7 @@ export default class BaseChyz {
         if (error.type == 'redirect')
             res.redirect('/error')
         else if (error.type == 'time-out') // arbitrary condition check
-            res.status(408).send(error)
+            res.status(408).json(error)
         else
             next(error) // forwarding exceptional case to fail-safe middleware
     }
@@ -230,11 +230,11 @@ export default class BaseChyz {
                     BaseChyz.express[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
                         async (req: Request, res: Response, next: NextFunction) => {
                             try {
-                                BaseChyz.logs().debug(`Call Request id ${instance.id}`)
+                                BaseChyz.debug(`Call Request id ${instance.id}`)
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e) {
-                                BaseChyz.logs().error(e);
+                                BaseChyz.error(e);
 
                                 res.status(e.statusCode)
                                 res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
@@ -244,14 +244,10 @@ export default class BaseChyz {
                         },
                         (req: Request, res: Response, next: NextFunction) => {
                             // @ts-ignore
-                            BaseChyz.logs().debug("Request ID ", req.reqId)
-                            try {
-                                // @ts-ignore
-                                instance[route.methodName](req, res);
-                                instance.afterAction(route, req, res)
-                            } catch (e) {
-                                next(e)
-                            }
+                            BaseChyz.debug("Request ID ", req.reqId)
+                            // @ts-ignore
+                            instance[route.methodName](req, res,next);
+                            instance.afterAction(route, req, res);
                         })
 
 
@@ -263,20 +259,16 @@ export default class BaseChyz {
     public middleware() {
 
         BaseChyz.express.use(bodyParser.json())
-        BaseChyz.express.use(methodOverride())
         BaseChyz.express.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
-        BaseChyz.express.use(this.errorLogger)
+        BaseChyz.express.use(methodOverride());
+        // BaseChyz.express.use(this.errorLogger)
         BaseChyz.express.use(this.errorResponder)
         BaseChyz.express.use(this.errorHandler)
 
-        BaseChyz.express.use(function (err: any, req: any, res: any, next: any) {
-            // logic
-            BaseChyz.error(err)
-        })
+
 
         // CORS
-        BaseChyz.express.use(function (req, res, next) {
-            console.log("ciasisdaisdaisdaisdaisdai")
+        BaseChyz.express.use(function (req:any, res:Response, next:any) {
             // @ts-ignore
             req.reqId = Utils.uniqueId("chyzzzz_")
             res.setHeader('Content-Type', 'application/json');
@@ -286,55 +278,6 @@ export default class BaseChyz {
             res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
             next();
         });
-
-
-        // Use middleware to set the default Content-Type
-        // BaseChyz.express.use(async (req: Request, res: Response, next: NextFunction) => {
-        //     // @ts-ignore
-        //     req.reqId = Utils.uniqueId("chyzzzz_")
-        //     res.header('Content-Type', 'application/json');
-        //
-        //     let c = _.trimStart(req.path, "/");
-        //     c = c.split("/");
-        //     let prefix = c[0];
-        //     let action = c.length > 1 ? c[1] : "";
-        //
-        //     BaseChyz.logs().debug(`Call Request1 ${prefix}/${action}`)
-        //     // @ts-ignore
-        //     let controller: Controller = null
-        //     for (const _controller of BaseChyz.controllers) {
-        //         if (_controller.id == prefix) {
-        //             controller = _controller;
-        //             break;
-        //         }
-        //     }
-        //
-        //
-        //     try {
-        //         if (controller == null) {
-        //             throw new NotFoundHttpException("Not found URL")
-        //         }
-        //
-        //         let actionId = action == "/" || action == "" ? controller.defaultAction : action;
-        //         let route: RouteDefinition = {
-        //             id: actionId,
-        //             path: req.path,
-        //             // @ts-ignore
-        //             requestMethod: req.method.toLowerCase() ?? "get",
-        //             methodName: ""
-        //         }
-        //
-        //         BaseChyz.logs().debug(`Call Request id ${controller.id}`)
-        //         await controller.beforeAction(route, req, res)
-        //         next();
-        //     } catch (e) {
-        //         BaseChyz.error(e)
-        //         res.status(e.statusCode)
-        //         res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
-        //         // next(e)
-        //     }
-        //
-        // });
 
 
     }
@@ -352,3 +295,5 @@ export default class BaseChyz {
 
 
 }
+
+

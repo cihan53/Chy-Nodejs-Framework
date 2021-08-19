@@ -5,6 +5,8 @@
  * Github:https://github.com/cihan53/
  */
 
+
+
 import {BaseError} from "./BaseError";
 
 export class InvalidConfigException extends BaseError {
