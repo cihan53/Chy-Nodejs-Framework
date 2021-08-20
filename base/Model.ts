@@ -10,7 +10,8 @@ import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
 import {DataTypes} from "sequelize";
-import { BaseError } from "./BaseError";
+
+export {DataTypes} from "sequelize";
 
 /**
  * ValidateMe.init({
