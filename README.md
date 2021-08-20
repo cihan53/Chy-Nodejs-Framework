@@ -83,10 +83,20 @@ export class Customer extends Model {
 ##Yetkilendirme için kullanıcı modeli
 
 ```js
+/*
+ * Copyright (c) 2021. Chy Bilgisayar Bilisim
+ * Author: Cihan Ozturk
+ * E-mail: cihan@chy.com.tr
+ * Github:https://github.com/cihan53/
+ */
 import {IdentityInterface} from "chyz/web/IdentityInterface";
 // @ts-ignore
-import {DataTypes} from "sequelize";
+import {DataTypes} from "chyz/base";
 import {Model} from "chyz/base";
+import BaseChyz from "chyz/BaseChyz";
+
+const bcrypt = require('bcrypt');
+const JsonWebToken = require("jsonwebtoken");
 
 export class User extends Model implements IdentityInterface {
     findIdentity(id: number) {
@@ -128,12 +138,28 @@ export class User extends Model implements IdentityInterface {
     }
 
     async findIdentityByAccessToken(token, type) {
-        let identity = await this.findOne({where: {salt_text: token.signature}});
-        return identity;
+        let decoded = JsonWebToken.decode(token, {complete: true})
+        let identity = await this.findOne({where: {id: parseInt(decoded.payload.user)}});
+        if(identity){
+            BaseChyz.debug("Find Identity By AccessToken: User Found", decoded.payload)
+            try {
+                JsonWebToken.verify(token, identity.salt_text);
+                BaseChyz.debug("Find Identity By AccessToken: User Verify Success")
+                return identity;
+            } catch(err) {
+                BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
+                return null;
+            }
+        }
+        BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
+        return null;
     }
 
 
 }
+
+
+
 
 
 
