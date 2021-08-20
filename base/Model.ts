@@ -115,7 +115,11 @@ export class Model extends Component {
     }
 
     public update() {
+        return this._model.build(this._attributes).update()
+    }
 
+    public findOne(...args: any[]){
+        return this._model.findOne(...arguments)
     }
 
     public delete() {
