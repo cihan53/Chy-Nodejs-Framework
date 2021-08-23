@@ -125,8 +125,8 @@ export class Model extends Component {
         return this._model.findOne(...arguments)
     }
 
-    public delete() {
-
+    public delete(...args: any[]) {
+        return this._model.delete(...arguments)
     }
 
 
