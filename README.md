@@ -43,8 +43,7 @@ Chyz.app(config).Start();
 Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 
 ```js
-import {Model} from "chyz/base/Model";
-import {DataTypes} from "sequelize";
+import {Model,DataTypes} from "chyz/base/Model";
 
 export class Customer extends Model {
     public static tableName() {

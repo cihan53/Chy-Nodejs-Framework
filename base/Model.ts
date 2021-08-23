@@ -88,10 +88,12 @@ export class Model extends Component {
             throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
         }
 
+        this.init();
+
     }
 
     public init() {
-        BaseChyz.debug("Model init....")
+        BaseChyz.debug("Model init....",this.constructor.name)
     }
 
     public tableName() {
