@@ -1,12 +1,12 @@
 require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
-import express, {ErrorRequestHandler} from "express";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
 
 
+const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
 const _ = require('lodash');
@@ -204,8 +204,6 @@ export default class BaseChyz {
         let articlesEndpoints: string[] = [];
         fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
             let controller = require(`${this._controllerpath}/${file}`);
-            // let controller = require(`../../../${this._controllerpath}/${file}`);
-
 
             // This is our instantiated class
             const instance: Controller = new controller();
@@ -268,7 +266,6 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.json())
         BaseChyz.express.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
-        // BaseChyz.express.use(this.errorLogger)
         BaseChyz.express.use(this.errorResponder)
         BaseChyz.express.use(this.errorHandler)
 
