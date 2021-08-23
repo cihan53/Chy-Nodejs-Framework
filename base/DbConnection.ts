@@ -5,7 +5,7 @@
  * Github:https://github.com/cihan53/
  */
 // @ts-ignore
-import {Sequelize} from "sequelize";
+const {Sequelize} = require("sequelize");
 import {Component} from "./Component";
 import BaseChyz from "../BaseChyz";
 
@@ -21,19 +21,19 @@ export class DbConnection extends Component {
     async init() {
         const sequelize = new Sequelize(this.database, this.username, this.password, this.options);
         this._db = sequelize;
+        sequelize
+            .authenticate()
+            .then(() => {
+                BaseChyz.info('Connection has been established successfully.');
+            })
+            .catch((err: any) => {
+                BaseChyz.error('Unable to connect to the database:', err);
+
+            });
+
         // await this.connect();
     }
 
-
-    connect = async () => {
-        try {
-            await this._db.authenticate();
-            BaseChyz.debug('Connection has been established successfully.');
-        } catch (error) {
-            BaseChyz.error('Unable to connect to the database:', error);
-        }
-
-    }
 
     get db(): any {
         return this._db;
