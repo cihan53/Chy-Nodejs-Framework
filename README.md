@@ -46,7 +46,7 @@ Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 import {Model,DataTypes} from "chyz/base/Model";
 
 export class Customer extends Model {
-    public static tableName() {
+    public tableName() {
         return 'customer';
     }
 
@@ -98,6 +98,9 @@ const bcrypt = require('bcrypt');
 const JsonWebToken = require("jsonwebtoken");
 
 export class User extends Model implements IdentityInterface {
+    public tableName() {
+        return 'users';
+    }
     findIdentity(id: number) {
         throw new Error("Method not implemented.");
     }
