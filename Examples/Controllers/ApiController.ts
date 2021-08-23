@@ -14,7 +14,6 @@ import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
 import {AccessControl} from "../../filters/AccessControl";
 import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
-import Utils from "../../requiments/Utils";
 
 @controller("/api")
 class ApiController extends Controller {

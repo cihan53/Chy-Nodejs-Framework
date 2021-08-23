@@ -6,7 +6,6 @@
  */
 
 import BaseChyz from "./BaseChyz";
-
 const Chyz = new BaseChyz();
 
 export default Chyz;

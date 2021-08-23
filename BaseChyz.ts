@@ -1,4 +1,3 @@
-require('dotenv-flow').config();
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
 import {NextFunction, Request, Response} from "express";
@@ -26,9 +25,6 @@ export default class BaseChyz {
     private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
     public static components: any = {}
-
-    // public ac: any = new AccessControl();
-
 
     get logConfig(): any {
         return this._logConfig;
@@ -117,7 +113,7 @@ export default class BaseChyz {
     }
 
 
-    app(config: any = {}) {
+    app(config: any = {}): BaseChyz {
 
         /**
          * Config set
@@ -144,6 +140,9 @@ export default class BaseChyz {
         return log4js;
     }
 
+    public getLogger(){
+        return this.logProvider().getLogger(this.constructor.name);
+    }
 
     static logs(...args: any[]) {
         return log4js.getLogger(this.name);
