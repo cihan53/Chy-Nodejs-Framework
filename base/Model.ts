@@ -9,9 +9,10 @@ import BaseChyz from "../BaseChyz";
 import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
-import {DataTypes} from "sequelize";
+import Sequelize, {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
+import {Exception} from "./db/Exception";
 
-export {DataTypes} from "sequelize";
+export {DataTypes,NOW} from "sequelize";
 
 /**
  * ValidateMe.init({
@@ -66,11 +67,13 @@ export {DataTypes} from "sequelize";
   }
 }, { sequelize });
  */
+
 export class Model extends Component {
     private sequelize: any
     private _tableName: string;
     private _model: any;
     private _attributes: any = {};
+    private _errors: any = {}
 
     constructor() {
         super();
@@ -92,8 +95,17 @@ export class Model extends Component {
 
     }
 
+
+    get errors(): any {
+        return this._errors;
+    }
+
+    set errors(value: any) {
+        this._errors = value;
+    }
+
     public init() {
-        BaseChyz.debug("Model init....",this.constructor.name)
+        BaseChyz.debug("Model init....", this.constructor.name)
     }
 
     public tableName() {
@@ -112,21 +124,53 @@ export class Model extends Component {
         return this._model;
     }
 
-    public save() {
+    public async save(params = {}, options = {}) {
         // now instantiate an object
-        return this._model.build(this._attributes).save()
+        let p = Object.assign(params, this._attributes)
+        let result: any;
+        try {
+            result = await this.model().create(p, options)
+        } catch (e) {
+            BaseChyz.debug(`Model[${this.constructor.name}].create`,e)
+            if (e instanceof ValidationError) {
+                let validationErrorItems = e.errors;
+                validationErrorItems.forEach(({message, path}) => {
+                    // @ts-ignore
+                    this._errors[path] = message
+                })
+
+                return false;
+            } else if (e instanceof DatabaseError) {
+
+            } else if (e instanceof TimeoutError) {
+
+            } else if (e instanceof UniqueConstraintError) {
+
+            } else if (e instanceof ForeignKeyConstraintError) {
+
+            } else if (e instanceof ExclusionConstraintError) {
+
+            }
+            throw new Exception(e.message,this.errors,e.code);
+        }
+
+        return result;
+
     }
 
-    public update() {
-        return this._model.build(this._attributes).update()
+    public update(params = {}, options = {}) {
+        let p = Object.assign(params, this._attributes)
+        return this.model().update(p, options)
     }
 
-    public findOne(...args: any[]){
+    public delete(params = {}, options = {}) {
+        let p = Object.assign(params, this._attributes)
+        return this.model().delete(p, options)
+    }
+
+
+    public findOne(...args: any[]) {
         return this._model.findOne(...arguments)
-    }
-
-    public delete(...args: any[]) {
-        return this._model.delete(...arguments)
     }
 
 

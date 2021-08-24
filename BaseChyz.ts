@@ -148,17 +148,29 @@ export default class BaseChyz {
         return log4js.getLogger(this.name);
     }
 
+    public static trace(...args: any[]) {
+        BaseChyz.logs().fatal(...arguments)
+    }
+    public static debug(...args: any[]) {
+        BaseChyz.logs().debug(...arguments)
+    }
     public static info(...args: any[]) {
         BaseChyz.logs().info(...arguments)
+    }
+    public static warn(...args: any[]) {
+        BaseChyz.logs().warn(...arguments)
     }
 
     public static error(...args: any[]) {
         BaseChyz.logs().error(...arguments)
     }
 
-    public static debug(...args: any[]) {
-        BaseChyz.logs().debug(...arguments)
+    public static fatal(...args: any[]) {
+        BaseChyz.logs().fatal(...arguments)
     }
+
+
+
 
     public static warning(...args: any[]) {
         BaseChyz.logs().warn(...arguments)

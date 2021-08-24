@@ -14,6 +14,11 @@ import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
 import {AccessControl} from "../../filters/AccessControl";
 import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
+import {Order} from "../Models/Order";
+import {Customer} from "../Models/Customer";
+import {ValidationHttpException} from "../../base/ValidationHttpException";
+import {ValidationError} from "sequelize";
+import {ForbiddenHttpException} from "../../base";
 
 @controller("/api")
 class ApiController extends Controller {
@@ -55,14 +60,56 @@ class ApiController extends Controller {
         return res.json({message: "index sayfası"})
     }
 
-    @post("login")
-    Login(req: Request, res: Response) {
-        BaseChyz.logs().info("Post Controller")
+    @post("orderCreate")
+    async Login(req: Request, res: Response) {
+        let data = req.body;
+        data.Customer.status = "true";
+        data.Customer["2fa"] = "true";
+
+        //Customer Model Create
+        let customer: Customer = new Customer();
+        //Order Model Create
+        let order: Order = new Order();
+
+
+        let transaction
+        try {
+            // get transaction
+            transaction = await BaseChyz.getComponent("db").transaction();
+
+
+            customer.load(data, "Customer");//load customer data
+            let cus: any = await customer.save({}, {transaction});
+
+            if (!cus) {
+                throw new ValidationHttpException(customer.errors);
+            }
+
+            data.Order.customer_id = cus.id;
+            // data.Order.total = 0;
+            // data.Order.status = true;
+            order.load(data, "Order");
+            let res1 = await order.save({}, {transaction});
+            if (!res1) {
+                throw new ValidationHttpException(order.errors);
+            }
+
+            // commit
+            await transaction.commit();
+
+        } catch (e) {
+            if (transaction) {
+                await transaction.rollback();
+                BaseChyz.warn("Rollback transaction")
+            }
+
+            if (e instanceof ValidationHttpException)
+                throw new ValidationHttpException(e.message)
+            else
+                throw new ForbiddenHttpException(e.message)
+        }
         return res.send("Post Controller")
     }
-
-
-
 
 
     error(req: Request, res: Response) {
@@ -70,4 +117,5 @@ class ApiController extends Controller {
         return res.send("Post Controller")
     }
 }
-module.exports=ApiController
+
+module.exports = ApiController

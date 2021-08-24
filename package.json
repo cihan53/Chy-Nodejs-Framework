@@ -1,6 +1,6 @@
 {
   "name": "chyz",
-  "version": "1.0.12-rc.8",
+  "version": "1.0.12-rc.9",
   "description": "Nodejs MicroServis Framework",
   "main": "dist/chyz.js",
   "scripts": {

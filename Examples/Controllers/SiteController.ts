@@ -12,9 +12,12 @@ import {Request, Response} from "express";
 import {get} from "../../decorator/get";
 import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
-import {AccessControl} from "../../filters/AccessControl";
-import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
-import Utils from "../../requiments/Utils";
+import {User} from "../Models/User";
+import {ForbiddenHttpException} from "../../base";
+
+const bcrypt = require('bcrypt');
+const JsonWebToken = require("jsonwebtoken");
+
 
 @controller("/site")
 class SiteController extends Controller {
@@ -23,31 +26,31 @@ class SiteController extends Controller {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
-    public behaviors(): any[] {
-
-        return [{
-            // 'authenticator': {
-            //     "class": JwtHttpBearerAuth,
-            //     // "auth": this.myCheck
-            // },
-            'access': {
-                'class': AccessControl,
-                'only': ['login', 'logout','index'  ],
-                'rules': [
-                    {
-                        'allow': false,
-                        'actions': ['login', 'index' ],
-                        'roles': ['?'],
-                    },
-                    {
-                        'allow': true,
-                        'actions': ['logout', "logout2"],
-                        'roles': ['@'],
-                    }
-                ]
-            }
-        }]
-    }
+    // public behaviors(): any[] {
+    //
+    //     return [{
+    //         // 'authenticator': {
+    //         //     "class": JwtHttpBearerAuth,
+    //         //     // "auth": this.myCheck
+    //         // },
+    //         'access': {
+    //             'class': AccessControl,
+    //             'only': ['login', 'logout','index'  ],
+    //             'rules': [
+    //                 {
+    //                     'allow': false,
+    //                     'actions': ['login', 'index' ],
+    //                     'roles': ['?'],
+    //                 },
+    //                 {
+    //                     'allow': true,
+    //                     'actions': ['logout', "logout2"],
+    //                     'roles': ['@'],
+    //                 }
+    //             ]
+    //         }
+    //     }]
+    // }
 
     @get("index")
     Index(req: Request, res: Response) {
@@ -57,9 +60,44 @@ class SiteController extends Controller {
     }
 
     @post("login")
-    Login(req: Request, res: Response) {
-        BaseChyz.logs().info("Post Controller")
-        return res.send("Post Controller")
+    async login(req: Request, res: Response) {
+        let UserModel: User = new User();
+        let token
+        let username = req.body.username;
+        let password = req.body.password;
+
+        let user = await UserModel.findOne({where: {username: username}})
+        if (user) {
+            BaseChyz.debug("Db found user", username)
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                BaseChyz.debug("Db user verify", username)
+                //login
+                // @ts-ignore
+                let xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
+                let ip = xForwardedFor || req.socket.remoteAddress;
+                var source: string  = req.headers['user-agent'] || '';
+                if (req.headers['x-ucbrowser-ua']) {  //special case of UC Browser
+                    source = req.headers['x-ucbrowser-ua']+"";
+                }
+                token = await JsonWebToken.sign({
+                    user: user.id,
+                    ip: ip,
+                    agent: source,
+                }, user.salt_text, {expiresIn: '1h'});
+
+                BaseChyz.debug("Db user create access token", username,"expiresIn","1h")
+                return res.json({token: token})
+            } else {
+                let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
+                res.status(500).json( error.toJSON())
+            }
+        } else {
+            let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
+            res.status(500).json( error.toJSON())
+        }
+
+
     }
 
     @get("logout")
