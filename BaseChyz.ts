@@ -8,7 +8,6 @@ import Utils from "./requiments/Utils";
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
-const _ = require('lodash');
 
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
