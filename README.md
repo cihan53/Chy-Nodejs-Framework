@@ -12,18 +12,19 @@ Klasör Yapısı<br>
 index.ts<br>
 
 `##Başlangıç<br>
-yarn start 
+yarn start
 
-##index.ts alanlar düzenlenmeli.
+## index.ts alanlar düzenlenmeli.
+
 ```js
 let config = {
     components: {
-        db:{
-            class:DbConnection,
+        db: {
+            class: DbConnection,
             database: process.env.DBDATABASE,
-            username:process.env.DBUSER,
-            password:process.env.DBPASS,
-            options:{
+            username: process.env.DBUSER,
+            password: process.env.DBPASS,
+            options: {
                 host: process.env.DBHOST,
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
                 // disable logging; default: console.log
@@ -32,18 +33,19 @@ let config = {
         },
         user: {
             'class': User,
-            'identityClass':Identity
+            'identityClass': Identity
         }
     }
 }
 Chyz.app(config).Start();
 ```
 
-##Create Model
+## Create Model
+
 Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 
 ```js
-import {Model,DataTypes} from "chyz/base/Model";
+import {Model, DataTypes} from "chyz/base/Model";
 
 export class Customer extends Model {
     public tableName() {
@@ -78,8 +80,56 @@ export class Customer extends Model {
 
 }
 ```
+## Http POST ve GET verilerini model'e yükleme
+````js
 
-##Yetkilendirme için kullanıcı modeli
+    /**
+     * post data
+     *  {
+     *      "Customer":{
+     *          "firstname":"cihan",
+     *          "lastname":"ozturk"
+     *          ....
+     *      }
+     *  }
+     * @type {Customer}
+     */
+
+    //Customer Model Create
+    let customer: Customer = new Customer();
+    customer.load(req.body, "Customer");//load customer data
+    let cus: any = await customer.save();
+        
+        
+        
+
+````
+## Transaction
+Transaction oluşturma
+
+
+```js
+    let transaction
+    try {
+        // get transaction
+        transaction = await BaseChyz.getComponent("db").transaction();
+        //Customer Model Create
+        let customer: Customer = new Customer();
+        customer.load(data, "Customer");//load customer data
+        let cus: any = await customer.save({}, {transaction});
+        if (!cus) {
+            throw new ValidationHttpException(customer.errors);
+        }
+    } catch (e) {
+        if (transaction) {
+            await transaction.rollback();
+            BaseChyz.warn("Rollback transaction")
+        }
+        ...
+    }
+```
+
+## Yetkilendirme için kullanıcı modeli
 
 ```js
 /*
