@@ -15,6 +15,7 @@ export class DbConnection extends Component {
     public username!: string
     public password!: string
     public options?: object
+    public _transaction:any;
 
     private _db: any
 
@@ -42,4 +43,9 @@ export class DbConnection extends Component {
     set db(value: any) {
         this._db = value;
     }
+
+    public transaction(){
+        return this.db.transaction();
+    }
+
 }

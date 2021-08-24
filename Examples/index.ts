@@ -5,7 +5,7 @@
  * Github:https://github.com/cihan53/
  */
 
-
+require('dotenv-flow').config();
 import Chyz from "../Chyz";
 import {User} from "../web/User";
 import {User as Identity } from "./Models/User";

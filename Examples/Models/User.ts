@@ -6,17 +6,35 @@
  */
 
 import {IdentityInterface} from "../../web/IdentityInterface";
-// @ts-ignore
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model} from "../../base";
 import BaseChyz from "../../BaseChyz";
+const JsonWebToken = require("jsonwebtoken");
+export class User extends Model implements IdentityInterface {
 
-export class User implements IdentityInterface {
+    [x: string]: any;
 
-    private _model  ;
+    public tableName() {
+        return 'users';
+    }
 
-    constructor() {
-        const sequelize = BaseChyz.getComponent("db").db;
-        this._model = sequelize.define('User', {
+    findIdentity(id: number) {
+        throw new Error("Method not implemented.");
+    }
+
+    getId(): number {
+        throw new Error("Method not implemented.");
+    }
+
+    getAuthKey(): string {
+        throw new Error("Method not implemented.");
+    }
+
+    validateAuthKey(authKey: string): boolean {
+        throw new Error("Method not implemented.");
+    }
+
+    public attributes() {
+        return {
             // Model attributes are defined here
             username: {
                 type: DataTypes.STRING,
@@ -34,35 +52,28 @@ export class User implements IdentityInterface {
                 type: DataTypes.STRING
                 // allowNull defaults to true
             }
-        }, {
-            tableName: 'users',
-            timestamps: false
-        });
-    }
-
-
-    get model(): any {
-        return this._model;
-    }
-
-    findIdentity(id) {
+        }
     }
 
     async findIdentityByAccessToken(token, type) {
-         let identity = await this._model.findOne({where: {salt_text: token.signature}});
-         return identity;
-    }
-
-    getAuthKey(): string {
-        return "";
-    }
-
-    getId(): number {
-        return 0;
-    }
-
-    validateAuthKey(authKey: string): boolean | null {
-        return undefined;
+        let decoded = JsonWebToken.decode(token, {complete: true})
+        let identity = await this.findOne({where: {id: parseInt(decoded.payload.user)}});
+        if (identity) {
+            BaseChyz.debug("Find Identity By AccessToken: User Found", decoded.payload)
+            try {
+                JsonWebToken.verify(token, identity.salt_text);
+                BaseChyz.debug("Find Identity By AccessToken: User Verify Success")
+                return identity;
+            } catch (err) {
+                if (err.name == "TokenExpiredError")
+                    BaseChyz.debug("Find Identity By AccessToken: Token Expired")
+                else
+                    BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
+                return null;
+            }
+        }
+        BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
+        return null;
     }
 }
 
