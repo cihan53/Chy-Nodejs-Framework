@@ -157,6 +157,39 @@ export class Model extends Component {
         return result;
 
     }
+    public async bulkCreate(params = {}, options = {}) {
+        // now instantiate an object
+        let p = Object.assign(params, this._attributes)
+        let result: any;
+        try {
+            result = await this.model().bulkCreate(p, options)
+        } catch (e) {
+            BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`,e)
+            if (e instanceof ValidationError) {
+                let validationErrorItems = e.errors;
+                validationErrorItems.forEach(({message, path}) => {
+                    // @ts-ignore
+                    this._errors[path] = message
+                })
+
+                return false;
+            } else if (e instanceof DatabaseError) {
+
+            } else if (e instanceof TimeoutError) {
+
+            } else if (e instanceof UniqueConstraintError) {
+
+            } else if (e instanceof ForeignKeyConstraintError) {
+
+            } else if (e instanceof ExclusionConstraintError) {
+
+            }
+            throw new Exception(e.message,this.errors,e.code);
+        }
+
+        return result;
+
+    }
 
     public update(params = {}, options = {}) {
         let p = Object.assign(params, this._attributes)
@@ -179,6 +212,18 @@ export class Model extends Component {
     }
 
     public load(data: any, formName: any = null) {
+        let scope = formName === null ? this.formName() : formName;
+        if (scope === '' && !Utils.isEmpty(data)) {
+            this.setAttribute(data);
+            return true;
+        } else if (data[scope]) {
+            this.setAttribute(data[scope]);
+            return true;
+        }
+        return false;
+    }
+
+    public bulkLoad(data: any, formName: any = null) {
         let scope = formName === null ? this.formName() : formName;
         if (scope === '' && !Utils.isEmpty(data)) {
             this.setAttribute(data);
