@@ -12,12 +12,16 @@ import {Component} from "./Component";
 
 const axios = require('axios')
 
-class RestClient extends Component {
+export class RestClient extends Component {
     public post(url: string, args: any[]) {
         return axios.post(url, args)
     }
 
     public get(url: string, args: any[]) {
         return axios.post(url, args)
+    }
+
+    public Rest(params: any) {
+        return axios(params)
     }
 }
