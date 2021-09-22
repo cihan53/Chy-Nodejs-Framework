@@ -8,7 +8,7 @@ import Utils from "./requiments/Utils";
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
-const axios = require('axios')
+
 
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
@@ -17,7 +17,6 @@ export {Request, Response, NextFunction} from "express";
 export default class BaseChyz {
     private config: any;
     static app: string;
-    private static _restClient:any = axios
     static express = express()
     private _port: number = 3001;
     static db: any;
@@ -28,13 +27,7 @@ export default class BaseChyz {
     public static components: any = {}
 
 
-    static get restClient(): any {
-        return this._restClient;
-    }
 
-    static set restClient(value: any) {
-        this._restClient = value;
-    }
 
     get logConfig(): any {
         return this._logConfig;
