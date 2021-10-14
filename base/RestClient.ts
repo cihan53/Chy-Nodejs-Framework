@@ -25,3 +25,4 @@ export class RestClient extends Component {
         return axios(params)
     }
 }
+export default new RestClient();
