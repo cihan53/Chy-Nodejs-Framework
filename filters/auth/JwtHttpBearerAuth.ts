@@ -44,6 +44,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
             return null;
         }
 
+        BaseChyz.debug("JSON Web Token.",autHeader);
 
         let identity = null;
         let token = null;
