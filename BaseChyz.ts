@@ -27,8 +27,6 @@ export default class BaseChyz {
     public static components: any = {}
 
 
-
-
     get logConfig(): any {
         return this._logConfig;
     }
@@ -130,8 +128,10 @@ export default class BaseChyz {
             for (const componentsKey in components) {
                 let comp = components[componentsKey];
                 BaseChyz.debug("Create Component ", componentsKey)
-                BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
-                BaseChyz.components[componentsKey]?.init();
+                // Utils.factory(comp.class, comp);
+                // BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
+                BaseChyz.components[componentsKey] = Utils.factory(comp.class, comp);
+                // BaseChyz.components[componentsKey]?.init();
             }
         }
 
@@ -143,7 +143,7 @@ export default class BaseChyz {
         return log4js;
     }
 
-    public getLogger(){
+    public getLogger() {
         return this.logProvider().getLogger(this.constructor.name);
     }
 
@@ -154,12 +154,15 @@ export default class BaseChyz {
     public static trace(...args: any[]) {
         BaseChyz.logs().fatal(...arguments)
     }
+
     public static debug(...args: any[]) {
         BaseChyz.logs().debug(...arguments)
     }
+
     public static info(...args: any[]) {
         BaseChyz.logs().info(...arguments)
     }
+
     public static warn(...args: any[]) {
         BaseChyz.logs().warn(...arguments)
     }
@@ -171,8 +174,6 @@ export default class BaseChyz {
     public static fatal(...args: any[]) {
         BaseChyz.logs().fatal(...arguments)
     }
-
-
 
 
     public static warning(...args: any[]) {
@@ -248,6 +249,7 @@ export default class BaseChyz {
                             } catch (e) {
                                 BaseChyz.error(e);
 
+
                                 res.status(e.statusCode || 500)
                                 res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
                                 // next(e)
@@ -260,12 +262,12 @@ export default class BaseChyz {
                                 BaseChyz.debug("Request ID ", req.reqId)
                                 // @ts-ignore
                                 await instance[route.methodName](req, res, next);
-                                instance.afterAction(route, req, res);
+                                if (instance.hasOwnProperty("afterAction"))
+                                    instance.afterAction(route, req, res);
                             } catch (e) {
                                 BaseChyz.error(e)
-                                // next(e)
-                                res.status(e.statusCode)
-                                res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
+                                res.status(e.statusCode || 500)
+                                res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
                             }
                         })
 

@@ -1,3 +1,5 @@
 export * from "./controller"
 export * from "./get"
 export * from "./post"
+export * from "./enums/ModelRelations"
+export * from "./enums/ControllerDecoratorParams"
