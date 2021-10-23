@@ -24,6 +24,10 @@ export class Component extends BaseObject {
     private _behaviors: Array<ActionFilter> = [];
 
 
+    constructor(props: any = null) {
+        super(props);
+    }
+
     /**
      *  Returns a list of behaviors that this component should behave as.
      */

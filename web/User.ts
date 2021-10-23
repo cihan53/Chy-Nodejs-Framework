@@ -19,6 +19,17 @@ export class User extends Component {
     private _identity: any;
 
 
+    constructor(props: any = null) {
+        super(props);
+        if (props.identityClass) {
+            // this.identityClass = identityClass;
+            this.identityClass = new props.identityClass();
+        } else {
+            throw new InvalidConfigException('User::identityClass must be set.');
+        }
+
+    }
+
     get identity() {
         return this._identity;
     }
@@ -28,19 +39,17 @@ export class User extends Component {
     }
 
     public init() {
-        super.init();
-
-        if (this.identityClass === null) {
-            throw new InvalidConfigException('User::identityClass must be set.');
-        }
-
-
-        this.identityClass = new this.identityClass();
+        // if (!this.identityClass) {
+        //     throw new InvalidConfigException('User::identityClass must be set.');
+        // }
+        // //
+        // //
+        // // this.identityClass = new this.identityClass();
 
     }
 
     public getIsGuest() {
-        return this.getIdentity() === null ;
+        return this.getIdentity() === null;
     }
 
     public getIdentity(autoRenew = true) {
@@ -67,7 +76,7 @@ export class User extends Component {
      * @param token
      * @param type
      */
-    public async loginByAccessToken(token: any, type:any = null) {
+    public async loginByAccessToken(token: any, type: any = null) {
 
         let $class = this.identityClass;
         this.identity = await $class.findIdentityByAccessToken(token, type)

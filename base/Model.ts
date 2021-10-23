@@ -11,8 +11,9 @@ import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
 import Sequelize, {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
+import {ModelRelations} from "../decorator";
 
-export {DataTypes,NOW} from "sequelize";
+export {DataTypes, NOW} from "sequelize";
 
 /**
  * ValidateMe.init({
@@ -68,12 +69,19 @@ export {DataTypes,NOW} from "sequelize";
 }, { sequelize });
  */
 
+interface Relations {
+    model: any,
+    relation: ModelRelations,
+    params?: any
+}
+
 export class Model extends Component {
     private sequelize: any
     private _tableName: string;
     private _model: any;
     private _attributes: any = {};
     private _errors: any = {}
+    private _relations: any = {}
 
     constructor() {
         super();
@@ -87,11 +95,29 @@ export class Model extends Component {
                 timestamps: false
             });
 
+
+            if (!Utils.isEmpty(this.relations())) {
+                for (const relation of this.relations()) {
+                    BaseChyz.debug("Model[" + this.formName() + "] set relation ", relation.model.constructor.name, relation.relation)
+                    // let params = Utils.clone(relation);
+                    // params.tableName = params.model.tableName()
+                    // // delete params.model
+                    // delete params.relation;
+                    relation.params.through = relation.model.model()
+                    switch (relation.relation) {
+                        case ModelRelations.belongsToMany:
+
+                            // relation.model.model().belongsToMany( this._model ,relation.params || {through: relation.model.model()}  )
+                            this._model.belongsToMany(relation.model.model(), relation.params || {})
+                            break;
+                    }
+                }
+            }
         } else {
             throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
         }
 
-        this.init();
+        // this.init();
 
     }
 
@@ -120,8 +146,18 @@ export class Model extends Component {
         return []
     }
 
+    /**
+     * return Sequelize Model
+     */
     public model() {
         return this._model;
+    }
+
+    /**
+     * return sequelize
+     */
+    public getProvider() {
+        return this.sequelize;
     }
 
     public async save(params = {}, options = {}) {
@@ -131,7 +167,7 @@ export class Model extends Component {
         try {
             result = await this.model().create(p, options)
         } catch (e) {
-            BaseChyz.debug(`Model[${this.constructor.name}].create`,e)
+            BaseChyz.debug(`Model[${this.constructor.name}].create`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
                 validationErrorItems.forEach(({message, path}) => {
@@ -151,12 +187,13 @@ export class Model extends Component {
             } else if (e instanceof ExclusionConstraintError) {
 
             }
-            throw new Exception(e.message,this.errors,e.code);
+            throw new Exception(e.message, this.errors, e.code);
         }
 
         return result;
 
     }
+
     public async bulkCreate(params = {}, options = {}) {
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
@@ -164,7 +201,7 @@ export class Model extends Component {
         try {
             result = await this.model().bulkCreate(p, options)
         } catch (e) {
-            BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`,e)
+            BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
                 validationErrorItems.forEach(({message, path}) => {
@@ -184,28 +221,30 @@ export class Model extends Component {
             } else if (e instanceof ExclusionConstraintError) {
 
             }
-            throw new Exception(e.message,this.errors,e.code);
+            throw new Exception(e.message, this.errors, e.code);
         }
 
         return result;
 
     }
 
-    public update(params = {}, options = {}) {
+    public async update(params = {}, options = {}) {
         let p = Object.assign(params, this._attributes)
         return this.model().update(p, options)
     }
 
-    public delete(params = {}, options = {}) {
+    public async delete(params = {}, options = {}) {
         let p = Object.assign(params, this._attributes)
         return this.model().delete(p, options)
     }
 
-
-    public findOne(...args: any[]) {
+    public async findOne(...args: any[]) {
         return this._model.findOne(...arguments)
     }
 
+    public async findAll(...args: any[]) {
+        return this._model.findAll(...arguments)
+    }
 
     public validate() {
 
@@ -248,7 +287,18 @@ export class Model extends Component {
         }
     }
 
+    /**
+     * Overwrites method
+     */
     public attributes() {
         return {}
     }
+
+    /**
+     * Overwrites method
+     */
+    public relations(): Relations[] {
+        return [];
+    }
+
 }

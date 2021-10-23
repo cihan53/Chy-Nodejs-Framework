@@ -13,12 +13,12 @@ import {get} from "../../decorator/get";
 import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
 import {AccessControl} from "../../filters/AccessControl";
-import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
 import {Order} from "../Models/Order";
 import {Customer} from "../Models/Customer";
 import {ValidationHttpException} from "../../base/ValidationHttpException";
-import {ValidationError} from "sequelize";
 import {ForbiddenHttpException} from "../../base";
+import {Oauth2Auth} from "../../filters/auth/Oauth2Auth";
+import {AuthAction} from "../../base/authclient/AuthAction";
 
 @controller("/api")
 class ApiController extends Controller {
@@ -27,29 +27,36 @@ class ApiController extends Controller {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
+
+    public successCallback(client) {
+        console.log("successCallback")
+    }
+
+
     public behaviors(): any[] {
 
         return [{
-            'authenticator': {
-                "class": JwtHttpBearerAuth,
+            'auth': {
+                "class": AuthAction,
+                'successCallback': this.successCallback,
                 // "auth": this.myCheck
             },
-            'access': {
-                'class': AccessControl,
-                'only': ['login', 'logout', 'signup'],
-                'rules': [
-                    {
-                        'allow': true,
-                        'actions': ['login', 'index'],
-                        'roles': ['?'],
-                    },
-                    {
-                        'allow': true,
-                        'actions': ['logout', "logout2"],
-                        'roles': ['@'],
-                    }
-                ]
-            }
+            // 'access': {
+            //     'class': AccessControl,
+            //     'only': ['login', 'logout', 'signup'],
+            //     'rules': [
+            //         {
+            //             'allow': true,
+            //             'actions': ['login', 'index'],
+            //             'roles': ['?'],
+            //         },
+            //         {
+            //             'allow': true,
+            //             'actions': ['logout', "logout2"],
+            //             'roles': ['@'],
+            //         }
+            //     ]
+            // }
         }]
     }
 
@@ -109,6 +116,18 @@ class ApiController extends Controller {
                 throw new ForbiddenHttpException(e.message)
         }
         return res.send("Post Controller")
+    }
+
+    @get("list")
+    async list(req: Request, res: Response) {
+
+        let orderModel = new Order();
+        let orders = await orderModel.findAll();
+        for (const ordersKey of orders) {
+            console.log(ordersKey.getPendingTags())
+        }
+
+        return res.json(orders)
     }
 
 
