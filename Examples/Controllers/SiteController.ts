@@ -119,12 +119,6 @@ class SiteController extends Controller {
         return res.send("Logout Controller")
     }
 
-    @get("/auth/github/callback")
-    oauth2Callback(req: Request, res: Response){
-
-
-    }
-
     error(req: Request, res: Response) {
         BaseChyz.logs().info("Error Sayfası")
         return res.send("Post Controller")
