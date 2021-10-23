@@ -1,4 +1,4 @@
-import {DataTypes, Model} from "../../base";
+import {DataTypes, Model} from "../../Chy-Nodejs-Framework/dist/base";
 
 export class OrderItem extends Model {
     [x: string]: any;
@@ -15,10 +15,6 @@ export class OrderItem extends Model {
                 validate: {
                     isBoolean: true
                 }
-            },
-            order_id: {
-                type: DataTypes.INTEGER,
-                allowNull:false
             }
         }
     }

@@ -5,8 +5,6 @@
  * Github:https://github.com/cihan53/
  */
 
-import {BaseChyz} from "../index";
-
 require('dotenv-flow').config();
 import Chyz from "../Chyz";
 import {User} from "../web/User";
@@ -19,7 +17,6 @@ let config = {
     port: 3000,
     controllerpath:"C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
     components: {
-
         db:{
             class:DbConnection,
             database: process.env.DBDATABASE,
@@ -29,18 +26,13 @@ let config = {
                 host: process.env.DBHOST,
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
                 // disable logging; default: console.log
-                logging: (msg: any) => BaseChyz.debug(msg)
+                logging: false
             }
         },
         user: {
             'class': User,
             'identityClass':Identity
-        },
-        authClientCollection: {
-            'class': User,
-            'identityClass':Identity
-        },
-
+        }
     }
 }
 Chyz.app(config).Start();

@@ -18,7 +18,7 @@ var _ = require('lodash');
 export class AccessControl extends ActionFilter {
 
     public user: any = null;
-    public rules: any=[];
+    public rules: any;
 
     public init() {
         super.init()
