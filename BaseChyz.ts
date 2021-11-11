@@ -9,7 +9,7 @@ const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
 
-
+var ip = require('ip');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 
@@ -306,6 +306,8 @@ export default class BaseChyz {
         BaseChyz.express.listen(this._port, () => {
             BaseChyz.info("Express Server Start ")
             BaseChyz.info(`Liten Port ${this._port}`)
+            BaseChyz.info(`http://localhost:${this._port}`)
+            BaseChyz.info(`http://${ip.address()}:${this._port}`)
         })
         return this;
     }
