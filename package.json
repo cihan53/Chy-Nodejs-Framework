@@ -1,6 +1,6 @@
 {
   "name": "chyz",
-  "version": "1.0.12-rc.17",
+  "version": "1.0.12-rc.18",
   "description": "Nodejs MicroServis Framework",
   "main": "dist/index.js",
   "scripts": {
@@ -27,6 +27,7 @@
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "glob": "^7.1.7",
+    "ip": "^1.1.5",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "log4js": "^6.3.0",
