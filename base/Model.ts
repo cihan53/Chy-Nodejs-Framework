@@ -12,7 +12,7 @@ import {InvalidConfigException} from "./InvalidConfigException";
 import Sequelize, {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
 
-export {DataTypes,NOW} from "sequelize";
+export {DataTypes, NOW} from "sequelize";
 
 /**
  * ValidateMe.init({
@@ -69,20 +69,22 @@ export {DataTypes,NOW} from "sequelize";
  */
 
 export class Model extends Component {
-    private sequelize: any
+    private _sequelize: any = null;
     private _tableName: string;
     private _model: any;
     private _attributes: any = {};
     private _errors: any = {}
 
+
     constructor() {
         super();
         this._tableName = this.constructor.name;
-        this.sequelize = BaseChyz.getComponent("db").db;
+        this._sequelize = BaseChyz.getComponent("db").db;
+        if (this._sequelize == null)
+            this._sequelize = BaseChyz.getComponent("db").db;
 
         if (!Utils.isEmpty(this.attributes())) {
-
-            this._model = this.sequelize.define(this.constructor.name, this.attributes(), {
+            this._model = this._sequelize.define(this.constructor.name, this.attributes(), {
                 tableName: this.tableName(),
                 timestamps: false
             });
@@ -96,6 +98,14 @@ export class Model extends Component {
     }
 
 
+    get sequelize(): any {
+        return this._sequelize;
+    }
+
+    set sequelize(value: any) {
+        this._sequelize = value;
+    }
+
     get errors(): any {
         return this._errors;
     }
@@ -107,6 +117,7 @@ export class Model extends Component {
     public init() {
         BaseChyz.debug("Model init....", this.constructor.name)
     }
+
 
     public tableName() {
         return this._tableName;
@@ -131,7 +142,7 @@ export class Model extends Component {
         try {
             result = await this.model().create(p, options)
         } catch (e) {
-            BaseChyz.debug(`Model[${this.constructor.name}].create`,e)
+            BaseChyz.debug(`Model[${this.constructor.name}].create`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
                 validationErrorItems.forEach(({message, path}) => {
@@ -151,12 +162,13 @@ export class Model extends Component {
             } else if (e instanceof ExclusionConstraintError) {
 
             }
-            throw new Exception(e.message,this.errors,e.code);
+            throw new Exception(e.message, this.errors, e.code);
         }
 
         return result;
 
     }
+
     public async bulkCreate(params = {}, options = {}) {
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
@@ -164,7 +176,7 @@ export class Model extends Component {
         try {
             result = await this.model().bulkCreate(p, options)
         } catch (e) {
-            BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`,e)
+            BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
                 validationErrorItems.forEach(({message, path}) => {
@@ -184,7 +196,7 @@ export class Model extends Component {
             } else if (e instanceof ExclusionConstraintError) {
 
             }
-            throw new Exception(e.message,this.errors,e.code);
+            throw new Exception(e.message, this.errors, e.code);
         }
 
         return result;
