@@ -219,6 +219,11 @@ export class Model extends Component {
     }
 
 
+    public findAll(...args: any[]) {
+        return this._model.findAll(...arguments)
+    }
+
+
     public validate() {
 
     }
