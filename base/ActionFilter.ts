@@ -51,7 +51,7 @@ export class ActionFilter extends Behavior {
         for (const exceptKey in this.except) {
             let pattern = this.except[exceptKey];
             let match = id.match(pattern)
-            if (match.length > 0) {
+            if (match && match.length > 0) {
                 exceptMatch = true;
             }
         }
