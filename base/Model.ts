@@ -69,18 +69,20 @@ export {DataTypes, NOW} from "sequelize";
  */
 
 export class Model extends Component {
-    private _sequelize: any = null;
+    _sequelize: any ;
     private _tableName: string;
     private _model: any;
     private _attributes: any = {};
     private _errors: any = {}
 
 
-    constructor() {
+    constructor(sequelize?: IDBDatabase) {
         super();
         this._tableName = this.constructor.name;
         // this._sequelize = BaseChyz.getComponent("db").db;
-        if (this._sequelize == null)
+        if (sequelize != null)
+            this._sequelize = sequelize;
+        else
             this._sequelize = BaseChyz.getComponent("db").db;
 
         if (!Utils.isEmpty(this.attributes())) {
