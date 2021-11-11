@@ -17,6 +17,13 @@ yarn start
 ## index.ts alanlar düzenlenmeli.
 
 ```js
+require('dotenv-flow').config();
+
+import BaseChyz from "chyz/dist/BaseChyz";
+import Chyz, {DbConnection} from "chyz/dist";
+import {User} from "chyz/dist/web/User";
+import {User as Identity} from "./Models/User";
+
 let config = {
     components: {
         db: {
