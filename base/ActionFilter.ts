@@ -25,7 +25,7 @@ export class ActionFilter extends Behavior {
     }
 
     public async beforeFilter(route: any, req: Request, res: Response) {
-        if (!this.isActive(route.id)) {
+        if (!this.isActive(route)) {
             return;
         }
 
