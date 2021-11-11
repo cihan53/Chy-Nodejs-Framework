@@ -79,7 +79,7 @@ export class Model extends Component {
     constructor() {
         super();
         this._tableName = this.constructor.name;
-        this._sequelize = BaseChyz.getComponent("db").db;
+        // this._sequelize = BaseChyz.getComponent("db").db;
         if (this._sequelize == null)
             this._sequelize = BaseChyz.getComponent("db").db;
 
