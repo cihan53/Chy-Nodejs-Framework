@@ -40,7 +40,7 @@ export class User extends Component {
     }
 
     public getIsGuest() {
-        return this.getIdentity() === null ;
+        return this.getIdentity() === null;
     }
 
     public getIdentity(autoRenew = true) {
@@ -67,12 +67,14 @@ export class User extends Component {
      * @param token
      * @param type
      */
-    public async loginByAccessToken(token: any, type:any = null) {
+    public async loginByAccessToken(token: any, type: any = null) {
 
         let $class = this.identityClass;
-        this.identity = await $class.findIdentityByAccessToken(token, type)
-        if (this.identity && this.login(this.identity)) {
-            return this.identity;
+        if ($class.hasOwnProperty('findIdentityByAccessToken')) {
+            this.identity = await $class.findIdentityByAccessToken(token, type)
+            if (this.identity && this.login(this.identity)) {
+                return this.identity;
+            }
         }
         return null;
     }
