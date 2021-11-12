@@ -70,11 +70,13 @@ export class User extends Component {
     public async loginByAccessToken(token: any, type: any = null) {
 
         let $class = this.identityClass;
-        if ($class.hasOwnProperty('findIdentityByAccessToken')) {
+        if ($class.findIdentityByAccessToken) {
             this.identity = await $class.findIdentityByAccessToken(token, type)
             if (this.identity && this.login(this.identity)) {
                 return this.identity;
             }
+        }else{
+            BaseChyz.error("WebUser::findIdentityByAccessToken undefined")
         }
         return null;
     }
