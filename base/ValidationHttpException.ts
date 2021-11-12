@@ -9,6 +9,6 @@ import {BaseError} from "./BaseError";
 
 export class ValidationHttpException extends BaseError {
     constructor ( public message: string) {
-        super(message);
+        super(message,401);
     }
 }
