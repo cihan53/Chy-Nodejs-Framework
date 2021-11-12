@@ -9,8 +9,9 @@ import {BaseError} from "./BaseError";
 
 export class UnauthorizedHttpException extends BaseError {
     constructor ( public message: string) {
-        super(message);
+        super(message,401);
     }
+
 }
 
 

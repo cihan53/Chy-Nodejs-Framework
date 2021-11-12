@@ -8,11 +8,11 @@
 export class BaseError extends Error {
     private statusCode: number;
 
-    constructor(message: string) {
+    constructor(message: string,statusCode=500) {
         super(message);
         this.message=message;
         this.name = this.constructor.name // good practice
-        this.statusCode = 500 // error code for responding to client
+        this.statusCode = statusCode // error code for responding to client
         Error.captureStackTrace(this)
     }
 

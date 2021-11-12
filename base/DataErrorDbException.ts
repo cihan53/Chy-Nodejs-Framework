@@ -11,6 +11,6 @@ import {BaseError} from "./BaseError";
 
 export class DataErrorDbException extends BaseError {
     constructor ( public message: string) {
-        super(message);
+        super(message,502);
     }
 }
