@@ -215,12 +215,18 @@ export class Model extends Component {
         return this.model().delete(p, options)
     }
 
-
+    /**
+     *
+     * @param args
+     */
     public findOne(...args: any[]) {
         return this._model.findOne(...arguments)
     }
 
-
+    /**
+     *
+     * @param args
+     */
     public findAll(...args: any[]) {
         return this._model.findAll(...arguments)
     }
@@ -230,6 +236,11 @@ export class Model extends Component {
 
     }
 
+    /**
+     *
+     * @param data
+     * @param formName
+     */
     public load(data: any, formName: any = null) {
         let scope = formName === null ? this.formName() : formName;
         if (scope === '' && !Utils.isEmpty(data)) {
