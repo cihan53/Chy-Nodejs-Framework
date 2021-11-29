@@ -21,6 +21,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     public jwt = 'jwt'
     public auth:any = null;
 
+
     /**
      * @throws InvalidConfigException
      */
@@ -39,16 +40,13 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     {
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
-
         if (autHeader == null || (autHeader = this.patternCheck(autHeader, this.pattern)) == null) {
             return null;
         }
 
         BaseChyz.debug("JSON Web Token.",autHeader);
-
         let identity = null;
         let token = null;
-
 
         token = JsonWebToken.decode(autHeader[1], {complete: true})
         if (!token) {

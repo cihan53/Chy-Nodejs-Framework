@@ -25,8 +25,7 @@ export default class BaseChyz {
     private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
     public static components: any = {}
-
-
+    public static middlewares: any = {}
 
 
     get logConfig(): any {
@@ -63,7 +62,6 @@ export default class BaseChyz {
             enumerable: true,
             writable: true
         })
-
 
         Object.defineProperty(BaseChyz.express.request, 'identity', {
             configurable: true,
@@ -123,7 +121,6 @@ export default class BaseChyz {
          */
         this.config = config;
 
-        this.init();
 
         let components = Utils.findKeyValue(config, "components")
         if (components) {
@@ -135,6 +132,21 @@ export default class BaseChyz {
             }
         }
 
+
+        let middlewares = Utils.findKeyValue(config, "middlewares")
+        if (middlewares) {
+            for (const middlewareKey in middlewares) {
+                let middleware1 = middlewares[middlewareKey];
+                BaseChyz.debug("Create middlewares ", middlewareKey)
+                BaseChyz.middlewares[middlewareKey] = middleware1;
+                // BaseChyz.middlewares[middlewareKey] = Utils.createObject(new middleware1.class, middleware1);
+            }
+        }
+
+
+
+        this.init();
+
         return this;
     }
 
@@ -143,7 +155,7 @@ export default class BaseChyz {
         return log4js;
     }
 
-    public getLogger(){
+    public getLogger() {
         return this.logProvider().getLogger(this.constructor.name);
     }
 
@@ -154,12 +166,15 @@ export default class BaseChyz {
     public static trace(...args: any[]) {
         BaseChyz.logs().fatal(...arguments)
     }
+
     public static debug(...args: any[]) {
         BaseChyz.logs().debug(...arguments)
     }
+
     public static info(...args: any[]) {
         BaseChyz.logs().info(...arguments)
     }
+
     public static warn(...args: any[]) {
         BaseChyz.logs().warn(...arguments)
     }
@@ -171,8 +186,6 @@ export default class BaseChyz {
     public static fatal(...args: any[]) {
         BaseChyz.logs().fatal(...arguments)
     }
-
-
 
 
     public static warning(...args: any[]) {
@@ -210,6 +223,12 @@ export default class BaseChyz {
     public static getComponent(key: any) {
         return BaseChyz.components[key] ?? null
     }
+
+
+    public static getMiddlewares(key: any) {
+        return BaseChyz.middlewares[key] ?? null
+    }
+
 
     /**
      * load contoller
@@ -280,8 +299,8 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.json())
         BaseChyz.express.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
-        BaseChyz.express.use(this.errorResponder)
-        BaseChyz.express.use(this.errorHandler)
+        BaseChyz.express.use(methodOverride());
+
 
 
         // CORS
@@ -296,7 +315,20 @@ export default class BaseChyz {
             next();
         });
 
+        //Middlewares
+        for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
+            if (!Utils.isFunction(middleware1)) {
+                let keycloak = BaseChyz.middlewares[middleware1].keycloak;
+                BaseChyz.express.use(keycloak.middleware(BaseChyz.middlewares[middleware1].config));
+            } else {
+                BaseChyz.express.use(BaseChyz.middlewares[middleware1]);
+            }
 
+        }
+
+
+        BaseChyz.express.use(this.errorResponder)
+        BaseChyz.express.use(this.errorHandler)
     }
 
 
@@ -315,4 +347,9 @@ export default class BaseChyz {
 
 }
 
+
+process.on('uncaughtException', err => {
+    BaseChyz.error('There was an uncaught error', err)
+    process.exit(1) //mandatory (as per the Node.js docs)
+})
 
