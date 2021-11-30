@@ -56,8 +56,8 @@ export class KeycloakUser implements IdentityInterface {
 
     async findIdentityByAccessToken(token, type) {
         console.log(token,type)
-        console.log(this)
-        console.log(BaseChyz)
+        // console.log(this)
+        // console.log(BaseChyz)
         return null;
         // return keycloak.protect('realm:user');
     }

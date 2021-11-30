@@ -283,8 +283,8 @@ export default class BaseChyz {
                             } catch (e) {
                                 BaseChyz.error(e)
                                 // next(e)
-                                res.status(e.statusCode)
-                                res.json({error: {code: e.statusCode, name: e.name, message: e.message}})
+                                res.status(e.statusCode || 500)
+                                res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
                             }
                         })
 
