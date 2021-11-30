@@ -21,8 +21,8 @@ require('dotenv-flow').config();
 
 import BaseChyz from "chyz/dist/BaseChyz";
 import Chyz, {DbConnection} from "chyz/dist";
-import {User} from "chyz/dist/web/User";
-import {User as Identity} from "./Models/User";
+import {WebUser} from "../web/WebUser";
+import {User} from "./Models/User";
 
 let config = {
     components: {
@@ -39,8 +39,8 @@ let config = {
             }
         },
         user: {
-            'class': User,
-            'identityClass': Identity
+            'class': WebUser,
+            'identityClass': User
         }
     }
 }
@@ -54,7 +54,7 @@ Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 ```js
 import {Model, DataTypes} from "chyz/base/Model";
 
-export class Customer extends Model {
+export class CustomerCLass extends Model {
     public tableName() {
         return 'customer';
     }
@@ -86,29 +86,77 @@ export class Customer extends Model {
     }
 
 }
+const Customer= new CustomerCLass();
+export { Customer };
+
 ```
+````js
+export class ProductsClass extends Model {
+    [x: string]: any;
+
+    tableName() {
+        return 'products';
+    }
+
+    attributes() {
+        return {
+            // Model attributes are defined here
+            title: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            model_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            properties: {
+                type: DataTypes.STRING,
+                allowNull: false
+            }
+
+        }
+    }
+
+    relations(): Relation[] {
+        return [
+            {
+                type: "hasOne",
+                foreignKey: "id",
+                sourceKey: "customer_id",
+                model: Customer.model()
+            }
+        ]
+    }
+}
+
+const Products = new ProductsClass()
+export {Products}
+
+```
+
 ## Http POST ve GET verilerini model'e yükleme
+
 ````js
 
-    /**
-     * post data
-     *  {
-     *      "Customer":{
-     *          "firstname":"cihan",
-     *          "lastname":"ozturk"
-     *          ....
-     *      }
-     *  }
-     * @type {Customer}
-     */
+/**
+ * post data
+ *  {
+ *      "Customer":{
+ *          "firstname":"cihan",
+ *          "lastname":"ozturk"
+ *          ....
+ *      }
+ *  }
+ * @type {Customer}
+ */
+import {Customer} from "./Customer";
+//Customer Model Create
+let customer: Customer = Customer;
+customer.load(req.body, "Customer");//load customer data
+let cus: any = await customer.save();
 
-    //Customer Model Create
-    let customer: Customer = new Customer();
-    customer.load(req.body, "Customer");//load customer data
-    let cus: any = await customer.save();
-        
-        
-        
+
+
 
 ````
 ## Transaction
