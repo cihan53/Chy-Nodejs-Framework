@@ -1,25 +1,27 @@
 /*
- * Copyright (c) 2021. Chy Bilgisayar Bilisim
+ *
+ * Copyright (c) 2021-2021.. Chy Bilgisayar Bilisim
  * Author: Cihan Ozturk
- * E-mail: cihan@chy.com.tr
- * Github:https://github.com/cihan53/
+ *  E-mail: cihan@chy.com.tr
+ *  Github:https://github.com/cihan53/
+ *
  */
 
-import {Controller} from "../../base/Controller";
+import {Controller} from "../../base";
 import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
-import {get} from "../../decorator/get";
-import {post} from "../../decorator/post";
-import {controller} from "../../decorator/controller";
-import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
-import {Order} from "../Models/Order";
-import {Customer} from "../Models/Customer";
-import {ValidationHttpException} from "../../base/ValidationHttpException";
+import {get} from "../../decorator";
+import {post} from "../../decorator";
+import {controller} from "../../decorator";
+import {JwtHttpBearerAuth} from "../../filters/auth";
+
+import {ValidationHttpException} from "../../base";
 import {ForbiddenHttpException} from "../../base";
-import {Categories} from "../Models/Categories";
+import {OrderClass, Order} from "../Models/Order";
+import {CustomerClass, Customer} from "../Models/Customer";
 import {Products} from "../Models/Products";
-import {Models} from "../Models/Models";
+import {ProductModels} from "../Models/ProductModels";
 
 @controller("/api")
 class ApiController extends Controller {
@@ -68,9 +70,9 @@ class ApiController extends Controller {
         data.Customer["2fa"] = "true";
 
         //Customer Model Create
-        let customer: Customer = new Customer();
+        let customer: CustomerClass = Customer;
         //Order Model Create
-        let order: Order = new Order();
+        let order: OrderClass = Order;
 
 
         let transaction
@@ -114,12 +116,8 @@ class ApiController extends Controller {
 
 
     @get("order/list")
-    async listOrder(req: Request, res: Response){
-
-        let ProductsModel:Products = new Products();
-        let myModel = new Models();
-        let product= await ProductsModel.findAll({include:[myModel.model()]});
-
+    async listOrder(req: Request, res: Response) {
+        let product = await Products.findAll({include: [ProductModels.model()]});
         return res.json(product)
 
     }

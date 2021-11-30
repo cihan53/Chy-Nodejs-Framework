@@ -6,7 +6,7 @@
  */
 
 import {AuthMethod} from "./AuthMethod";
-import {User} from "../../web/User";
+import {WebUser} from "../../web/WebUser";
 import Utils from "../../requiments/Utils";
 import {Request, Response} from "express";
 
@@ -24,7 +24,7 @@ export class HttpHeaderAuth extends AuthMethod {
     public pattern!: string;
 
 
-    async authenticate(user: User, request:Request, response:Response) {
+    async authenticate(user: WebUser, request:Request, response:Response) {
         let key = Object.keys(request.headers).find(key => key.toLowerCase() === this.header.toLowerCase())
         if (key) {
             let authHeader:any = request.headers[key];

@@ -8,7 +8,7 @@
 import {ActionFilter} from "../../base/ActionFilter";
 import {AuthInterface} from "./AuthInterface";
 import {UnauthorizedHttpException} from "../../base/UnauthorizedHttpException";
-import {User} from "../../web/User";
+import {WebUser} from "../../web/WebUser";
 import {Request, Response} from "express";
 
 export abstract class AuthMethod extends ActionFilter implements AuthInterface {
@@ -16,7 +16,7 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
     /**
      * @var User the user object representing the user authentication status. If not set, the `user` application component will be used.
      */
-    public user: User | undefined;
+    public user: WebUser | undefined;
 
     /**
      * @var Request the current request. If not set, the `request` application component will be used.
@@ -33,7 +33,7 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
 
     public async beforeAction(action: any, request: Request, response: Response) {
         let identity = await this.authenticate(
-            this.user ?? new User(),
+            this.user ?? new WebUser(),
             request,
             response
         )
@@ -51,7 +51,7 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
         return false;
     }
 
-    authenticate(user: User, request: Request, response: Response) {
+    authenticate(user: WebUser, request: Request, response: Response) {
 
     }
 

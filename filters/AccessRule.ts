@@ -4,7 +4,7 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {User} from "../web/User";
+import {WebUser} from "../web/WebUser";
 
 var _ = require('lodash');
 import {Component} from "../base/Component";
@@ -51,7 +51,7 @@ export class AccessRule extends Component {
     public ips:any;
 
 
-    public allows(action:any, user:User, request:Request) {
+    public allows(action:any, user:WebUser, request:Request) {
         if (
             this.matchAction(action)
             && this.matchRole(user)

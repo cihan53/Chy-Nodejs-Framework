@@ -1,12 +1,13 @@
 import {DataTypes, Model, Relation} from "../../base";
 import {OrderItem} from "./OrderItem";
 
-export class Order extends Model {
+export class OrderClass extends Model {
     [x: string]: any;
 
     tableName() {
         return 'order';
     }
+
 
     attributes() {
 
@@ -49,11 +50,14 @@ export class Order extends Model {
                 type: "hasOne",
                 sourceKey: "order_id",
                 foreignKey: "id",
-                model: (new OrderItem()).model()
+                model: OrderItem.model()
             }
         ]
     }
 }
+
+const Order = new OrderClass()
+export {Order};
 
 
 

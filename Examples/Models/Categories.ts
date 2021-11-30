@@ -4,9 +4,9 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {DataTypes, Model, Relation} from "../../base";
+import {DataTypes, Model} from "../../base";
 
-export class Categories extends Model {
+export class CategoriesClass extends Model {
     [x: string]: any;
 
     tableName() {
@@ -29,12 +29,8 @@ export class Categories extends Model {
         }
     }
 
-    relation(): Relation[] {
-        return [
-            {
-                type: "hasOne",
-                foreignKey: "category_id"
-            }
-        ]
-    }
+
 }
+
+const Categories = new CategoriesClass();
+export {Categories};

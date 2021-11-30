@@ -5,7 +5,7 @@ export {JwtHttpBearerAuth} from "./filters/auth";
 export * from "./decorator";
 export * from "./requiments/Utils";
 export {RouteDefinition} from "./model/RouteDefinition";
-export {User} from "./web/User";
+export {WebUser} from "./web/WebUser";
 
 import BaseChyz from "./BaseChyz";
 export {BaseChyz}

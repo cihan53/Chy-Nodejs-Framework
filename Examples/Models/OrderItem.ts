@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "../../base";
 
-export class OrderItem extends Model {
+export class OrderItemClass extends Model {
     [x: string]: any;
 
     public tableName() {
@@ -20,7 +20,8 @@ export class OrderItem extends Model {
     }
 
 }
-
+const OrderItem = new OrderItemClass()
+export { OrderItem };
 
 
 

@@ -9,7 +9,7 @@ import {HttpBearerAuth} from "./HttpBearerAuth";
 import {InvalidConfigException} from "../../base/InvalidConfigException";
 import {UnauthorizedHttpException} from "../../base/UnauthorizedHttpException";
 import {Response, Request} from "express";
-import {User} from "../../web/User";
+import {WebUser} from "../../web/WebUser";
 
 const JsonWebToken = require("jsonwebtoken");
 
@@ -47,7 +47,7 @@ export class KeyCloakHttpBearerAuth extends HttpBearerAuth {
     }
 
 
-    public async authenticate(user: User, request: Request, response: Response) // BC signature
+    public async authenticate(user: WebUser, request: Request, response: Response) // BC signature
     {
 
         let identity = null;

@@ -4,9 +4,9 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {DataTypes, Model, Relation} from "../../base";
+import {DataTypes, Model} from "../../base";
 
-export class ProductToCategories extends Model {
+export class ProductToCategoriesClass extends Model {
     [x: string]: any;
 
     tableName() {
@@ -30,3 +30,6 @@ export class ProductToCategories extends Model {
     }
 
 }
+
+const ProductToCategories = new ProductToCategoriesClass()
+export {ProductToCategories}

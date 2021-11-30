@@ -6,7 +6,7 @@
  */
 import {DataTypes, Model} from "../../base";
 
-export class Stocks extends Model {
+export class StocksClass extends Model {
     [x: string]: any;
 
     public tableName() {
@@ -55,3 +55,6 @@ export class Stocks extends Model {
         }
     }
 }
+
+const Stocks = new StocksClass();
+export {Stocks}

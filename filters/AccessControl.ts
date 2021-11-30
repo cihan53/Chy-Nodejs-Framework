@@ -8,7 +8,7 @@ import BaseChyz from "../BaseChyz";
 import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
 import {ActionFilter} from "../base/ActionFilter";
 import {AccessRule} from "./AccessRule";
-import {User} from "../web/User";
+import {WebUser} from "../web/WebUser";
 import Utils from "../requiments/Utils";
 import {NextFunction, Request, Response} from "express";
 
@@ -24,7 +24,7 @@ export class AccessControl extends ActionFilter {
         super.init()
 
         if (this.user == undefined) {
-            this.user = Utils.cloneDeep(BaseChyz.getComponent("user")) ?? new User();
+            this.user = Utils.cloneDeep(BaseChyz.getComponent("user")) ?? new WebUser();
         }
 
         this.rules.forEach((rule:any, index:number) => {
@@ -55,7 +55,7 @@ export class AccessControl extends ActionFilter {
         return false;
     }
 
-    public denyAccess(user: User) {
+    public denyAccess(user: WebUser) {
         if (user != undefined && user.getIsGuest()) {
             user.loginRequired();
         } else throw new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'));

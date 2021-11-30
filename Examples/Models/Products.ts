@@ -5,9 +5,9 @@
  * Github:https://github.com/cihan53/
  */
 import {DataTypes, Model, Relation} from "../../base";
-import {Models} from "./Models";
+import {ProductModels} from "./ProductModels";
 
-export class Products extends Model {
+export class ProductsClass extends Model {
     [x: string]: any;
 
     tableName() {
@@ -38,9 +38,12 @@ export class Products extends Model {
             {
                 type: "hasOne",
                 foreignKey: "id",
-                sourceKey:"model_id",
-                model:(new Models()).model()
+                sourceKey: "model_id",
+                model: ProductModels.model()
             }
         ]
     }
 }
+
+const Products = new ProductsClass()
+export {Products}

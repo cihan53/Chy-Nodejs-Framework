@@ -5,13 +5,13 @@
  * Github:https://github.com/cihan53/
  */
 
-import {Controller} from "../../base/Controller";
+import {Controller} from "../../base";
 import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
-import {get} from "../../decorator/get";
-import {post} from "../../decorator/post";
-import {controller} from "../../decorator/controller";
+import {get} from "../../decorator";
+import {post} from "../../decorator";
+import {controller} from "../../decorator";
 import {User} from "../Models/User";
 import {ForbiddenHttpException} from "../../base";
 import {JwtHttpBearerAuth} from "../../filters/auth";
