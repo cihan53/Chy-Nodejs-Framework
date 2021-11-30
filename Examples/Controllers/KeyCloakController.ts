@@ -1,25 +1,23 @@
 /*
- * Copyright (c) 2021. Chy Bilgisayar Bilisim
+ *
+ * Copyright (c) 2021-2021.. Chy Bilgisayar Bilisim
  * Author: Cihan Ozturk
- * E-mail: cihan@chy.com.tr
- * Github:https://github.com/cihan53/
+ *  E-mail: cihan@chy.com.tr
+ *  Github:https://github.com/cihan53/
+ *
  */
 
 import {Controller} from "../../base/Controller";
 import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
-import {get} from "../../decorator/get";
-import {post} from "../../decorator/post";
-import {controller} from "../../decorator/controller";
-import {AccessControl} from "../../filters/AccessControl";
-import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
-import {Order} from "../Models/Order";
-import {Customer} from "../Models/Customer";
-import {ValidationHttpException} from "../../base/ValidationHttpException";
-import {ValidationError} from "sequelize";
-import {ForbiddenHttpException} from "../../base";
+import {get,post,controller} from "../../decorator";
+
+import {ValidationHttpException,ForbiddenHttpException} from "../../base";
 import {KeyCloakHttpBearerAuth} from "../../filters/auth/KeyCloakHttpBearerAuth";
+
+import {OrderClass, Order} from "../Models/Order";
+import {CustomerClass, Customer} from "../Models/Customer";
 
 @controller("/oauth2.0")
 class ApiController extends Controller {
@@ -48,9 +46,9 @@ class ApiController extends Controller {
         data.Customer["2fa"] = "true";
 
         //Customer Model Create
-        let customer: Customer = new Customer();
+        let customer: CustomerClass = Customer;
         //Order Model Create
-        let order: Order = new Order();
+        let order: OrderClass = Order ;
 
 
         let transaction

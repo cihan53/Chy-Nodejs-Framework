@@ -1,7 +1,7 @@
 // @ts-ignore
 import {DataTypes, Model} from "../../base";
 
-export class Customer extends Model {
+export class CustomerClass extends Model {
     [x: string]: any;
 
     public tableName() {
@@ -15,21 +15,21 @@ export class Customer extends Model {
                 allowNull: false,
                 validate: {
                     notEmpty: true,
-                    is: ["^[a-z0-9A-Z]+$",'i'],
+                    is: ["^[a-z0-9A-Z]+$", 'i'],
                     len: [4, 255],
                 }
             },
             firstname: {
                 type: DataTypes.STRING,
                 validate: {
-                    is: ["^[a-z0-9A-Z]+$",'i'],
+                    is: ["^[a-z0-9A-Z]+$", 'i'],
                     len: [4, 255],
                 }
             },
             lastname: {
                 type: DataTypes.STRING,
                 validate: {
-                    is: ["^[a-z0-9A-Z]+$",'i'],
+                    is: ["^[a-z0-9A-Z]+$", 'i'],
                     len: [4, 255],
                 }
             },
@@ -50,7 +50,7 @@ export class Customer extends Model {
             gsm_phone: {
                 type: DataTypes.STRING,
                 validate: {
-                    is: ["^[0-9 +]+$",'i'],
+                    is: ["^[0-9 +]+$", 'i'],
                 }
             },
             country: {
@@ -62,20 +62,20 @@ export class Customer extends Model {
             address: {
                 type: DataTypes.STRING,
                 validate: {
-                    is: ["^[\\w'\\-,.[0-9_\\/\\\\+=\"()<>;:\\[\\] şŞçÇöÖğĞıİüÜ  ]{2,}$","i"],
+                    is: ["^[\\w'\\-,.[0-9_\\/\\\\+=\"()<>;:\\[\\] şŞçÇöÖğĞıİüÜ  ]{2,}$", "i"],
                 }
             },
             taxoffice: {
                 type: DataTypes.STRING,
                 validate: {
-                    is: ["^[\\w'\\-,.[0-9_\\/\\\\+=\"()<>;:\\[\\] şŞçÇöÖğĞıİüÜ  ]{2,}$","i"],
+                    is: ["^[\\w'\\-,.[0-9_\\/\\\\+=\"()<>;:\\[\\] şŞçÇöÖğĞıİüÜ  ]{2,}$", "i"],
                 }
             },
             taxnumber: {
                 unique: true,
                 type: DataTypes.STRING,
                 validate: {
-                    is:["^[0-9]+$",'i'],
+                    is: ["^[0-9]+$", 'i'],
                 }
             },
             username: {
@@ -108,6 +108,8 @@ export class Customer extends Model {
 
 }
 
+const Customer = new CustomerClass();
+export {Customer};
 
 
 

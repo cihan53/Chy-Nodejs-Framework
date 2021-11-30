@@ -1,8 +1,10 @@
 /*
- * Copyright (c) 2021. Chy Bilgisayar Bilisim
+ *
+ * Copyright (c) 2021-2021.. Chy Bilgisayar Bilisim
  * Author: Cihan Ozturk
- * E-mail: cihan@chy.com.tr
- * Github:https://github.com/cihan53/
+ *  E-mail: cihan@chy.com.tr
+ *  Github:https://github.com/cihan53/
+ *
  */
 
 import {Controller} from "../../base/Controller";
@@ -10,11 +12,7 @@ import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
 import {get} from "../../decorator/get";
-import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
-import {AccessControl} from "../../filters/AccessControl";
-import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
-import Utils from "../../requiments/Utils";
 
 @controller("/public")
 class PublicController extends Controller {

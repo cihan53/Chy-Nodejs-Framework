@@ -9,9 +9,8 @@ import BaseChyz from "../BaseChyz";
 import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
-import Sequelize, {DatabaseError,Model as SModel, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
+import {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
-import {Models} from "../Examples/Models/Models";
 
 export {DataTypes, NOW} from "sequelize";
 
@@ -114,8 +113,7 @@ export class Model extends Component {
 
                 if(relation.type=="hasOne"  ){
                     // @ts-ignore
-                    // delete relation.model;
-                    console.log(m)
+                    delete relation.model
                     this.model().hasOne(m, relation );
                 }
 
@@ -146,6 +144,17 @@ export class Model extends Component {
 
     }
 
+
+    /**
+     * Returns the database connection used by this AR class.
+     * By default, the "db" application component is used as the database connection.
+     * You may override this method if you want to use a different database connection.
+     * @return Connection the database connection used by this AR class.
+     */
+    public static getDb()
+    {
+        return BaseChyz.getComponent("db").db
+    }
 
     get sequelize(): any {
         return this._sequelize;

@@ -9,7 +9,7 @@
 
 import {DataTypes, Model} from "../../base";
 
-export class UserPermission extends Model {
+export class UserPermissionClass extends Model {
     [x: string]: any;
 
     public tableName() {
@@ -32,3 +32,6 @@ export class UserPermission extends Model {
         }
     }
 }
+
+const UserPermission = new UserPermissionClass();
+export {UserPermission}

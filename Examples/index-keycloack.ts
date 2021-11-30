@@ -11,7 +11,7 @@ require('dotenv-flow').config();
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import Chyz from "../Chyz";
-import {User} from "../web/User";
+import {WebUser} from "../web/WebUser";
 import {KeycloakUser as Identity} from "./Models/KeycloakUser";
 // @ts-ignore
 import {DbConnection} from "../base/DbConnection";
@@ -62,7 +62,7 @@ let config = {
             }
         },
         user: {
-            'class': User,
+            'class': WebUser,
             'identityClass': Identity
         }
     },

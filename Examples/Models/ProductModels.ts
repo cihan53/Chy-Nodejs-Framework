@@ -7,7 +7,7 @@
 import {DataTypes, Model, Relation} from "../../base";
 import {Products} from "./Products";
 
-export class Models extends Model {
+export class ProductModelsClass extends Model {
     [x: string]: any;
 
     tableName() {
@@ -34,15 +34,17 @@ export class Models extends Model {
         }
     }
 
-    // relation(): Relation[] {
-    //     return [
-    //         {
-    //             type: "hasOne",
-    //             foreignKey: "id",
-    //             sourceKey:"category_id",
-    //             model:(new Products()).model()
-    //         }
-    //     ]
-    // }
+    relation(): Relation[] {
+        return [
+            {
+                type: "hasOne",
+                foreignKey: "id",
+                sourceKey: "category_id",
+                model: Products.model()
+            }
+        ]
+    }
 }
 
+const ProductModels = new ProductModelsClass();
+export {ProductModels}

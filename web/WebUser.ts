@@ -10,7 +10,7 @@ import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
 import {InvalidConfigException} from "../base/InvalidConfigException";
 import {IdentityInterface} from "./IdentityInterface";
 
-export class User extends Component {
+export class WebUser extends Component {
 
     /**
      * @var string the class name of the [[identity]] object.

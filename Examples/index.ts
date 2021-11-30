@@ -7,16 +7,11 @@
 
 
 import {BaseChyz} from "../index";
-
 require('dotenv-flow').config();
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 import Chyz from "../Chyz";
-import {User} from "../web/User";
-import {User as Identity} from "./Models/User";
-// @ts-ignore
-import {DbConnection} from "../base/DbConnection";
+import {WebUser} from "../web/WebUser";
+import {User} from "./Models/User";
+import {DbConnection} from "../base";
 
 let config = {
     port: process.env.PORT,
@@ -35,8 +30,8 @@ let config = {
             }
         },
         user: {
-            'class': User,
-            'identityClass': Identity
+            'class': WebUser,
+            'identityClass': User
         }
     }
 
