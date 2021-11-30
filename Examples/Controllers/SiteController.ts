@@ -14,6 +14,7 @@ import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
 import {User} from "../Models/User";
 import {ForbiddenHttpException} from "../../base";
+import {JwtHttpBearerAuth} from "../../filters/auth";
 
 const bcrypt = require('bcrypt');
 const JsonWebToken = require("jsonwebtoken");
@@ -25,6 +26,16 @@ class SiteController extends Controller {
     public myCheck(token) {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
+    public behaviors(): any[] {
+        return [{
+            'authenticator': {
+                "class": JwtHttpBearerAuth,
+                "except":["index","login"]
+                // "auth": this.myCheck
+            }
+        }]
+    }
+
 
     // public behaviors(): any[] {
     //
@@ -66,6 +77,7 @@ class SiteController extends Controller {
         let username = req.body.username;
         let password = req.body.password;
 
+
         let user = await UserModel.findOne({where: {username: username}})
         if (user) {
             BaseChyz.debug("Db found user", username)
@@ -84,7 +96,7 @@ class SiteController extends Controller {
                     user: user.id,
                     ip: ip,
                     agent: source,
-                }, user.salt_text, {expiresIn: '1h'});
+                }, user.authkey, {expiresIn: '1h'});
 
                 BaseChyz.debug("Db user create access token", username,"expiresIn","1h")
                 return res.json({token: token})
@@ -106,7 +118,7 @@ class SiteController extends Controller {
         // @ts-ignore
         let identity = req.user ?? BaseChyz.getComponent("user").getIdentity();
         // console.log("logout2", identity.id)
-        console.log(identity)
+        //console.log(identity)
 
         BaseChyz.logs().info("Logout Controller")
         return res.send("Logout Controller")

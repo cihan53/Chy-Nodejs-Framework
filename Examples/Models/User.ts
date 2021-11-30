@@ -4,13 +4,16 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
+// @ts-ignore
+
 
 import {IdentityInterface} from "../../web/IdentityInterface";
 import {DataTypes, Model} from "../../base";
-import BaseChyz from "../../BaseChyz";
-const JsonWebToken = require("jsonwebtoken");
-export class User extends Model implements IdentityInterface {
+import {BaseChyz} from "../../index";
 
+const JsonWebToken = require("jsonwebtoken");
+
+export class User extends Model implements IdentityInterface {
     [x: string]: any;
 
     public tableName() {
@@ -36,6 +39,10 @@ export class User extends Model implements IdentityInterface {
     public attributes() {
         return {
             // Model attributes are defined here
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
             username: {
                 type: DataTypes.STRING,
                 allowNull: false
@@ -44,11 +51,19 @@ export class User extends Model implements IdentityInterface {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            user_role: {
+            email: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            salt_text: {
+            permissions_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            authkey: {
+                type: DataTypes.STRING
+                // allowNull defaults to true
+            },
+            status: {
                 type: DataTypes.STRING
                 // allowNull defaults to true
             }
@@ -57,11 +72,16 @@ export class User extends Model implements IdentityInterface {
 
     async findIdentityByAccessToken(token, type) {
         let decoded = JsonWebToken.decode(token, {complete: true})
+
+        if(!decoded.payload.user) {
+            return null;
+        }
+
         let identity = await this.findOne({where: {id: parseInt(decoded.payload.user)}});
         if (identity) {
             BaseChyz.debug("Find Identity By AccessToken: User Found", decoded.payload)
             try {
-                JsonWebToken.verify(token, identity.salt_text);
+                JsonWebToken.verify(token, identity.authkey);
                 BaseChyz.debug("Find Identity By AccessToken: User Verify Success")
                 return identity;
             } catch (err) {
@@ -75,6 +95,6 @@ export class User extends Model implements IdentityInterface {
         BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
         return null;
     }
+
+
 }
-
-

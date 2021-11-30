@@ -6,20 +6,47 @@
  */
 
 
-import {BaseChyz} from "../index";
-
 require('dotenv-flow').config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import Chyz from "../Chyz";
 import {User} from "../web/User";
-import {User as Identity} from "./Models/User";
+import {KeycloakUser as Identity} from "./Models/KeycloakUser";
 // @ts-ignore
 import {DbConnection} from "../base/DbConnection";
 
+var Keycloak = require('keycloak-connect');
+var session = require('express-session');
+var memoryStore = new session.MemoryStore();
+
+
+var keycloakConfig = {
+    "realm": "CameraBox",
+    "auth-server-url": "https://keycloak.hubbox.io:8080/auth/",
+    //"ssl-required": "external",
+    "resource": "izanami",
+    "verify-token-audience": true,
+    "bearerOnly": true,
+    "confidential-port":0,
+    "policy-enforcer":{},
+    "credentials": {
+        "secret": "0b476571-28ab-49b1-9968-90fce6294d5a"
+    }
+
+};
+
+
+
+Keycloak.prototype.accessDenied = function () {
+    return null;
+}
+
+var keycloak = new Keycloak({scope: 'offline_access'}, keycloakConfig);
+
+
 let config = {
-    port: process.env.PORT,
+    port: 3000,
     controllerpath: "C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
     components: {
         db: {
@@ -31,14 +58,21 @@ let config = {
                 host: process.env.DBHOST,
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
                 // disable logging; default: console.log
-                logging: (msg: any) => BaseChyz.debug(msg)
+                logging: false
             }
         },
         user: {
             'class': User,
             'identityClass': Identity
         }
+    },
+    middlewares: {
+        keycloak: {
+            keycloak: keycloak,
+            config: {
+                logout: '/logout'
+            }
+        }
     }
-
 }
 Chyz.app(config).Start();

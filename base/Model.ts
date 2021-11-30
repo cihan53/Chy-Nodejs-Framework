@@ -9,10 +9,22 @@ import BaseChyz from "../BaseChyz";
 import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
-import Sequelize, {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
+import Sequelize, {DatabaseError,Model as SModel, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
+import {Models} from "../Examples/Models/Models";
 
 export {DataTypes, NOW} from "sequelize";
+
+export interface Relation{
+    type:  "hasOne"  | "hasMany" | "belongsToMany" | "belongsTo",
+    allowNull?:boolean,
+    sourceKey:string,
+    model:SModel,
+    foreignKey:string,
+    name?:string,
+    through?:string,
+    as?:string
+}
 
 /**
  * ValidateMe.init({
@@ -91,6 +103,41 @@ export class Model extends Component {
                 timestamps: false
             });
 
+
+
+            /**
+             * init buraya
+             */
+
+            for (const relation of this.relations()) {
+                let m = relation.model;
+
+                if(relation.type=="hasOne"  ){
+                    // @ts-ignore
+                    // delete relation.model;
+                    console.log(m)
+                    this.model().hasOne(m, relation );
+                }
+
+                if(relation.type=="hasMany" ){
+                    // @ts-ignore
+                    delete relation.model;
+                    this.model().hasMany(m, relation );
+                }
+
+                if(relation.type=="belongsTo"  ){
+                    // @ts-ignore
+                    delete relation.model;
+                    this.model().belongsTo(m, relation );
+                }
+
+                if(relation.type=="belongsToMany"  ){
+                    // @ts-ignore
+                    delete relation.model;
+                    this.model().belongsToMany(m, relation );
+                }
+            }
+
         } else {
             throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
         }
@@ -108,6 +155,10 @@ export class Model extends Component {
         this._sequelize = value;
     }
 
+
+    /**
+     *
+     */
     get errors(): any {
         return this._errors;
     }
@@ -280,5 +331,15 @@ export class Model extends Component {
 
     public attributes() {
         return {}
+    }
+
+    /**
+     * relation return array
+     * [
+     *
+     * ]
+     */
+    public relations():Relation[]{
+        return []
     }
 }

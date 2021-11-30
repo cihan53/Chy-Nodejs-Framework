@@ -1,7 +1,7 @@
 export {Request, Response, NextFunction} from "express";
 export * from "./base";
-export * from "./filters";
-export * from "./filters/auth";
+export *  from "./filters";
+export {JwtHttpBearerAuth} from "./filters/auth";
 export * from "./decorator";
 export * from "./requiments/Utils";
 export {RouteDefinition} from "./model/RouteDefinition";

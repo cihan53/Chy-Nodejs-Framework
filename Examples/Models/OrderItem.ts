@@ -1,4 +1,4 @@
-import {DataTypes, Model} from "../../Chy-Nodejs-Framework/dist/base";
+import {DataTypes, Model} from "../../base";
 
 export class OrderItem extends Model {
     [x: string]: any;

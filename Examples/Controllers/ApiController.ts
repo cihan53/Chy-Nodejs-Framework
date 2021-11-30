@@ -12,13 +12,14 @@ import {Request, Response} from "express";
 import {get} from "../../decorator/get";
 import {post} from "../../decorator/post";
 import {controller} from "../../decorator/controller";
-import {AccessControl} from "../../filters/AccessControl";
 import {JwtHttpBearerAuth} from "../../filters/auth/JwtHttpBearerAuth";
 import {Order} from "../Models/Order";
 import {Customer} from "../Models/Customer";
 import {ValidationHttpException} from "../../base/ValidationHttpException";
-import {ValidationError} from "sequelize";
 import {ForbiddenHttpException} from "../../base";
+import {Categories} from "../Models/Categories";
+import {Products} from "../Models/Products";
+import {Models} from "../Models/Models";
 
 @controller("/api")
 class ApiController extends Controller {
@@ -34,22 +35,22 @@ class ApiController extends Controller {
                 "class": JwtHttpBearerAuth,
                 // "auth": this.myCheck
             },
-            'access': {
-                'class': AccessControl,
-                'only': ['login', 'logout', 'signup'],
-                'rules': [
-                    {
-                        'allow': true,
-                        'actions': ['login', 'index'],
-                        'roles': ['?'],
-                    },
-                    {
-                        'allow': true,
-                        'actions': ['logout', "logout2"],
-                        'roles': ['@'],
-                    }
-                ]
-            }
+            // 'access': {
+            //     'class': AccessControl,
+            //     'only': ['login', 'logout', 'signup'],
+            //     'rules': [
+            //         {
+            //             'allow': true,
+            //             'actions': ['login', 'index'],
+            //             'roles': ['?'],
+            //         },
+            //         {
+            //             'allow': true,
+            //             'actions': ['logout', "logout2"],
+            //             'roles': ['@'],
+            //         }
+            //     ]
+            // }
         }]
     }
 
@@ -111,6 +112,17 @@ class ApiController extends Controller {
         return res.send("Post Controller")
     }
 
+
+    @get("order/list")
+    async listOrder(req: Request, res: Response){
+
+        let ProductsModel:Products = new Products();
+        let myModel = new Models();
+        let product= await ProductsModel.findAll({include:[myModel.model()]});
+
+        return res.json(product)
+
+    }
 
     error(req: Request, res: Response) {
         BaseChyz.logs().info("Error Sayfası")
