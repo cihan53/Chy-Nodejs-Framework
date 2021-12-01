@@ -86,8 +86,7 @@ export class CustomerCLass extends Model {
     }
 
 }
-const Customer= new CustomerCLass();
-export { Customer };
+ 
 
 ```
 ````typescript
@@ -129,8 +128,7 @@ export class ProductsClass extends Model {
     }
 }
 
-const Products = new ProductsClass()
-export {Products}
+ 
 ````
 
 ## Http POST ve GET verilerini model'e yükleme
