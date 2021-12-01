@@ -33,5 +33,5 @@ export class UserPermissionClass extends Model {
     }
 }
 
-const UserPermission = new UserPermissionClass();
-export {UserPermission}
+// const UserPermission = new UserPermissionClass();
+// export {UserPermission}

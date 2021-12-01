@@ -1,12 +1,13 @@
 {
   "name": "chyz",
-  "version": "1.0.13-rc.01",
+  "version": " 1.0.13-rc.4",
   "description": "Nodejs MicroServis Framework",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.ts",
+    "dev": "nodemon -t --trace-warnings index.ts",
     "debug": "ts-node index.ts",
-    "build": "npx tsc && xcopy .\\log .\\dist\\log /e /i /h /Y ",
+    "build": "rmdir /S /Q .\\dist && npx tsc && xcopy .\\log .\\dist\\log /e /i /h /Y",
+    "publish": "cd dist && npm publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postversion": "git push && git push --tags"
   },

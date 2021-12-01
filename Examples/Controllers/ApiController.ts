@@ -7,7 +7,7 @@
  *
  */
 
-import {Controller} from "../../base";
+import {Controller, ModelManager} from "../../base";
 import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
@@ -18,10 +18,8 @@ import {JwtHttpBearerAuth} from "../../filters/auth";
 
 import {ValidationHttpException} from "../../base";
 import {ForbiddenHttpException} from "../../base";
-import {OrderClass, Order} from "../Models/Order";
-import {CustomerClass, Customer} from "../Models/Customer";
-import {Products} from "../Models/Products";
-import {ProductModels} from "../Models/ProductModels";
+
+
 
 @controller("/api")
 class ApiController extends Controller {
@@ -70,17 +68,15 @@ class ApiController extends Controller {
         data.Customer["2fa"] = "true";
 
         //Customer Model Create
-        let customer: CustomerClass = Customer;
+        let customer  = ModelManager.Customer;
         //Order Model Create
-        let order: OrderClass = Order;
+        let order  = ModelManager.Order;
 
 
         let transaction
         try {
             // get transaction
             transaction = await BaseChyz.getComponent("db").transaction();
-
-
             customer.load(data, "Customer");//load customer data
             let cus: any = await customer.save({}, {transaction});
 
@@ -117,7 +113,20 @@ class ApiController extends Controller {
 
     @get("order/list")
     async listOrder(req: Request, res: Response) {
-        let product = await Products.findAll({include: [ProductModels.model()]});
+        let product = await ModelManager.Products.findAll({include: [ModelManager.ProductModels.model()]});
+        return res.json(product)
+
+    }
+
+    @get("categories")
+    async Categories(req: Request, res: Response) {
+        let product = await ModelManager.Categories.findAll( {include:[
+                {
+                    model: ModelManager.Products.model(),
+                    // as: 'product',
+                    // through: { attributes: [] } // Hide unwanted `PlayerGameTeam` nested object from results
+                }
+            ]} );
         return res.json(product)
 
     }

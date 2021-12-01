@@ -16,7 +16,7 @@ yarn start
 
 ## index.ts alanlar düzenlenmeli.
 
-```js
+```typescript
 require('dotenv-flow').config();
 
 import BaseChyz from "chyz/dist/BaseChyz";
@@ -51,7 +51,7 @@ Chyz.app(config).Start();
 
 Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 
-```js
+```typescript
 import {Model, DataTypes} from "chyz/base/Model";
 
 export class CustomerCLass extends Model {
@@ -90,7 +90,7 @@ const Customer= new CustomerCLass();
 export { Customer };
 
 ```
-````js
+````typescript
 export class ProductsClass extends Model {
     [x: string]: any;
 
@@ -131,12 +131,11 @@ export class ProductsClass extends Model {
 
 const Products = new ProductsClass()
 export {Products}
-
-```
+````
 
 ## Http POST ve GET verilerini model'e yükleme
 
-````js
+````typescript
 
 /**
  * post data
@@ -156,14 +155,12 @@ customer.load(req.body, "Customer");//load customer data
 let cus: any = await customer.save();
 
 
-
-
 ````
 ## Transaction
 Transaction oluşturma
 
 
-```js
+```typescript
     let transaction
     try {
         // get transaction
@@ -186,7 +183,7 @@ Transaction oluşturma
 
 ## Yetkilendirme için kullanıcı modeli
 
-```js
+```typescript
 /*
  * Copyright (c) 2021. Chy Bilgisayar Bilisim
  * Author: Cihan Ozturk

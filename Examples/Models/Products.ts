@@ -4,8 +4,8 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {DataTypes, Model, Relation} from "../../base";
-import {ProductModels} from "./ProductModels";
+import {DataTypes, ModelManager, Model, Relation} from "../../base";
+
 
 export class ProductsClass extends Model {
     [x: string]: any;
@@ -36,14 +36,15 @@ export class ProductsClass extends Model {
     relations(): Relation[] {
         return [
             {
-                type: "hasOne",
-                foreignKey: "id",
-                sourceKey: "model_id",
-                model: ProductModels.model()
+                type: "belongsToMany",
+                foreignKey: "product_id",
+                sourceKey: "id",
+                model: ModelManager.Categories.model(),
+                through: ModelManager.ProductToCategories.model()
             }
         ]
     }
 }
 
-const Products = new ProductsClass()
-export {Products}
+// const Products = new ProductsClass()
+// export {Products}

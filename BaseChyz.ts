@@ -3,6 +3,7 @@ import {RouteDefinition} from "./model/RouteDefinition";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
+import {ModelManager} from "./base";
 
 
 const express = require("express");
@@ -83,6 +84,13 @@ export default class BaseChyz {
             this.controllerpath = this.config.controllerpath
         }
 
+
+        /**
+         * Model Register
+         */
+
+        this.loadModels();
+
         /**
          * Express Server
          */
@@ -142,7 +150,6 @@ export default class BaseChyz {
                 // BaseChyz.middlewares[middlewareKey] = Utils.createObject(new middleware1.class, middleware1);
             }
         }
-
 
 
         this.init();
@@ -229,6 +236,30 @@ export default class BaseChyz {
         return BaseChyz.middlewares[key] ?? null
     }
 
+    /**
+     * load model
+     */
+    async loadModels() {
+        let models: any = {}
+        let path = `${this._controllerpath}/../Models`;
+        fs.readdirSync(path).forEach((file: string) => {
+            if (file !== "index.ts") {
+                let model = require(`${path}/${file}`);
+                // @ts-ignore
+                let className = file.split(".")[0] + "Class";
+                if (model[className])
+                    models[className.replace("Class","")] = new model[className];
+            }
+        })
+
+        ModelManager._register(models);
+
+        for (const key of Object.keys(ModelManager)) {
+            if(key!="_register"){
+                ModelManager[key].init();
+            }
+        }
+    }
 
     /**
      * load contoller
@@ -281,10 +312,16 @@ export default class BaseChyz {
                                 await instance[route.methodName](req, res, next);
                                 instance.afterAction(route, req, res);
                             } catch (e) {
-                                BaseChyz.error(e)
-                                // next(e)
-                                res.status(e.statusCode || 500)
-                                res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                if (e instanceof Error) {
+                                    BaseChyz.error(e)
+
+                                    // @ts-ignore
+                                    res.status(e.statusCode || 500)
+                                    // @ts-ignore
+                                    res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                } else {
+                                    res.json(e)
+                                }
                             }
                         })
 
@@ -300,7 +337,6 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
         BaseChyz.express.use(methodOverride());
-
 
 
         // CORS
@@ -346,10 +382,3 @@ export default class BaseChyz {
 
 
 }
-
-
-process.on('uncaughtException', err => {
-    BaseChyz.error('There was an uncaught error', err)
-    process.exit(1) //mandatory (as per the Node.js docs)
-})
-

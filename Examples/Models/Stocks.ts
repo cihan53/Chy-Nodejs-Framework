@@ -56,5 +56,5 @@ export class StocksClass extends Model {
     }
 }
 
-const Stocks = new StocksClass();
-export {Stocks}
+// const Stocks = new StocksClass();
+// export {Stocks}

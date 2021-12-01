@@ -16,8 +16,8 @@ import {get,post,controller} from "../../decorator";
 import {ValidationHttpException,ForbiddenHttpException} from "../../base";
 import {KeyCloakHttpBearerAuth} from "../../filters/auth/KeyCloakHttpBearerAuth";
 
-import {OrderClass, Order} from "../Models/Order";
-import {CustomerClass, Customer} from "../Models/Customer";
+import {OrderClass} from "../Models/Order";
+import {CustomerClass} from "../Models/Customer";
 
 @controller("/oauth2.0")
 class ApiController extends Controller {
@@ -46,9 +46,9 @@ class ApiController extends Controller {
         data.Customer["2fa"] = "true";
 
         //Customer Model Create
-        let customer: CustomerClass = Customer;
+        let customer: CustomerClass = new CustomerClass();
         //Order Model Create
-        let order: OrderClass = Order ;
+        let order: OrderClass = new OrderClass() ;
 
 
         let transaction

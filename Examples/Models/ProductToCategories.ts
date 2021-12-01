@@ -4,7 +4,7 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {DataTypes, Model} from "../../base";
+import {DataTypes, ModelManager, Model, Relation} from "../../base";
 
 export class ProductToCategoriesClass extends Model {
     [x: string]: any;
@@ -21,7 +21,7 @@ export class ProductToCategoriesClass extends Model {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            categories_id: {
+            category_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             }
@@ -29,7 +29,18 @@ export class ProductToCategoriesClass extends Model {
         }
     }
 
+    // relations(): Relation[] {
+    //     return [
+    //         {
+    //             type: "hasMany",
+    //             foreignKey: "category_id",
+    //             sourceKey: "id",
+    //             model: ModelManager.Categories.model(),
+    //         }
+    //     ]
+    // }
+
 }
 
-const ProductToCategories = new ProductToCategoriesClass()
-export {ProductToCategories}
+// const ProductToCategories = new ProductToCategoriesClass()
+// export {ProductToCategories}
