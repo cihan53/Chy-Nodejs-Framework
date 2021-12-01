@@ -9,7 +9,7 @@ import {ModelManager} from "./base";
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
-const validate = require('validate');
+const validate = require('validate.js');
 
 var ip = require('ip');
 var bodyParser = require('body-parser')
