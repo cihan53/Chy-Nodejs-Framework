@@ -4,8 +4,7 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import {DataTypes, ModelManager, Model, Relation} from "../../base";
-import {ProductToCategoriesClass} from "./ProductToCategories";
+import {DataTypes, Model, ModelManager, Relation} from "../../base";
 
 export class CategoriesClass extends Model {
     [x: string]: any;
