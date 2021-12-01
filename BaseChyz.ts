@@ -9,6 +9,7 @@ import {ModelManager} from "./base";
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
+const validate = require('validate');
 
 var ip = require('ip');
 var bodyParser = require('body-parser')
@@ -22,6 +23,7 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
+    private static _validate:any=validate;
     private _logConfig: any = require('./log/config/log4js.json') ?? {}
     private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
@@ -121,6 +123,14 @@ export default class BaseChyz {
         this._port = value;
     }
 
+
+    static get validate(): any {
+        return this._validate;
+    }
+
+    static set validate(value: any) {
+        this._validate = value;
+    }
 
     app(config: any = {}): BaseChyz {
 

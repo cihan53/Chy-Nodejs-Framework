@@ -1,12 +1,12 @@
 {
   "name": "chyz",
-  "version": " 1.0.13-rc.5",
+  "version": " 1.0.13-rc.7",
   "description": "Nodejs MicroServis Framework",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -t --trace-warnings index.ts",
     "debug": "ts-node index.ts",
-    "build": "rmdir /S /Q .\\dist && npx tsc && xcopy .\\log .\\dist\\log /e /i /h /Y",
+    "build": "rmdir /S /Q .\\dist && npx tsc && xcopy .\\log .\\dist\\log /e /i /h /Y && copy .\\package.json .\\dist\\package.json",
     "publish": "cd dist && npm publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postversion": "git push && git push --tags"
@@ -38,7 +38,8 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
