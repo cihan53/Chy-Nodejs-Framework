@@ -108,8 +108,8 @@ export class CustomerClass extends Model {
 
 }
 
-const Customer = new CustomerClass();
-export {Customer};
+// const Customer = new CustomerClass();
+// export {Customer};
 
 
 

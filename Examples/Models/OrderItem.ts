@@ -20,8 +20,8 @@ export class OrderItemClass extends Model {
     }
 
 }
-const OrderItem = new OrderItemClass()
-export { OrderItem };
+// const OrderItem = new OrderItemClass()
+// export { OrderItem };
 
 
 

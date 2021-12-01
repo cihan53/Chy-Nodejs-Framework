@@ -21,7 +21,7 @@ export interface Relation{
     model:SModel,
     foreignKey:string,
     name?:string,
-    through?:string,
+    through?:any,
     as?:string
 }
 
@@ -99,48 +99,20 @@ export class Model extends Component {
         if (!Utils.isEmpty(this.attributes())) {
             this._model = this._sequelize.define(this.constructor.name, this.attributes(), {
                 tableName: this.tableName(),
-                timestamps: false
+                timestamps: false,
+                createdAt: false,
+                updateAt:false
             });
 
 
 
-            /**
-             * init buraya
-             */
 
-            for (const relation of this.relations()) {
-                let m = relation.model;
-
-                if(relation.type=="hasOne"  ){
-                    // @ts-ignore
-                    delete relation.model
-                    this.model().hasOne(m, relation );
-                }
-
-                if(relation.type=="hasMany" ){
-                    // @ts-ignore
-                    delete relation.model;
-                    this.model().hasMany(m, relation );
-                }
-
-                if(relation.type=="belongsTo"  ){
-                    // @ts-ignore
-                    delete relation.model;
-                    this.model().belongsTo(m, relation );
-                }
-
-                if(relation.type=="belongsToMany"  ){
-                    // @ts-ignore
-                    delete relation.model;
-                    this.model().belongsToMany(m, relation );
-                }
-            }
 
         } else {
             throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
         }
 
-        this.init();
+        // this.init();
 
     }
 
@@ -178,6 +150,38 @@ export class Model extends Component {
 
     public init() {
         BaseChyz.debug("Model init....", this.constructor.name)
+        /**
+         * init buraya
+         */
+        BaseChyz.debug("Relation init....", this.constructor.name)
+        for (const relation of this.relations()) {
+            let m = relation.model;
+
+            if(relation.type=="hasOne"  ){
+                // @ts-ignore
+                delete relation.model
+                this.model().hasOne(m, relation );
+            }
+        //
+            if(relation.type=="hasMany" ){
+                // @ts-ignore
+                delete relation.model;
+                this.model().hasMany(m, relation );
+            }
+
+            if(relation.type=="belongsTo"  ){
+                // @ts-ignore
+                delete relation.model;
+                this.model().belongsTo(m, relation );
+            }
+
+            if(relation.type=="belongsToMany"  ){
+                // @ts-ignore
+                delete relation.model;
+                this.model().belongsToMany(m, relation );
+            }
+        }
+
     }
 
 

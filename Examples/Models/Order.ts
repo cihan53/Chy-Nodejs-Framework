@@ -1,5 +1,5 @@
 import {DataTypes, Model, Relation} from "../../base";
-import {OrderItem} from "./OrderItem";
+import {OrderItemClass} from "./OrderItem";
 
 export class OrderClass extends Model {
     [x: string]: any;
@@ -50,15 +50,15 @@ export class OrderClass extends Model {
                 type: "hasOne",
                 sourceKey: "order_id",
                 foreignKey: "id",
-                model: OrderItem.model()
+                model: (new OrderItemClass()).model()
             }
         ]
     }
 }
 
-const Order = new OrderClass()
-export {Order};
-
+// const Order = new OrderClass()
+// export {Order};
+//
 
 
 
