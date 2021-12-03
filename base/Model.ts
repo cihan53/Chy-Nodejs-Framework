@@ -104,10 +104,6 @@ export class Model extends Component {
                 updateAt:false
             });
 
-
-
-
-
         } else {
             throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
         }
