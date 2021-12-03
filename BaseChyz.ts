@@ -144,9 +144,14 @@ export default class BaseChyz {
         if (components) {
             for (const componentsKey in components) {
                 let comp = components[componentsKey];
-                BaseChyz.debug("Create Component ", componentsKey)
-                BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
-                BaseChyz.components[componentsKey]?.init();
+                BaseChyz.logs().info("Create Component ", componentsKey)
+                try {
+                    BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
+                    BaseChyz.components[componentsKey]?.init();
+                }catch (e) {
+                    console.error(e)
+                }
+
             }
         }
 
@@ -155,7 +160,7 @@ export default class BaseChyz {
         if (middlewares) {
             for (const middlewareKey in middlewares) {
                 let middleware1 = middlewares[middlewareKey];
-                BaseChyz.debug("Create middlewares ", middlewareKey)
+                BaseChyz.logs().debug("Create middlewares ", middlewareKey)
                 BaseChyz.middlewares[middlewareKey] = middleware1;
                 // BaseChyz.middlewares[middlewareKey] = Utils.createObject(new middleware1.class, middleware1);
             }
