@@ -5,12 +5,14 @@
  * Github:https://github.com/cihan53/
  */
 
+import Utils from "../requiments/Utils";
+
 export class BaseError extends Error {
     private statusCode: number;
 
     constructor(message: string,statusCode=500) {
         super(message);
-        this.message=message;
+        this.message= Utils.isString(message)?message: JSON.stringify(message);
         this.name = this.constructor.name // good practice
         this.statusCode = statusCode // error code for responding to client
         Error.captureStackTrace(this)
