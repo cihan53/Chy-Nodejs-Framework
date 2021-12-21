@@ -59,4 +59,10 @@ export interface IdentityInterface {
      */
     validateAuthKey(authKey: string): (boolean | null);
 
+
+    /**
+     *
+     */
+    can(permissionName:string, params: any[]  , allowCaching: boolean  ): (boolean | null);
+
 }

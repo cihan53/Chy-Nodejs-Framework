@@ -26,11 +26,12 @@ class SiteController extends Controller {
     public myCheck(token) {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
+
     public behaviors(): any[] {
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
-                "except":["index","login"]
+                "except": ["index", "login"]
                 // "auth": this.myCheck
             }
         }]
@@ -88,25 +89,40 @@ class SiteController extends Controller {
                 // @ts-ignore
                 let xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
                 let ip = xForwardedFor || req.socket.remoteAddress;
-                var source: string  = req.headers['user-agent'] || '';
+                var source: string = req.headers['user-agent'] || '';
                 if (req.headers['x-ucbrowser-ua']) {  //special case of UC Browser
-                    source = req.headers['x-ucbrowser-ua']+"";
+                    source = req.headers['x-ucbrowser-ua'] + "";
                 }
                 token = await JsonWebToken.sign({
                     user: user.id,
                     ip: ip,
                     agent: source,
-                }, user.authkey, {expiresIn: '1h'});
+                    platform: "admin",
+                    role: [
+                        "admin"
+                    ],
+                    permissions: [
+                        "alprboxkoli",
+                        "edisboxkoli",
+                        "hubboxkoli",
+                        "edisboxold",
+                        "edisboxnew",
+                        "hubboxold",
+                        "hubboxnew",
+                        "alprboxold",
+                        "alprboxnew"
+                    ],
+                }, user.authkey, null);
 
-                BaseChyz.debug("Db user create access token", username,"expiresIn","1h")
+                BaseChyz.debug("Db user create access token", username, "expiresIn", "1h")
                 return res.json({token: token})
             } else {
                 let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
-                res.status(500).json( error.toJSON())
+                res.status(500).json(error.toJSON())
             }
         } else {
             let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
-            res.status(500).json( error.toJSON())
+            res.status(500).json(error.toJSON())
         }
 
 
@@ -136,4 +152,5 @@ class SiteController extends Controller {
         return res.send("Post Controller")
     }
 }
-module.exports=SiteController
+
+module.exports = SiteController

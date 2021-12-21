@@ -9,6 +9,7 @@ interface Role {
     description: string;
     ruleName: string;
     data: string;
+    params:string;
 }
 
 interface Permission {
@@ -17,6 +18,7 @@ interface Permission {
     description: string;
     ruleName: string;
     data: string;
+    params:string;
 }
 
 

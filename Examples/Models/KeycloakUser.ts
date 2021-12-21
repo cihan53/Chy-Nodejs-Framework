@@ -61,6 +61,10 @@ export class KeycloakUser implements IdentityInterface {
         return null;
         // return keycloak.protect('realm:user');
     }
+
+    can(permissionName: string, params: any[], allowCaching: boolean): boolean | null {
+        return undefined;
+    }
 }
 
 

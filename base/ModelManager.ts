@@ -1,3 +1,5 @@
+import {Model} from "./Model"
+
 /*
  *
  * Copyright (c) 2021.. Chy Bilgisayar Bilisim
@@ -6,9 +8,12 @@
  *  Github:https://github.com/cihan53/
  *
  */
+interface ObjectConstructor {
+    _register(o: Model): void;
+}
 
 export const ModelManager: any = {
-    _register(map: any) {
+    _register(map: Model) {
         Object.assign(this, map)
     }
 }
