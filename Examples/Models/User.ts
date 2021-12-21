@@ -28,6 +28,11 @@ export class User extends Model implements IdentityInterface {
         throw new Error("Method not implemented.");
     }
 
+    can(permissionName: string, params: any[], allowCaching: boolean): boolean | null {
+        throw new Error("Method not implemented.");
+    }
+
+
     getAuthKey(): string {
         throw new Error("Method not implemented.");
     }
@@ -71,8 +76,8 @@ export class User extends Model implements IdentityInterface {
     }
 
     async findIdentityByAccessToken(token, type) {
-        let decoded = JsonWebToken.decode(token, {complete: true})
 
+        let decoded = JsonWebToken.decode(token, {complete: true})
         if(!decoded.payload.user) {
             return null;
         }
@@ -95,6 +100,8 @@ export class User extends Model implements IdentityInterface {
         BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
         return null;
     }
+
+
 
 
 }

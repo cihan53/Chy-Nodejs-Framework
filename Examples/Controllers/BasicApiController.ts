@@ -7,50 +7,27 @@
  *
  */
 
-import {Controller, ModelManager} from "../../base";
+import {Controller, ForbiddenHttpException, ModelManager, ValidationHttpException} from "../../base";
 import BaseChyz from "../../BaseChyz";
 // @ts-ignore
 import {Request, Response} from "express";
-import {get} from "../../decorator";
-import {post} from "../../decorator";
-import {controller} from "../../decorator";
-import {JwtHttpBearerAuth} from "../../filters/auth";
-
-import {ValidationHttpException} from "../../base";
-import {ForbiddenHttpException} from "../../base";
+import {controller, get, post} from "../../decorator";
 import {ProductsClass} from "../Models/Products";
+import {HttpBasicAuth} from "../../filters/auth/HttpBasicAuth";
 
 
-@controller("/api")
+@controller("/basic/api")
 class ApiController extends Controller {
 
-    public myCheck(token) {
-        console.log("myyyyyyyyyyyyyyyyyyyyy")
-    }
+
 
     public behaviors(): any[] {
 
         return [{
             'authenticator': {
-                "class": JwtHttpBearerAuth,
+                "class": HttpBasicAuth,
                 // "auth": this.myCheck
-            },
-            // 'access': {
-            //     'class': AccessControl,
-            //     'only': ['login', 'logout', 'signup'],
-            //     'rules': [
-            //         {
-            //             'allow': true,
-            //             'actions': ['login', 'index'],
-            //             'roles': ['?'],
-            //         },
-            //         {
-            //             'allow': true,
-            //             'actions': ['logout', "logout2"],
-            //             'roles': ['@'],
-            //         }
-            //     ]
-            // }
+            }
         }]
     }
 
@@ -133,6 +110,7 @@ class ApiController extends Controller {
         return res.json(product)
 
     }
+
 
     error(req: Request, res: Response) {
         BaseChyz.logs().info("Error Sayfası")

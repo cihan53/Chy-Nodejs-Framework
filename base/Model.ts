@@ -14,15 +14,15 @@ import {Exception} from "./db/Exception";
 
 export {DataTypes, NOW} from "sequelize";
 
-export interface Relation{
-    type:  "hasOne"  | "hasMany" | "belongsToMany" | "belongsTo",
-    allowNull?:boolean,
-    sourceKey?:string,
-    model:SModel,
-    foreignKey:string,
-    name?:string,
-    through?:any,
-    as?:string
+export interface Relation {
+    type: "hasOne" | "hasMany" | "belongsToMany" | "belongsTo",
+    allowNull?: boolean,
+    sourceKey?: string,
+    model: SModel,
+    foreignKey: string,
+    name?: string,
+    through?: any,
+    as?: string
 }
 
 /**
@@ -80,7 +80,8 @@ export interface Relation{
  */
 
 export class Model extends Component {
-    _sequelize: any ;
+    _sequelize: any;
+    _register: any;
     private _tableName: string;
     private _model: any;
     private _attributes: any = {};
@@ -101,7 +102,7 @@ export class Model extends Component {
                 tableName: this.tableName(),
                 timestamps: false,
                 createdAt: false,
-                updateAt:false
+                updateAt: false
             });
 
         } else {
@@ -119,8 +120,7 @@ export class Model extends Component {
      * You may override this method if you want to use a different database connection.
      * @return Connection the database connection used by this AR class.
      */
-    public static getDb()
-    {
+    public static getDb() {
         return BaseChyz.getComponent("db").db
     }
 
@@ -153,28 +153,28 @@ export class Model extends Component {
         for (const relation of this.relations()) {
             let m = relation.model;
 
-            if(relation.type=="hasOne"  ){
+            if (relation.type == "hasOne") {
                 // @ts-ignore
                 delete relation.model
-                this.model().hasOne(m, relation );
+                this.model().hasOne(m, relation);
             }
-        //
-            if(relation.type=="hasMany" ){
+            //
+            if (relation.type == "hasMany") {
                 // @ts-ignore
                 delete relation.model;
-                this.model().hasMany(m, relation );
-            }
-
-            if(relation.type=="belongsTo"  ){
-                // @ts-ignore
-                delete relation.model;
-                this.model().belongsTo(m, relation );
+                this.model().hasMany(m, relation);
             }
 
-            if(relation.type=="belongsToMany"  ){
+            if (relation.type == "belongsTo") {
                 // @ts-ignore
                 delete relation.model;
-                this.model().belongsToMany(m, relation );
+                this.model().belongsTo(m, relation);
+            }
+
+            if (relation.type == "belongsToMany") {
+                // @ts-ignore
+                delete relation.model;
+                this.model().belongsToMany(m, relation);
             }
         }
 
@@ -348,7 +348,8 @@ export class Model extends Component {
      *
      * ]
      */
-    public relations():Relation[]{
+    public relations(): Relation[] {
         return []
     }
+
 }

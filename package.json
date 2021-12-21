@@ -1,13 +1,13 @@
 {
   "name": "chyz",
-  "version": " 1.0.13-rc.10",
+  "version": " 1.0.13-rc.11",
   "description": "Nodejs Micro service Framework",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -t --trace-warnings index.ts",
     "debug": "ts-node index.ts",
     "build": "rmdir /S /Q .\\dist && npx tsc && xcopy .\\log .\\dist\\log /e /i /h /Y && copy .\\package.json .\\dist\\package.json",
-    "publish": "cd dist && npm publish",
+    "publish": "npm publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postversion": "git push && git push --tags"
   },
