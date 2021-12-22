@@ -90,7 +90,7 @@ export class Model extends Component {
 
     constructor(sequelize?: IDBDatabase) {
         super();
-        this._tableName = this.constructor.name;
+        this._tableName = this.alias();
         // this._sequelize = BaseChyz.getComponent("db").db;
         if (sequelize != null)
             this._sequelize = sequelize;
@@ -98,7 +98,8 @@ export class Model extends Component {
             this._sequelize = BaseChyz.getComponent("db").db;
 
         if (!Utils.isEmpty(this.attributes())) {
-            this._model = this._sequelize.define(this.constructor.name, this.attributes(), {
+
+            this._model = this._sequelize.define(this._tableName, this.attributes(), {
                 tableName: this.tableName(),
                 timestamps: false,
                 createdAt: false,
@@ -180,6 +181,10 @@ export class Model extends Component {
 
     }
 
+
+    public alias() {
+        return this.constructor.name;
+    }
 
     public tableName() {
         return this._tableName;
