@@ -19,6 +19,8 @@ import {JwtHttpBearerAuth} from "../../filters/auth";
 import {ValidationHttpException} from "../../base";
 import {ForbiddenHttpException} from "../../base";
 import {ProductsClass} from "../Models/Products";
+import {AccessControl} from "../../filters";
+import {AuthManager} from "../../rbac/AuthManager";
 
 
 @controller("/api")
@@ -35,22 +37,18 @@ class ApiController extends Controller {
                 "class": JwtHttpBearerAuth,
                 // "auth": this.myCheck
             },
-            // 'access': {
-            //     'class': AccessControl,
-            //     'only': ['login', 'logout', 'signup'],
-            //     'rules': [
-            //         {
-            //             'allow': true,
-            //             'actions': ['login', 'index'],
-            //             'roles': ['?'],
-            //         },
-            //         {
-            //             'allow': true,
-            //             'actions': ['logout', "logout2"],
-            //             'roles': ['@'],
-            //         }
-            //     ]
-            // }
+            'access': {
+                'class': AccessControl,
+                'only': ['order/list' ],
+                'rules': [
+
+                    {
+                        'allow': true,
+                        'actions': ['order/list' ],
+                        'roles': ['admin2'],
+                    }
+                ]
+            }
         }]
     }
 
@@ -114,7 +112,7 @@ class ApiController extends Controller {
     @get("order/list")
     async listOrder(req: Request, res: Response) {
         const {Products}: { Products: ProductsClass } = ModelManager;
-        let product = await Products.findAll({include: [ModelManager.ProductModels.model()]});
+        let product = await Products.findAll( );
         return res.json(product)
 
     }

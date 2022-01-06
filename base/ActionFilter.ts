@@ -41,7 +41,7 @@ export class ActionFilter extends Behavior {
         } else {
             onlyMatch = false;
             for (const onlyKey of this.only) {
-                if (Utils.matchWildcard(action, onlyKey)) {
+                if (Utils.matchWildcard(action.id, onlyKey)) {
                     onlyMatch = true;
                     break;
                 }

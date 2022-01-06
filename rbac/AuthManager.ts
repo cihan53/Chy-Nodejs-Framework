@@ -1,4 +1,4 @@
-import {Component, ModelManager} from "../base";
+import {Component, DataErrorDbException, InvalidConfigException, ModelManager, UnauthorizedHttpException} from "../base";
 import {BaseChyz, InvalidArgumentException} from "../index";
 import Utils from "../requiments/Utils";
 
@@ -9,7 +9,7 @@ interface Role {
     description: string;
     ruleName: string;
     data: string;
-    params:string;
+    params: string;
 }
 
 interface Permission {
@@ -18,7 +18,7 @@ interface Permission {
     description: string;
     ruleName: string;
     data: string;
-    params:string;
+    params: string;
 }
 
 
@@ -42,7 +42,7 @@ export class AuthManager extends Component {
      *
      */
 
-    public async checkAccess(userId: number, permissionName: string, params: any[] = []) {
+    public async checkAccess(userId: number, permissionName: string, params: any[] = []): Promise<boolean> {
         let assignments: any;
         if (!this.checkAccessAssignments[userId.toString()]) {
             assignments = await this.getAssignments(userId);
@@ -66,7 +66,7 @@ export class AuthManager extends Component {
 
     }
 
-    public async checkAccessRecursive(user: string | number, itemname: string, params: any[], assignments: any[]) {
+    public async checkAccessRecursive(user: string | number, itemname: string, params: any[], assignments: any): Promise<boolean> {
         let item: any = await this.getItem(itemname);
         if (!item) return false;
 
@@ -74,6 +74,10 @@ export class AuthManager extends Component {
          * @todo
          * Rule test edilmeli
          */
+
+        if (assignments[itemname] || Utils.find(this.defaultRoles, itemname)) {
+            return true;
+        }
 
         /**
          * item child
@@ -344,11 +348,15 @@ export class AuthManager extends Component {
         }
 
         let assignments: any = {};
-        let as = await ModelManager.AuthAssignment.findAll({where: {user_id: userId.toString()}});
-        for (const a of as) {
-            assignments[a["item_name"]] = a;
-        }
+        try {
 
+            let as = await ModelManager.AuthAssignment.findAll({where: {user_id: userId.toString()}});
+            for (const a of as) {
+                assignments[a["item_name"]] = a;
+            }
+        } catch (e) {
+            throw new InvalidConfigException('The user application component must be available to specify roles in AccessRule.');
+        }
         return assignments;
     }
 
