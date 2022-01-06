@@ -20,7 +20,6 @@ import {ValidationHttpException} from "../../base";
 import {ForbiddenHttpException} from "../../base";
 import {ProductsClass} from "../Models/Products";
 import {AccessControl} from "../../filters";
-import {AuthManager} from "../../rbac/AuthManager";
 
 
 @controller("/api")
@@ -45,7 +44,7 @@ class ApiController extends Controller {
                     {
                         'allow': true,
                         'actions': ['order/list' ],
-                        'roles': ['admin2'],
+                        'roles': ['edis-manager'],
                     }
                 ]
             }

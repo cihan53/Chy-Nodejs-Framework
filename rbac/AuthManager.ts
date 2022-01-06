@@ -82,9 +82,9 @@ export class AuthManager extends Component {
         /**
          * item child
          */
-        let parents = await ModelManager.AuthItemChild.findAll({where: {child: itemname}});
+        let parents = await ModelManager.AuthItemChild.findAll({attributes:["parent"], where: {child: itemname}});
         for (const parent of parents) {
-            let r = await this.checkAccessRecursive(user, parent, params, assignments);
+            let r = await this.checkAccessRecursive(user, parent.parent, params, assignments);
             if (r) {
                 return true;
             }
