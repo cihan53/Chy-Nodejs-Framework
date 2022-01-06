@@ -19,6 +19,7 @@ export class AccessControl extends ActionFilter {
 
     public user: any = null;
     public rules: any;
+    public denyCallback: any = null;
 
     public init() {
         super.init()
@@ -27,7 +28,7 @@ export class AccessControl extends ActionFilter {
             this.user = Utils.cloneDeep(BaseChyz.getComponent("user")) ?? new WebUser();
         }
 
-        this.rules.forEach((rule:any, index:number) => {
+        this.rules.forEach((rule: any, index: number) => {
             if (rule === Object(rule)) {
                 this.rules[index] = Utils.createObject(new AccessRule(), rule);
             }
@@ -35,7 +36,7 @@ export class AccessControl extends ActionFilter {
     }
 
 
-    public async beforeAction(action:any, request:Request) {
+    public async beforeAction(action: any, request: Request) {
         let allow;
         // @ts-ignore
         let user = request.user ?? this.user;
@@ -43,15 +44,27 @@ export class AccessControl extends ActionFilter {
         user.identity = request.identity ?? null;
 
         for (const rulesKey in this.rules) {
-            if ((allow = this.rules[rulesKey].allows(action, user, request))) {
+
+            let rule = this.rules[rulesKey];
+            if ((allow = await rule.allows(action, user, request))) {
                 return true;
             } else if (allow === false) {
-                this.denyAccess(user);
-
+                if (this.denyCallback != null) {
+                    rule.denyCallback.apply(rule, action);
+                } else {
+                    this.denyAccess(user);
+                }
                 return false;
             }
         }
-        this.denyAccess(user);
+
+
+        if (this.denyCallback != null) {
+            this.denyCallback.apply(null, action);
+        } else {
+            this.denyAccess(user);
+        }
+
         return false;
     }
 

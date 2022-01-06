@@ -10,35 +10,72 @@ var _ = require('lodash');
 import {Component} from "../base/Component";
 import {InvalidConfigException} from "../base/InvalidConfigException";
 import {Request, Response} from "express";
+import Utils from "../requiments/Utils";
 
 export class AccessRule extends Component {
 
     /**
      * @var bool whether this is an 'allow' rule or 'deny' rule.
      */
-    public allow:any;
+    public allow: any;
     /**
      * @var array list of action IDs that this rule applies to. The comparison is case-sensitive.
      * If not set or empty, it means this rule applies to all actions.
      */
-    public actions:any;
+    public actions: any;
 
     /**
      *  @var array list of the controller IDs that this rule applies to.
      */
-    public controllers:any;
+    public controllers: any;
 
     /**
      * - `?`: matches a guest user (not authenticated yet)
      * - `@`: matches an authenticated user
      */
 
-    public roles:any;
+    public roles: any;
 
     /**
      * @var array list of RBAC (Role-Based Access Control) permissions that this rules applies to.
      */
-    public permissions:any;
+    public permissions: any;
+
+    /**
+     * @var array|Closure parameters to pass to the [[User::can()]] function for evaluating
+     * user permissions in [[$roles]].
+     *
+     * If this is an array, it will be passed directly to [[User::can()]]. For example for passing an
+     * ID from the current request, you may use the following:
+     *
+     * ```php
+     * ['postId' => Yii::$app->request->get('id')]
+     * ```
+     *
+     * You may also specify a closure that returns an array. This can be used to
+     * evaluate the array values only if they are needed, for example when a model needs to be
+     * loaded like in the following code:
+     *
+     * ```php
+     * 'rules' => [
+     *     [
+     *         'allow' => true,
+     *         'actions' => ['update'],
+     *         'roles' => ['updatePost'],
+     *         'roleParams' => function($rule) {
+     *             return ['post' => Post::findOne(Yii::$app->request->get('id'))];
+     *         },
+     *     ],
+     * ],
+     * ```
+     *
+     * A reference to the [[AccessRule]] instance will be passed to the closure as the first parameter.
+     *
+     * @see roles
+     * @since 2.0.12
+     */
+    public roleParams: any = [];
+
 
     /**
      * @var array list of user IP addresses that this rule applies to. An IP address
@@ -48,13 +85,13 @@ export class AccessRule extends Component {
      * 20-bit private network block in RFC1918.
      * If not set or empty, it means this rule applies to all IP addresses.
      */
-    public ips:any;
+    public ips: any;
 
 
-    public allows(action:any, user:WebUser, request:Request) {
+    public async allows(action: any, user: WebUser, request: Request) {
         if (
             this.matchAction(action)
-            && this.matchRole(user)
+            && await this.matchRole(user)
         ) {
             return this.allow
         }
@@ -75,7 +112,7 @@ export class AccessRule extends Component {
      * @param Action $action the action
      * @return bool whether the rule applies to the action
      */
-    protected matchAction(action:any) {
+    protected matchAction(action: any) {
         return _.isEmpty(this.actions) || this.actions.includes(action.id);
     }
 
@@ -83,7 +120,7 @@ export class AccessRule extends Component {
      * @param Controller $controller the controller
      * @return bool whether the rule applies to the controller
      */
-    protected matchController(controller:any) {
+    protected matchController(controller: any) {
         //     if (empty($this->controllers)) {
         //         return true;
         //     }
@@ -98,22 +135,23 @@ export class AccessRule extends Component {
         return false;
     }
 
-    protected matchRole(user:any) {
-        let items = _.isEmpty(this.roles) ? [] : this.roles;
+    protected async matchRole(user: WebUser) {
+        let items = Utils.isEmpty(this.roles) ? [] : this.roles;
 
-        if (!_.isEmpty(this.permissions)) {
-            items = _.merge(items, this.permissions);
+        if (!Utils.isEmpty(this.permissions)) {
+            items = Utils.merge(items, this.permissions);
         }
 
-        if (_.isEmpty(items)) {
+        if (Utils.isEmpty(items)) {
             return true;
         }
 
 
-        if (user === false) {
+        if (!user) {
             throw new InvalidConfigException('The user application component must be available to specify roles in AccessRule.');
         }
 
+        let roleParams: any = [];
         for (const itemsKey in items) {
             let item = items[itemsKey];
             if (item === '?') {
@@ -126,6 +164,13 @@ export class AccessRule extends Component {
                 }
             } else {
                 //roleparams
+                if (!Utils.isEmpty(this.roleParams)) {
+                    roleParams = !Utils.isArray(this.roleParams) ? this.roleParams.apply(this) : this.roleParams;
+                }
+
+                if (await user.can(item, this.roleParams)) {
+                    return true;
+                }
             }
         }
 

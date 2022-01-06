@@ -7,17 +7,22 @@
 
 
 import {BaseChyz} from "../index";
+
 require('dotenv-flow').config();
 import Chyz from "../Chyz";
 import {WebUser} from "../web/WebUser";
 import {User} from "./Models/User";
 import {DbConnection} from "../base";
+import {AuthManager} from "../rbac/AuthManager";
 
 
 let config = {
     port: process.env.PORT,
     controllerpath: "C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
     components: {
+        authManager: {
+            class: AuthManager,
+        },
         db: {
             class: DbConnection,
             database: process.env.DBDATABASE,
