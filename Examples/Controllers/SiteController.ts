@@ -102,15 +102,8 @@ class SiteController extends Controller {
                         "admin"
                     ],
                     permissions: [
-                        "alprboxkoli",
-                        "edisboxkoli",
-                        "hubboxkoli",
-                        "edisboxold",
-                        "edisboxnew",
-                        "hubboxold",
-                        "hubboxnew",
-                        "alprboxold",
-                        "alprboxnew"
+                        "xxxx",
+
                     ],
                 }, user.authkey, null);
 
