@@ -110,7 +110,7 @@ class ApiController extends Controller {
                     {
                         'allow': true,
                         'actions': ['order/list' ],
-                        'roles': ['edis-manager'],
+                        'roles': ['editor'],
                     }
                 ]
             }
@@ -128,7 +128,6 @@ class ApiController extends Controller {
     async Login(req: Request, res: Response) {
         let data = req.body;
         data.Customer.status = "true";
-        data.Customer["2fa"] = "true";
 
         //Customer Model Create
         let customer = ModelManager.Customer.save();
@@ -148,8 +147,7 @@ class ApiController extends Controller {
             }
 
             data.Order.customer_id = cus.id;
-            // data.Order.total = 0;
-            // data.Order.status = true;
+            
             order.load(data, "Order");
             let res1 = await order.save({}, {transaction});
             if (!res1) {
@@ -188,8 +186,6 @@ class ApiController extends Controller {
             include: [
                 {
                     model: ModelManager.Products.model(),
-                    // as: 'product',
-                    // through: { attributes: [] } // Hide unwanted `PlayerGameTeam` nested object from results
                 }
             ]
         });
