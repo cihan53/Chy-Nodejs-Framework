@@ -153,7 +153,7 @@ export class WebUser extends Component {
             return false;
 
 
-        access = await accessChecker.checkAccess(this.getIdentity().id, permissionName, params);
+        access = await accessChecker.checkAccess(this.getId(), permissionName, params);
 
         if (allowCaching && Utils.isEmpty(params)) {
             // this._access[$permissionName] = $access;
