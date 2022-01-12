@@ -208,9 +208,9 @@ module.exports = ApiController
 
 Veritabanı işlemleri için model oluşturma, sequelize desteklidir.
 
-Model adı "Class" şeklinde bitmeli.
+Model adı "**Class**" şeklinde bitmeli.
 
-Örnek = "ModelAdiClass" 
+Örnek = "ModelName**Class**" 
 
 ```typescript
 import {Model, DataTypes} from "chyz/base/Model";
@@ -290,7 +290,9 @@ export class ProductsClass extends Model {
     }
 }
 
-
+/**
+ * 
+ */
 export class CategoriesClass extends Model {
     [x: string]: any;
 
@@ -348,9 +350,11 @@ export class CategoriesClass extends Model {
  *  }
  * @type {Customer}
  */
+import {  ModelManager} from "chyz/dist";
 import {Customer} from "./Customer";
+
 //Customer Model Create
-let customer: Customer = Customer;
+let customer: Customer = ModelManager.Customer;
 customer.load(req.body, "Customer");//load customer data
 let cus: any = await customer.save();
 
@@ -366,7 +370,7 @@ Transaction oluşturma
         // get transaction
         transaction = await BaseChyz.getComponent("db").transaction();
         //Customer Model Create
-        let customer: Customer = new Customer();
+        let customer: Customer = ModelManager.Customer;
         customer.load(data, "Customer");//load customer data
         let cus: any = await customer.save({}, {transaction});
         if (!cus) {
@@ -375,9 +379,9 @@ Transaction oluşturma
     } catch (e) {
         if (transaction) {
             await transaction.rollback();
-            BaseChyz.warn("Rollback transaction")
+            BaseChyz.warn("Rollback transaction");
         }
-        ...
+        
     }
 ```
 
@@ -480,16 +484,25 @@ export class User extends Model implements IdentityInterface {
     }
 
     async findIdentityByAccessToken(token, type) {
+        
+        
         let decoded = JsonWebToken.decode(token, {complete: true})
+        if (!decoded.payload.user) {
+            return null;
+        }
         let identity = await this.findOne({where: {id: parseInt(decoded.payload.user)}});
         if(identity){
             BaseChyz.debug("Find Identity By AccessToken: User Found", decoded.payload)
             try {
                 JsonWebToken.verify(token, identity.salt_text);
+                this.setIdentity(identity);
                 BaseChyz.debug("Find Identity By AccessToken: User Verify Success")
-                return identity;
+                return this;
             } catch(err) {
-                BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
+                if (err.name == "TokenExpiredError")
+                    BaseChyz.debug("Find Identity By AccessToken: Token Expired")
+                else
+                    BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
                 return null;
             }
         }
