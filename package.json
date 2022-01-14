@@ -1,8 +1,7 @@
 {
   "name": "chyz",
-  "version": " 1.0.13-rc.18",
+  "version": " 1.0.13-rc.19",
   "description": "Nodejs Micro service Framework",
-  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon -t --trace-warnings index.ts",
     "debug": "ts-node index.ts",
