@@ -296,6 +296,15 @@ export class Model extends Component {
         return this._model.findAll(...arguments)
     }
 
+    /**
+     * return {count : number , rows: any}
+     * @param args
+     */
+    public findAndCountAll(...args: any[]) {
+        return this._model.findAndCountAll(...arguments)
+    }
+
+
 
     public validate() {
 
