@@ -18,7 +18,7 @@ export class RestClient extends Component {
     }
 
     public get(url: string, args: any[],headers:any={}) {
-        return axios.post(url, args ,headers )
+        return axios.get(url, args ,headers )
     }
 
     public Rest(params: any) {
