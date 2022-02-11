@@ -3,14 +3,14 @@ import {RouteDefinition} from "./model/RouteDefinition";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
-import {BaseError, ModelManager} from "./base";
-import {Exception} from "./base/db/Exception";
+import {ModelManager} from "./base";
 
 
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
 const validate = require('validate.js');
+
 
 var ip = require('ip');
 var bodyParser = require('body-parser')
@@ -140,7 +140,7 @@ export default class BaseChyz {
         this.config = config;
 
 
-        // logger settin
+        // logger setting
         this.logProvider().level = log4js.levels.ALL;
         this.logProvider().configure(this._logConfig);
 
