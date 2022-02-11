@@ -3,7 +3,8 @@ import {RouteDefinition} from "./model/RouteDefinition";
 import {NextFunction, Request, Response} from "express";
 import {Controller} from "./base/Controller";
 import Utils from "./requiments/Utils";
-import {ModelManager} from "./base";
+import {BaseError, ModelManager} from "./base";
+import {Exception} from "./base/db/Exception";
 
 
 const express = require("express");
@@ -23,7 +24,7 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
-    private static _validate:any=validate;
+    private static _validate: any = validate;
     private _logConfig: any = require('./log/config/log4js.json') ?? {}
     private _controllerpath: string = "Controllers"
     private static controllers: Array<Controller> = []
@@ -48,8 +49,7 @@ export default class BaseChyz {
     }
 
     init() {
-        this.logProvider().level = log4js.levels.ALL;
-        this.logProvider().configure(this._logConfig);
+
 
         /**
          * set request id
@@ -140,16 +140,21 @@ export default class BaseChyz {
         this.config = config;
 
 
+        // logger settin
+        this.logProvider().level = log4js.levels.ALL;
+        this.logProvider().configure(this._logConfig);
+
         let components = Utils.findKeyValue(config, "components")
         if (components) {
             for (const componentsKey in components) {
+
                 let comp = components[componentsKey];
-                BaseChyz.logs().info("Create Component ", componentsKey)
+                BaseChyz.debug("Create Component ", componentsKey)
                 try {
                     BaseChyz.components[componentsKey] = Utils.createObject(new comp.class, comp);
                     BaseChyz.components[componentsKey]?.init();
-                }catch (e) {
-                    console.error(e)
+                } catch (e) {
+                    BaseChyz.error("Create Component ", e)
                 }
 
             }
@@ -165,7 +170,6 @@ export default class BaseChyz {
                 // BaseChyz.middlewares[middlewareKey] = Utils.createObject(new middleware1.class, middleware1);
             }
         }
-
 
         this.init();
 
@@ -263,14 +267,14 @@ export default class BaseChyz {
                 // @ts-ignore
                 let className = file.split(".")[0] + "Class";
                 if (model[className])
-                    models[className.replace("Class","")] = new model[className];
+                    models[className.replace("Class", "")] = new model[className];
             }
         })
 
         ModelManager._register(models);
 
         for (const key of Object.keys(ModelManager)) {
-            if(key!="_register"){
+            if (key != "_register") {
                 ModelManager[key].init();
             }
         }
@@ -310,7 +314,7 @@ export default class BaseChyz {
                                 BaseChyz.debug(`Call Request id ${instance.id}`)
                                 await instance.beforeAction(route, req, res)
                                 next()
-                            } catch (e) {
+                            } catch (e: any) {
                                 BaseChyz.error(e);
 
                                 res.status(e.statusCode || 500)

@@ -15,7 +15,7 @@ export class BaseError extends Error {
         this.message= Utils.isString(message)?message: JSON.stringify(message);
         this.name = this.constructor.name // good practice
         this.statusCode = statusCode // error code for responding to client
-        Error.captureStackTrace(this)
+        //Error.captureStackTrace(this)
     }
 
     toString(){
