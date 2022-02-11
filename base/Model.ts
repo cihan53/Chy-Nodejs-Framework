@@ -9,7 +9,16 @@ import BaseChyz from "../BaseChyz";
 import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
-import {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
+import {
+    DatabaseError,
+    DataTypes,
+    ExclusionConstraintError,
+    ForeignKeyConstraintError,
+    Model as SModel,
+    TimeoutError,
+    UniqueConstraintError,
+    ValidationError,
+} from "sequelize";
 import {Exception} from "./db/Exception";
 
 export {DataTypes, NOW} from "sequelize";
@@ -91,11 +100,13 @@ export class Model extends Component {
     constructor(sequelize?: IDBDatabase) {
         super();
         this._tableName = this.alias();
+
+        BaseChyz.debug("Model constructor", this._tableName)
         // this._sequelize = BaseChyz.getComponent("db").db;
         if (sequelize != null)
             this._sequelize = sequelize;
         else
-            this._sequelize = BaseChyz.getComponent("db").db;
+            this._sequelize = Model.getDb();
 
         if (!Utils.isEmpty(this.attributes())) {
 
@@ -208,7 +219,7 @@ export class Model extends Component {
         let result: any;
         try {
             result = await this.model().create(p, options)
-        } catch (e) {
+        } catch (e: any) {
             BaseChyz.debug(`Model[${this.constructor.name}].create`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
@@ -242,7 +253,7 @@ export class Model extends Component {
         let result: any;
         try {
             result = await this.model().bulkCreate(p, options)
-        } catch (e) {
+        } catch (e: any) {
             BaseChyz.debug(`Model[${this.constructor.name}].bulkCreate`, e)
             if (e instanceof ValidationError) {
                 let validationErrorItems = e.errors;
@@ -305,7 +316,6 @@ export class Model extends Component {
     }
 
 
-
     public validate() {
 
     }
@@ -365,8 +375,6 @@ export class Model extends Component {
     public relations(): Relation[] {
         return []
     }
-
-
 
 
 }

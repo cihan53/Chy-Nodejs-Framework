@@ -18,11 +18,9 @@ import {AuthManager} from "../rbac/AuthManager";
 
 let config = {
     port: process.env.PORT,
-    controllerpath: "C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
+    controllerpath:process.env.CONTROLLER_PATH,
     components: {
-        authManager: {
-            class: AuthManager,
-        },
+
         db: {
             class: DbConnection,
             database: process.env.DBDATABASE,
@@ -34,6 +32,21 @@ let config = {
                 // disable logging; default: console.log
                 logging: (msg: any) => BaseChyz.debug(msg)
             }
+        },
+        db2: {
+            class: DbConnection,
+            database: process.env.DBDATABASE,
+            username: process.env.DBUSER,
+            password: process.env.DBPASS,
+            options: {
+                host: process.env.DBHOST,
+                dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+                // disable logging; default: console.log
+                logging: (msg:any) => BaseChyz.debug('DB2',msg)
+            }
+        },
+        authManager: {
+            class: AuthManager,
         },
         user: {
             'class': WebUser,
