@@ -352,8 +352,8 @@ export default class BaseChyz {
 
     public middleware() {
 
-        BaseChyz.express.use(bodyParser.json())
-        BaseChyz.express.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
+        BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
+        BaseChyz.express.use(bodyParser.urlencoded({ limit: '1mb',extended: true })); // support encoded bodies
         BaseChyz.express.use(methodOverride());
         BaseChyz.express.use(methodOverride());
 
