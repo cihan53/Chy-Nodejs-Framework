@@ -242,8 +242,8 @@ export default class BaseChyz {
         if (res.headersSent) {
             return next(err)
         }
-        res.status(500)
-        res.json('error', {error: err})
+
+        res.status(500).json(  {error: err})
     }
 
     public static getComponent(key: any) {

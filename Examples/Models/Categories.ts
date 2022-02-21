@@ -5,10 +5,14 @@
  * Github:https://github.com/cihan53/
  */
 import {DataTypes, Model, ModelManager, Relation} from "../../base";
+import {BaseChyz} from "../../index";
 
 export class CategoriesClass extends Model {
     [x: string]: any;
 
+    constructor( ) {
+        super(BaseChyz.getComponent("db2").db);
+    }
     tableName() {
         return 'categories';
     }
