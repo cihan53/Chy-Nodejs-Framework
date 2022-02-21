@@ -48,7 +48,13 @@ function wildTest(wildcard: string, str: string) {
 const matchWildcard = (pattern: string, string: string, options: any = {}) => {
     return wildTest(pattern, string)
 }
+
+const t = function (text: string) {
+    return text;
+}
+
 export default {
+    t,
     createObject,
     findKeyValue,
     sleep,

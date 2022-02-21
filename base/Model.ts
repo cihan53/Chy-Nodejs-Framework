@@ -106,7 +106,7 @@ export class Model extends Component {
         if (sequelize != null)
             this._sequelize = sequelize;
         else
-            this._sequelize = Model.getDb();
+            this._sequelize = this.getDb();
 
         if (!Utils.isEmpty(this.attributes())) {
 
@@ -132,7 +132,7 @@ export class Model extends Component {
      * You may override this method if you want to use a different database connection.
      * @return Connection the database connection used by this AR class.
      */
-    public static getDb() {
+    public  getDb() {
         return BaseChyz.getComponent("db").db
     }
 
