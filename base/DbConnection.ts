@@ -12,10 +12,9 @@ import BaseChyz from "../BaseChyz";
 export class DbConnection extends Component {
 
     public database!: string;
-    public username!: string
-    public password!: string
-    public options?: object
-    public _transaction:any;
+    public username!: string;
+    public password!: string;
+    public options?: object;
 
     private _db: any
 
@@ -44,7 +43,7 @@ export class DbConnection extends Component {
         this._db = value;
     }
 
-    public transaction(){
+    public transaction() {
         return this.db.transaction();
     }
 
