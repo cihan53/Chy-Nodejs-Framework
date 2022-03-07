@@ -11,6 +11,42 @@ const log4js = require("log4js");
 const fs = require('fs');
 const validate = require('validate.js');
 
+/**
+ * Use
+ *  selectedBox: {
+ *     array: {
+ *        id: {
+ *          numericality: {
+ *            onlyInteger: true,
+ *            greaterThan: 0
+ *          }
+ *       }
+ *      }
+ *    },
+ * @param arrayItems
+ * @param itemConstraints
+ */
+validate.validators.array = (arrayItems: any, itemConstraints: any) => {
+    const arrayItemErrors = arrayItems.reduce((errors: any, item: any, index: any) => {
+        const error = validate(item, itemConstraints);
+        if (error) errors[index] = {error: error};
+        return errors;
+    }, {});
+
+    return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
+};
+
+
+validate.validators.tokenString = (items: any, itemConstraints: any) => {
+    let arrayItems = items.split(",");
+    const arrayItemErrors = arrayItems.reduce((errors: any, item: any, index: any) => {
+        const error = validate(item, itemConstraints);
+        if (error) errors[index] = {error: error};
+        return errors;
+    }, {});
+
+    return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
+};
 
 var ip = require('ip');
 var bodyParser = require('body-parser')
@@ -243,7 +279,7 @@ export default class BaseChyz {
             return next(err)
         }
 
-        res.status(500).json(  {error: err})
+        res.status(500).json({error: err})
     }
 
     public static getComponent(key: any) {
@@ -353,7 +389,7 @@ export default class BaseChyz {
     public middleware() {
 
         BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
-        BaseChyz.express.use(bodyParser.urlencoded({ limit: '1mb',extended: true })); // support encoded bodies
+        BaseChyz.express.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
         BaseChyz.express.use(methodOverride());
 
