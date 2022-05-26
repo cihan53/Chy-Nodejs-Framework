@@ -111,7 +111,7 @@ class ApiController extends Controller {
     @get("order/list")
     async listOrder(req: Request, res: Response) {
         const {Products}: { Products: ProductsClass } = ModelManager;
-        let product = await Products.findAll( );
+        let product = await Products.cache().findAll( );
         return res.json(product)
 
     }

@@ -109,7 +109,7 @@ export class WebUser extends Component {
 
     public getId() {
         let identity = this.getIdentity();
-        return identity !== null ? identity.getId() : null;
+        return identity !== null ? identity.id : null;
     }
 
     /**

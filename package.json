@@ -1,6 +1,6 @@
 {
   "name": "chyz",
-  "version": " 1.0.13-rc.26",
+  "version": " 1.1.0-rc.0",
   "description": "Nodejs Micro service Framework",
   "scripts": {
     "dev": "nodemon -t --trace-warnings index.ts",
@@ -37,6 +37,7 @@
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.6.5",
+    "sequelize-transparent-cache": "^2.3.0",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
