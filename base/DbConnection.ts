@@ -9,12 +9,15 @@ const {Sequelize} = require("sequelize");
 import {Component} from "./Component";
 import BaseChyz from "../BaseChyz";
 
+const sequelizeCache = require('sequelize-transparent-cache')
+
 export class DbConnection extends Component {
 
     public database!: string;
     public username!: string;
     public password!: string;
     public options?: object;
+
 
     private _db: any
 
@@ -31,8 +34,10 @@ export class DbConnection extends Component {
 
             });
 
+
         // await this.connect();
     }
+
 
 
     get db(): any {

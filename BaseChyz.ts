@@ -6,6 +6,7 @@ import Utils from "./requiments/Utils";
 import {ModelManager} from "./base";
 
 
+const https = require('https');
 const express = require("express");
 const log4js = require("log4js");
 const fs = require('fs');
@@ -426,12 +427,25 @@ export default class BaseChyz {
     public Start() {
 
         BaseChyz.info("Express Server Starting")
-        BaseChyz.express.listen(this._port, () => {
-            BaseChyz.info("Express Server Start ")
-            BaseChyz.info(`Liten Port ${this._port}`)
-            BaseChyz.info(`http://localhost:${this._port}`)
-            BaseChyz.info(`http://${ip.address()}:${this._port}`)
-        })
+
+        if (this.config?.ssl) {
+            const httpsServer = https.createServer(this.config?.ssl , BaseChyz.express);
+            httpsServer.listen(this._port, () => {
+                BaseChyz.info("Express Server Start ")
+                BaseChyz.info(`Liten Port ${this._port}`)
+                BaseChyz.info(`https://localhost:${this._port}`)
+                BaseChyz.info(`https://${ip.address()}:${this._port}`)
+            })
+        }else{
+            BaseChyz.express.listen(this._port, () => {
+                BaseChyz.info("Express Server Start ")
+                BaseChyz.info(`Liten Port ${this._port}`)
+                BaseChyz.info(`http://localhost:${this._port}`)
+                BaseChyz.info(`http://${ip.address()}:${this._port}`)
+            })
+        }
+
+
         return this;
     }
 

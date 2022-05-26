@@ -45,15 +45,15 @@ export class AuthItemClass extends Model {
         this.model().removeAttribute('id')
     }
 
-    relations(): Relation[] {
-        return [
-            {
-                type: "hasOne",
-                foreignKey: "item_name",
-                model: ModelManager.AuthAssignment.model()
-            }
-        ]
-    }
+    // relations(): Relation[] {
+    //     return [
+    //         {
+    //             type: "hasOne",
+    //             foreignKey: "item_name",
+    //             model: ModelManager.AuthAssignment.model()
+    //         }
+    //     ]
+    // }
 
 }
 

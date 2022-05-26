@@ -14,6 +14,7 @@ import {Exception} from "./db/Exception";
 
 export {DataTypes, NOW} from "sequelize";
 
+
 export interface Relation {
     type: "hasOne" | "hasMany" | "belongsToMany" | "belongsTo",
     allowNull?: boolean,
@@ -127,12 +128,20 @@ export class Model extends Component {
         return BaseChyz.getComponent("db").db
     }
 
+    public getDbConnection() {
+        return BaseChyz.getComponent("db");
+    }
+
     get sequelize(): any {
         return this._sequelize;
     }
 
     set sequelize(value: any) {
         this._sequelize = value;
+    }
+
+    public provider() {
+        return this._sequelize;
     }
 
 
@@ -181,6 +190,7 @@ export class Model extends Component {
             }
         }
 
+
     }
 
     public alias() {
@@ -200,8 +210,7 @@ export class Model extends Component {
     }
 
 
-
-    set setModel(value: any) {
+    public setModel(value: any) {
         this._model = value;
     }
 
@@ -452,8 +461,8 @@ export class Model extends Component {
      * );``
      * @param query
      */
-    public async rawQuery(query: string, options: any = {type: QueryTypes.SELECT,nest: true }) {
-        return await this.model().query(query,options);
+    public async rawQuery(query: string, options: any = {type: QueryTypes.SELECT, nest: true}) {
+        return await this.model().query(query, options);
     }
 
 
@@ -470,7 +479,7 @@ export class Model extends Component {
      * @param args
      */
     public findAll(...args: any[]) {
-        return this._model.findAll(...arguments)
+        return this._model. findAll(...arguments)
     }
 
     /**

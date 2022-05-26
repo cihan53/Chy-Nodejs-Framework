@@ -7,18 +7,19 @@
 
 
 import {BaseChyz} from "../index";
-
-require('dotenv-flow').config();
 import Chyz from "../Chyz";
 import {WebUser} from "../web/WebUser";
 import {User} from "./Models/User";
 import {DbConnection} from "../base";
 import {AuthManager} from "../rbac/AuthManager";
 
+require('dotenv-flow').config();
+
+
 
 let config = {
     port: process.env.PORT,
-    controllerpath:process.env.CONTROLLER_PATH,
+    controllerpath: process.env.CONTROLLER_PATH,
     components: {
 
         db: {
@@ -26,6 +27,7 @@ let config = {
             database: process.env.DBDATABASE,
             username: process.env.DBUSER,
             password: process.env.DBPASS,
+
             options: {
                 host: process.env.DBHOST,
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
@@ -42,7 +44,7 @@ let config = {
                 host: process.env.DBHOST,
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
                 // disable logging; default: console.log
-                logging: (msg:any) => BaseChyz.debug('DB2',msg)
+                logging: (msg: any) => BaseChyz.debug('DB2', msg)
             }
         },
         authManager: {
