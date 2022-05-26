@@ -1,6 +1,6 @@
 {
   "name": "chyz",
-  "version": " 1.1.0-rc.0",
+  "version": " 1.1.0-rc.1",
   "description": "Nodejs Micro service Framework",
   "scripts": {
     "dev": "nodemon -t --trace-warnings index.ts",
@@ -51,6 +51,9 @@
   "keywords": [
     "Framework",
     "RespAPI",
-    "microservice"
+    "microservice",
+    "micro service",
+    "easy configuration",
+    "Rbac support"
   ]
 }
