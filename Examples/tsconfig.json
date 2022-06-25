@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+//    "isolatedModules": true,
+    "removeComments": true,
+//    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "__tests__/**/*.ts",
+    "Controllers/**/*.ts",
+    "Models/**/*.ts",
+    "environment.d.ts",
+  ]
+}

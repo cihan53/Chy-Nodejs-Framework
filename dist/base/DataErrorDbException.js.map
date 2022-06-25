@@ -1,0 +1,1 @@
+{"version":3,"file":"DataErrorDbException.js","sourceRoot":"","sources":["../../base/DataErrorDbException.ts"],"names":[],"mappings":";AAAA;;;;;GAKG;;;AAIH,2CAAsC;AAEtC,MAAa,oBAAqB,SAAQ,qBAAS;IAC/C,YAAqB,OAAe;QAChC,KAAK,CAAC,OAAO,EAAC,GAAG,CAAC,CAAC;QADF,YAAO,GAAP,OAAO,CAAQ;IAEpC,CAAC;CACJ;AAJD,oDAIC"}
