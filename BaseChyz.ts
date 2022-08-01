@@ -8,6 +8,7 @@ import {ModelManager} from "./base";
 
 const https = require('https');
 const express = require("express");
+const compression = require('compression')
 const log4js = require("log4js");
 const fs = require('fs');
 const validate = require('validate.js');
@@ -407,6 +408,9 @@ export default class BaseChyz {
             res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
             next();
         });
+
+        // compress all responses
+        BaseChyz.express.use(compression())
 
         //Middlewares
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
