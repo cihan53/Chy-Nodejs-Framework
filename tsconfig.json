@@ -6,15 +6,11 @@
     "strict": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "importHelpers": true,
-    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
-    "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
-
   "exclude": [
     "node_modules",
     "**/Examples/*"
