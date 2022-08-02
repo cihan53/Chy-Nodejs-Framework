@@ -24,6 +24,12 @@ export class ActionFilter extends Behavior {
 
     }
 
+    /**
+     *
+     * @param route
+     * @param req
+     * @param res
+     */
     public async beforeFilter(route: any, req: Request, res: Response) {
         if (!this.isActive(route)) {
             return;
