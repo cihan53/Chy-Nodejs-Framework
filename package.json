@@ -1,7 +1,6 @@
 {
   "name": "chyz",
-  "version": "1.2.4-rc.6",
-  "main": "dist/index",
+  "version": "1.2.4-rc.7",
   "typings": "dist/index",
   "description": "Nodejs Micro service Framework",
   "scripts": {
