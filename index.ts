@@ -1,18 +1,17 @@
-export {Request, Response, NextFunction} from "express";
-export {RouteDefinition} from "./model/RouteDefinition";
-export {WebUser} from "./web/WebUser";
-
-
+import RestClient from "./base/RestClient";
 import BaseChyz from "./BaseChyz";
-
-;
-
 /**
  *
  */
 const Chyz = new BaseChyz();
+
+
+export {Request, Response, NextFunction} from "express";
+export {RouteDefinition} from "./model/RouteDefinition";
+export {WebUser} from "./web/WebUser";
+
 export default Chyz;
-export {BaseChyz,}
+export {BaseChyz,RestClient}
 export {
     ActionFilter,
     BaseObject,
@@ -40,5 +39,6 @@ export {
     HttpBasicAuth
 } from "./filters/auth";
 
-export {controller,get,post} from "./decorator";
+export {controller, get, post} from "./decorator";
 export * as utils from "./requiments/Utils";
+
