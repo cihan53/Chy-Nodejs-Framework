@@ -7,31 +7,34 @@
  *
  */
 
+
+
 import {RestClient} from "./base/RestClient";
 import BaseChyz from "./BaseChyz";
+
 /**
  *
  */
 const Chyz = new BaseChyz();
-export {Request, Response, NextFunction} from "express";
+export {Request, Response, NextFunction} from "./base/CRequest";
 export {RouteDefinition} from "./model/RouteDefinition";
 export {WebUser} from "./web/WebUser";
-export {BaseChyz,RestClient}
+export {BaseChyz, RestClient}
 export {
-    ActionFilter	,
-    BaseError		,
-    Behavior		,
-    Component		,
+    ActionFilter,
+    BaseError,
+    Behavior,
+    Component,
     Configurable,
     CWebController,
     DbConnection,
     ForbiddenHttpException,
-    InvalidConfigException		,
-    InvalidArgumentException	,
-    NotFoundHttpException		,
-    UnauthorizedHttpException	,
-    DataErrorDbException		,
-    ValidationHttpException	,
+    InvalidConfigException,
+    InvalidArgumentException,
+    NotFoundHttpException,
+    UnauthorizedHttpException,
+    DataErrorDbException,
+    ValidationHttpException,
     Model,
     ModelManager,
 } from "./base";

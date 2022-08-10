@@ -18,7 +18,6 @@ require('dotenv-flow').config();
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
-
     components: {
         // db: {
         //     class: DbConnection,

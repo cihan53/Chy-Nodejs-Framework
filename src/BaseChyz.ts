@@ -1,7 +1,7 @@
-import 'reflect-metadata';
-import {RouteDefinition} from "./model/RouteDefinition";
-import {NextFunction, Request, Response} from "express";
+
+import {Request, Response, NextFunction} from "./base/CRequest";
 import {CWebController, ModelManager} from "./base";
+
 import Utils from "./requiments/Utils";
 import {Logger} from "./base/Logger";
 
@@ -53,13 +53,34 @@ validate.validators.tokenString = (items: any, itemConstraints: any) => {
 var ip = require('ip');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
+const Server = express();
+
+/**
+ * set request id
+ */
+Object.defineProperty(Server.request, 'reqId', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+Object.defineProperty(Server.request, 'user', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+Object.defineProperty(Server.request, 'identity', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+
 
 
 export default class BaseChyz {
     private config: any;
     static app: string;
     static httpServer: any;
-    static express = express()
+    static express = Server
     private _port: number = 3001;
     static db: any;
     static routes: any;
@@ -83,28 +104,6 @@ export default class BaseChyz {
 
         if (this.config.logger instanceof Logger)
             BaseChyz.logger = this.config.logger;
-
-        /**
-         * set request id
-         */
-        Object.defineProperty(BaseChyz.express.request, 'reqId', {
-            configurable: true,
-            enumerable: true,
-            writable: true
-        })
-
-        Object.defineProperty(BaseChyz.express.request, 'user', {
-            configurable: true,
-            enumerable: true,
-            writable: true
-        })
-
-        Object.defineProperty(BaseChyz.express.request, 'identity', {
-            configurable: true,
-            enumerable: true,
-            writable: true
-        })
-
 
         /**
          * server port setting

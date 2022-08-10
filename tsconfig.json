@@ -77,10 +77,13 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "outDir": "./dist"
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+
   },
   "include": [
     "./src",
+    "./src/types",
     "package.json",
     "README.md"
   ],

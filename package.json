@@ -1,4 +1,5 @@
 {
+  "types": "./src/types/Request.d.ts",
   "scripts": {
     "debug": "ts-node src/index.ts",
     "build2": "npx tsc -p tsconfig.json",

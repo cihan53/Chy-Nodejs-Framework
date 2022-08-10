@@ -32,15 +32,10 @@ export class User implements IdentityInterface {
         throw new Error("Method not implemented.");
     }
 
-    /**
-     *
-     * @param permissionName
-     * @param params
-     * @param allowCaching
-     */
-    can(permissionName: string, params: any[], allowCaching: boolean): boolean | null {
-        throw new Error("Method not implemented.");
+    can(permissionName: string, params: any[], allowCaching: boolean): Promise<boolean | null> {
+        return Promise.resolve(null);
     }
+
 
     /**
      *
