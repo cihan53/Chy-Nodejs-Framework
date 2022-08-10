@@ -7,13 +7,13 @@
 // @ts-ignore
 
 
-import {IdentityInterface} from "../../web/IdentityInterface";
-import {DataTypes} from "../../base";
-import {BaseChyz} from "../../index";
+import {IdentityInterface} from "chyz/web/IdentityInterface";
+import {DataTypes} from "chyz/base";
+import {BaseChyz} from "chyz";
 
 const JsonWebToken = require("jsonwebtoken");
 
-export class User   implements IdentityInterface {
+export class User implements IdentityInterface {
     [x: string]: any;
 
 
@@ -90,10 +90,10 @@ export class User   implements IdentityInterface {
         }
     }
 
-    async findIdentityByAccessToken(token, type) {
+    async findIdentityByAccessToken(token: any, type: any) {
 
         let decoded = JsonWebToken.decode(token, {complete: true})
-        if(!decoded.payload.user) {
+        if (!decoded.payload.user) {
             return null;
         }
 
@@ -104,7 +104,7 @@ export class User   implements IdentityInterface {
                 JsonWebToken.verify(token, identity.authkey);
                 BaseChyz.debug("Find Identity By AccessToken: User Verify Success")
                 return identity;
-            } catch (err) {
+            } catch (err: any) {
                 if (err.name == "TokenExpiredError")
                     BaseChyz.debug("Find Identity By AccessToken: Token Expired")
                 else
@@ -115,8 +115,6 @@ export class User   implements IdentityInterface {
         BaseChyz.debug("Find Identity By AccessToken: User Verify Failed")
         return null;
     }
-
-
 
 
 }

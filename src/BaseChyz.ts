@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import {RouteDefinition} from "./model/RouteDefinition";
 import {NextFunction, Request, Response} from "express";
-import {CWebController} from "./base";
+import {CWebController, ModelManager} from "./base";
 import Utils from "./requiments/Utils";
-import {ModelManager} from "./base";
+import {Logger} from "./base/Logger";
 
 
 const https = require('https');
@@ -54,7 +54,7 @@ var ip = require('ip');
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 
-export {Request, Response, NextFunction} from "express";
+
 export default class BaseChyz {
     private config: any;
     static app: string;
@@ -63,21 +63,13 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
+    static logger: Logger = new Logger();
     private static _validate: any = validate;
-    private _logConfig: any = require('./log/config/log4js.json') ?? {}
     private _controllerpath: string = "Controllers"
     private static controllers: Array<CWebController> = []
     public static components: any = {}
     public static middlewares: any = {}
 
-
-    get logConfig(): any {
-        return this._logConfig;
-    }
-
-    set logConfig(value: any) {
-        this._logConfig = value;
-    }
 
     get controllerpath(): string {
         return this._controllerpath;
@@ -89,6 +81,8 @@ export default class BaseChyz {
 
     init() {
 
+        if (this.config.logger instanceof Logger)
+            BaseChyz.logger = this.config.logger;
 
         /**
          * set request id
@@ -180,8 +174,8 @@ export default class BaseChyz {
 
 
         // logger setting
-        this.logProvider().level = log4js.levels.ALL;
-        this.logProvider().configure(this._logConfig);
+        // this.logProvider().level = log4js.levels.ALL;
+        // this.logProvider().configure(this._logConfig);
 
         let components = Utils.findKeyValue(config, "components")
         if (components) {
@@ -323,9 +317,10 @@ export default class BaseChyz {
      * load contoller
      */
     async loadController() {
-        let articlesEndpoints: string[] = [];
-        fs.readdirSync(`${this._controllerpath}/`).forEach((file: string) => {
+        // let articlesEndpoints: string[] = [];
+        for (const file of fs.readdirSync(`${this._controllerpath}/`)) {
             let controller = require(`${this._controllerpath}/${file}`);
+            // let controller = await import(`${this._controllerpath}/${file}`);
 
             // This is our instantiated class
             const instance: CWebController = new controller();
@@ -386,7 +381,7 @@ export default class BaseChyz {
 
                 });
             }
-        })
+        }
     }
 
     public middleware() {

@@ -4,13 +4,13 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-import BaseChyz from "../BaseChyz";
+import {Request,Response,BaseChyz} from "../index";
 import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
 import {ActionFilter} from "../base/ActionFilter";
 import {AccessRule} from "./AccessRule";
 import {WebUser} from "../web/WebUser";
 import Utils from "../requiments/Utils";
-import {NextFunction, Request, Response} from "express";
+
 
 export class AccessControl extends ActionFilter {
 
@@ -33,7 +33,7 @@ export class AccessControl extends ActionFilter {
     }
 
 
-    public async beforeAction(action: any, request: Request) {
+    public async beforeAction(action: any, request: Request,res:Response)  {
         let allow;
         // @ts-ignore
         let user = request.user ?? this.user;

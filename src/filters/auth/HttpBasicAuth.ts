@@ -5,10 +5,8 @@
  * Github:https://github.com/cihan53/
  */
 
-import {HttpHeaderAuth} from "./HttpHeaderAuth";
 import {Request, Response} from "express";
 import {WebUser} from "../../web/WebUser";
-import Utils from "../../requiments/Utils";
 import {AuthMethod} from "./AuthMethod";
 import {InvalidConfigException} from "../../base";
 import BaseChyz from "../../BaseChyz";

@@ -5,12 +5,12 @@
  * Github:https://github.com/cihan53/
  */
 import {WebUser} from "../web/WebUser";
-
-var _ = require('lodash');
 import {Component} from "../base/Component";
 import {InvalidConfigException} from "../base/InvalidConfigException";
-import {Request, Response} from "express";
+import {Request} from "express";
 import Utils from "../requiments/Utils";
+
+var _ = require('lodash');
 
 export class AccessRule extends Component {
 
@@ -151,6 +151,7 @@ export class AccessRule extends Component {
             throw new InvalidConfigException('The user application component must be available to specify roles in AccessRule.');
         }
 
+        // @ts-ignore
         let roleParams: any = [];
         for (const itemsKey in items) {
             let item = items[itemsKey];

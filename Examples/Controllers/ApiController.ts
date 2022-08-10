@@ -7,23 +7,16 @@
  *
  */
 
-import {CWebController, ForbiddenHttpException, ModelManager, ValidationHttpException} from "../../base";
-import BaseChyz from "../../BaseChyz";
-// @ts-ignore
-import {Request, Response} from "express";
-import {controller, get, post} from "../../decorator";
-import {JwtHttpBearerAuth} from "../../filters/auth";
-
+import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, JwtHttpBearerAuth, ModelManager, post, Request, Response, ValidationHttpException} from "chyz";
 
 @controller("/api")
-class ApiController extends CWebController {
+export class ApiController extends CWebController {
 
-    public myCheck(token) {
+    public myCheck(token: any) {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
     public behaviors(): any[] {
-
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
@@ -47,7 +40,7 @@ class ApiController extends CWebController {
     @get("/")
     Index(req: Request, res: Response) {
 
-        BaseChyz.logs().info("Site Controller Burası", this.id)
+        BaseChyz.logs().info("Site Controller Burası")
         return res.json({message: "index sayfası"})
     }
 
@@ -86,7 +79,7 @@ class ApiController extends CWebController {
             // commit
             await transaction.commit();
 
-        } catch (e) {
+        } catch (e: any) {
             if (transaction) {
                 await transaction.rollback();
                 BaseChyz.warn("Rollback transaction")

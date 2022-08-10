@@ -6,14 +6,11 @@
  */
 
 import {Configurable} from "./Configurable";
-import BaseChyz from "../BaseChyz";
+import {Logger} from "./Logger";
 
-export class BaseObject implements Configurable {
-
+export class CBaseObject implements Configurable {
 
     public init() {
-
-        BaseChyz.debug("BaseObject init.....",)
-
+        Logger.debug("BaseObject init.....")
     }
 }

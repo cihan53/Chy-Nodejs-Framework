@@ -5,7 +5,6 @@
  * Github:https://github.com/cihan53/
  */
 // import _ from "lodash";
-import {Utils} from "sequelize";
 
 const _ = require('lodash');
 /**

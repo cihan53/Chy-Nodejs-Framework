@@ -1,6 +1,5 @@
-export {ActionFilter} from "./ActionFilter"
-export {BaseObject} from "./BaseObject"
 export {BaseError} from "./BaseError"
+export {ActionFilter} from "./ActionFilter"
 export {Behavior} from "./Behavior"
 export {Component} from "./Component"
 export {Configurable} from "./Configurable"

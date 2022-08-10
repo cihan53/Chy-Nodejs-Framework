@@ -8,9 +8,9 @@ import {Model} from "./Model"
  *  Github:https://github.com/cihan53/
  *
  */
-interface ObjectConstructor {
-    _register(o: Model): void;
-}
+// interface ObjectConstructor {
+//     _register(o: Model): void;
+// }
 
 export const ModelManager: any = {
     _register(map: Model) {

@@ -5,23 +5,21 @@
  * Github:https://github.com/cihan53/
  */
 
-
-// import {BaseChyz} from "../index";
-import Chyz from "../Chyz";
-import {WebUser} from "../web/WebUser";
+import Chyz ,{WebUser} from "chyz";
 import {User} from "./Models/User";
-// import {DbConnection} from "../base";
-// import {AuthManager} from "../rbac/AuthManager";
 
+
+//
+//
 require('dotenv-flow').config();
-
-
-
+//
+//
+//
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
-    components: {
 
+    components: {
         // db: {
         //     class: DbConnection,
         //     database: process.env.DBDATABASE,

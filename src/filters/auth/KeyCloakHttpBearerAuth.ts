@@ -7,8 +7,7 @@
 import BaseChyz from "../../BaseChyz";
 import {HttpBearerAuth} from "./HttpBearerAuth";
 import {InvalidConfigException} from "../../base/InvalidConfigException";
-import {UnauthorizedHttpException} from "../../base/UnauthorizedHttpException";
-import {Response, Request} from "express";
+import {Request, Response} from "express";
 import {WebUser} from "../../web/WebUser";
 
 const JsonWebToken = require("jsonwebtoken");

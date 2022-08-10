@@ -6,7 +6,7 @@
  */
 
 import {HttpHeaderAuth} from "./HttpHeaderAuth";
-import {Request, Response} from "express";
+import {Response} from "express";
 
 export class HttpBearerAuth extends HttpHeaderAuth {
 
@@ -25,7 +25,7 @@ export class HttpBearerAuth extends HttpHeaderAuth {
     /**
      * {@inheritdoc}
      */
-    public challenge(response:Response) {
+    public challenge(response: Response) {
         response.set('WWW-Authenticate', `Bearer realm="${this.realm}"`);
     }
 }

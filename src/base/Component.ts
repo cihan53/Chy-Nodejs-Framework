@@ -5,16 +5,16 @@
  * Github:https://github.com/cihan53/
  */
 
-import {BaseObject} from "./BaseObject";
+import {CBaseObject} from "./CBaseObject";
 import {ActionFilter} from "./ActionFilter";
 import Utils from "../requiments/Utils";
 
-export class Component extends BaseObject {
+export class Component extends CBaseObject {
 
     /**
      * @var array the attached event handlers (event name => handlers)
      */
-    private _events = [];
+    // private _events = [];
 
 
     /**
@@ -27,7 +27,7 @@ export class Component extends BaseObject {
     /**
      *  Returns a list of behaviors that this component should behave as.
      */
-    public behaviors() {
+    public behaviors(): any {
         return [];
     }
 
@@ -43,7 +43,7 @@ export class Component extends BaseObject {
         if (this._behaviors.length == 0) {
             this._behaviors = [];
             if (this.behaviors().length > 0) {
-                this.behaviors().forEach(behavior => {
+                this.behaviors().forEach((behavior: any) => {
                     Object.keys(behavior).forEach((name: string) => {
                         this.attachBehaviorInternal(name, behavior)
                     });

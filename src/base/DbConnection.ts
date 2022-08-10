@@ -9,7 +9,7 @@ const {Sequelize} = require("sequelize");
 import {Component} from "./Component";
 import BaseChyz from "../BaseChyz";
 
-const sequelizeCache = require('sequelize-transparent-cache')
+// const sequelizeCache = require('sequelize-transparent-cache')
 
 export class DbConnection extends Component {
 

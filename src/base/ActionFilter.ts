@@ -4,12 +4,11 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-// @ts-ignore
-import {NextFunction, Request, Response} from "express";
+import {Request, Response} from "../index";
 import Utils from "../requiments/Utils";
-import {Behavior} from "./Behavior";
+import {CBaseObject} from "./CBaseObject"
 
-export class ActionFilter extends Behavior {
+export class ActionFilter extends CBaseObject {
 
     public only: any;
 
@@ -38,6 +37,21 @@ export class ActionFilter extends Behavior {
         await this.beforeAction(route, req, res)
     }
 
+    /**
+     * This method is invoked right before an action is to be executed (after all possible filters.)
+     * You may override this method to do last-minute preparation for the action.
+     * @param Action $action the action to be executed.
+     * @return bool whether the action should continue to be executed.
+     */
+    public async beforeAction(route: any, req: Request, res: Response) {
+        return true;
+    }
+
+    /**
+     *
+     * @param action
+     * @protected
+     */
     protected isActive(action: any) {
         let id = action.id;
         let onlyMatch: boolean = false;
@@ -63,15 +77,5 @@ export class ActionFilter extends Behavior {
         }
 
         return !exceptMatch && onlyMatch;
-    }
-
-    /**
-     * This method is invoked right before an action is to be executed (after all possible filters.)
-     * You may override this method to do last-minute preparation for the action.
-     * @param Action $action the action to be executed.
-     * @return bool whether the action should continue to be executed.
-     */
-    public async beforeAction(route: any, req: Request, res: Response) {
-        return true;
     }
 }

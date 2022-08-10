@@ -31,6 +31,12 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
 
     public optional = [];
 
+    /**
+     *
+     * @param action
+     * @param request
+     * @param response
+     */
     public async beforeAction(action: any, request: Request, response: Response) {
         let identity = await this.authenticate(
             this.user ?? new WebUser(),
@@ -51,6 +57,12 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
         return false;
     }
 
+    /**
+     *
+     * @param user
+     * @param request
+     * @param response
+     */
     authenticate(user: WebUser, request: Request, response: Response) {
 
     }

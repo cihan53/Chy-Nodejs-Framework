@@ -1,18 +1,92 @@
+//{
+//  "compilerOptions": {
+//    // Tells TypeScript to read JS files, as
+//    // normally they are ignored as source files
+//    "allowJs": true,
+//    // Generate d.ts files
+//    "declaration": true,
+//    // This compiler run should
+//    // only output d.ts files
+//    "emitDeclarationOnly": true,
+//    // Types should go into this directory.
+//    // Removing this would place the .d.ts files
+//    // next to the .js files
+//    "outDir": "./dist",
+//    // go to js file when using IDE functions like
+//    // "Go to Definition" in VSCode
+//    "declarationMap": true,
+//
+//    "target": "ES6",
+//    "module": "CommonJS",
+//    "esModuleInterop": true,
+//    "emitDecoratorMetadata": true,
+//    "experimentalDecorators": true,
+//    "strict": true,
+//    "noImplicitAny": true,
+//    "noFallthroughCasesInSwitch": true,
+//    "noUnusedLocals": true,
+//    "removeComments": true,
+//    "sourceMap": true,
+//    "resolveJsonModule": true,
+//    "preserveSymlinks": true,
+//    "forceConsistentCasingInFileNames": true
+////    "lib": ["dom", "es2018", "ES2021","esnext.asynciterable"]
+//
+//
+////
+////    "preserveSymlinks": true,
+////    "module": "CommonJS",
+////    "target": "es6",
+////    "sourceMap": true,
+////    "strict": true,
+//////    "resolveJsonModule": true,
+////    "emitDecoratorMetadata": true,
+////    "esModuleInterop": true,
+////    "experimentalDecorators": true,
+////    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+//  },
+//  "include": ["./src"],
+//  "exclude": [
+//    "**/node_modules/*",
+//    "**/Examples/*",
+//    "**/ExamplesTs/*"
+//  ]
+//}
+
+
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "sourceMap": true,
+    // Tells TypeScript to read JS files, as
+    // normally they are ignored as source files
+    "allowJs": true,
+    // Generate d.ts files
+    "declaration": true,
+    // This compiler run should
+    // only output d.ts files
+    //        "emitDeclarationOnly": true,
+    // Types should go into this directory.
+    // Removing this would place the .d.ts files
+    // next to the .js files
+    "outDir": "./dist",
+    // go to js file when using IDE functions like
+    // "Go to Definition" in VSCode
+    "declarationMap": true,
+    "target": "ES6",
+    "module": "CommonJS",
     "strict": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "outDir": "./dist"
   },
+  "include": [
+    "./src",
+    "package.json",
+    "README.md"
+  ],
   "exclude": [
-    "node_modules",
-    "**/Examples/*"
+    "**/node_modules/*",
+    "**/Examples/*",
+    "**/ExamplesTs/*"
   ]
 }

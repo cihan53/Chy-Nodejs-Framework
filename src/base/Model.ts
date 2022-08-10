@@ -9,10 +9,10 @@ import BaseChyz from "../BaseChyz";
 import Utils from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
-import {DatabaseError, DataTypes, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, QueryTypes, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
+import {DatabaseError, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, QueryTypes, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
 
-export {DataTypes, NOW} from "sequelize";
+export {DataTypes,NOW} from "sequelize";
 
 
 export interface Relation {
@@ -217,7 +217,6 @@ export class Model extends Component {
     public model() {
         return this._model;
     }
-
 
 
     public async save(params = {}, options = {}) {
@@ -479,7 +478,7 @@ export class Model extends Component {
      * @param args
      */
     public findAll(...args: any[]) {
-        return this._model. findAll(...arguments)
+        return this._model.findAll(...arguments)
     }
 
     /**

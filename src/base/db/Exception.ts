@@ -2,7 +2,7 @@ import {BaseError} from "../BaseError";
 
 export class Exception extends BaseError {
     public errorInfo = [];
-    private code: string;
+    protected code: string;
 
     constructor(message: string, errorInfo:any = [], code = '', previous = null) {
         super(message);

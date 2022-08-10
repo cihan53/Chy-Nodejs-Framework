@@ -1,10 +1,25 @@
 {
+  "name": "chyz",
+  "version": "2.0.0-rc.3",
+  "main":"./index.js",
+  "type": "./index.d.ts",
+  "description": "Nodejs Micro service Framework",
   "scripts": {
-    "debug": "ts-node src/index.ts",
-    "build2": "npx tsc -p tsconfig.json",
-    "build": "rmdir /S /Q .\\dist && npx tsc -p tsconfig.json  && xcopy .\\src\\log .\\dist\\log /e /i /h /Y && copy .\\src\\package.json .\\dist\\package.json  && copy .\\src\\README.md .\\dist\\README.md",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cihan53/Chy-Nodejs-Framework.git"
+  },
+  "author": "Cihan Ozturk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cihan53/Chy-Nodejs-Framework/issues"
+  },
+  "homepage": "https://github.com/cihan53/Chy-Nodejs-Framework#readme",
+  "resolutions": {
+    "ts-node": "^10.2.0"
   },
   "dependencies": {
     "axios": "^0.23.0",
@@ -37,5 +52,14 @@
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
-  }
+  },
+
+  "keywords": [
+    "Framework",
+    "RespAPI",
+    "microservice",
+    "micro service",
+    "easy configuration",
+    "Rbac support"
+  ]
 }
