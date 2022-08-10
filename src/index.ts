@@ -7,7 +7,7 @@
  *
  */
 
-import RestClient from "./base/RestClient";
+import {RestClient} from "./base/RestClient";
 import BaseChyz from "./BaseChyz";
 /**
  *
