@@ -63,6 +63,6 @@ export interface IdentityInterface {
     /**
      *
      */
-    can(permissionName:string, params: any[]  , allowCaching: boolean  ): (boolean | null);
+    can(permissionName:string, params: any[]  , allowCaching: boolean  ):Promise<(boolean | null)> ;
 
 }
