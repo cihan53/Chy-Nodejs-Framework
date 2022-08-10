@@ -1,2 +1,2 @@
-export * from "./AccessControl"
-export * from "./AccessRule"
+export {AccessControl} from "./AccessControl"
+export {AccessRule} from "./AccessRule"

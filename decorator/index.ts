@@ -1,3 +1,3 @@
-export * from "./controller"
-export * from "./get"
-export * from "./post"
+export {controller} from "./controller"
+export {get} from "./get"
+export {post} from "./post"
