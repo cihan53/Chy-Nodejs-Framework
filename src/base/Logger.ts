@@ -13,7 +13,7 @@ const log4js = require("log4js");
 
 export class Logger implements Configurable {
 
-    public configs: any = require('./log/config/log4js.json') ?? {}
+    public configs: any = require('../log/config/log4js.json') ?? {}
 
     init() {
 
