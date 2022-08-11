@@ -7,9 +7,9 @@
 // @ts-ignore
 
 
-import {IdentityInterface} from "chyz/web/IdentityInterface";
-import {DataTypes} from "chyz/base";
-import {BaseChyz} from "chyz";
+import {IdentityInterface} from "../../src/web/IdentityInterface";
+import {DataTypes} from "../../src/base";
+import {BaseChyz} from "../../src";
 
 const JsonWebToken = require("jsonwebtoken");
 

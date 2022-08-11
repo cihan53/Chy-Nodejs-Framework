@@ -6,7 +6,7 @@
  */
 
 
-import Chyz, {Logs, WebUser} from "../src";
+import Chyz, {DbConnection, Logs, WebUser} from "../src";
 import {User} from "./Models/User";
 
 
@@ -21,6 +21,20 @@ let config = {
     controllerpath: process.env.CONTROLLER_PATH,
     logs: new Logs('Examples', require('./log4js.json')),
     components: {
+        db: {
+            class: DbConnection,
+            database: process.env.DBDATABASE,
+            username: process.env.DBUSER,
+            password: process.env.DBPASS,
+            options: {
+                host: process.env.DBHOST,
+                port: process.env.DBPORT ||  '5432',
+                dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+                // disable logging; default: console.log
+                logging: false
+                // logging: (msg: any) => BaseChyz.debug(msg)
+            }
+        },
         // db: {
         //     class: DbConnection,
         //     database: process.env.DBDATABASE,

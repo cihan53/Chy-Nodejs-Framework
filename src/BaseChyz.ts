@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import {CWebController, ModelManager} from "./base";
+import {CWebController, InvalidConfigException, ModelManager } from "./base";
 
-import Utils from "./requiments/Utils";
+import t,{Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 
 
@@ -88,7 +88,6 @@ export default class BaseChyz {
     private static controllers: Array<CWebController> = []
     public static components: any = {}
     public static middlewares: any = {}
-
 
 
     get controllerpath(): string {
@@ -314,7 +313,16 @@ export default class BaseChyz {
         // let articlesEndpoints: string[] = [];
         for (const file of fs.readdirSync(`${this._controllerpath}/`)) {
             // let controller = require(`${this._controllerpath}/${file}`);
-            let controller = (await import(`${this._controllerpath}/${file}`))[file.replace(".ts", "")];
+            let controller = (await import(`${this._controllerpath}/${file}`));
+            if (controller[file.replace(".ts", "")]) {
+                controller = controller[file.replace(".ts", "")]
+            }else if( controller.default){
+                controller = controller.default;
+            }else{
+                throw new InvalidConfigException(t("Invalid Controller"))
+            }
+
+
             // This is our instantiated class
             const instance: CWebController = new controller();
 

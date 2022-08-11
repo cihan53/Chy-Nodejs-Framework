@@ -9,7 +9,7 @@ import {Component} from "../base/Component";
 import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
 import {InvalidConfigException} from "../base/InvalidConfigException";
 import {IdentityInterface} from "./IdentityInterface";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 import {AuthManager} from "../rbac/AuthManager";
 
 export class WebUser extends Component {

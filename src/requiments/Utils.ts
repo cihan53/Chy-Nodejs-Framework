@@ -40,19 +40,18 @@ const toQuery = function (obj: any) {
  * @param object
  * @param params
  */
-const
-    createObject = (object: any, params: any) => {
-        let newParams: any = {}
-        Object.keys(params).forEach((param) => {
-            newParams[param] = {}
-            Object.assign(newParams[param], {
-                writable: true,
-                configurable: true,
-                value: params[param]
-            });
-        })
-        return Object.create(object, newParams);
-    }
+const createObject = (object: any, params: any) => {
+    let newParams: any = {}
+    Object.keys(params).forEach((param) => {
+        newParams[param] = {}
+        Object.assign(newParams[param], {
+            writable: true,
+            configurable: true,
+            value: params[param]
+        });
+    })
+    return Object.create(object, newParams);
+}
 /**
  *
  * @param object
@@ -105,12 +104,13 @@ const t = function (text: string) {
     return text;
 }
 
-export default {
-    t,
-    createObject,
+export const Utils = {
     findKeyValue,
+    createObject,
     sleep,
     matchWildcard,
     toQuery,
     ..._
 }
+export {t}
+export default t;

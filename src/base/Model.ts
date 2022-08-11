@@ -6,7 +6,7 @@
  */
 
 import BaseChyz from "../BaseChyz";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
 import {DatabaseError, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, QueryTypes, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";

@@ -8,8 +8,6 @@
  */
 
 import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, JwtHttpBearerAuth, ModelManager, post, Request, Response, ValidationHttpException} from "../../src";
-import Util from "util";
-import {Logger} from "chyz/base/Logger";
 
 @controller("/api")
 export class ApiController extends CWebController {
@@ -42,9 +40,9 @@ export class ApiController extends CWebController {
     @get("/")
     Index(req: Request, res: Response) {
 
-        Logger.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
+        // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
-        Logger.info("Site Controller Burası")
+        BaseChyz.info("Site Controller Burası")
         return res.json({message: "index sayfası"})
     }
 
@@ -99,7 +97,7 @@ export class ApiController extends CWebController {
 
 
     error(req: Request, res: Response) {
-        Logger.info("Error Sayfası")
+        BaseChyz.info("Error Sayfası")
         return res.send("Post Controller")
     }
 }

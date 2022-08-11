@@ -5,7 +5,7 @@
  * Github:https://github.com/cihan53/
  */
 
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 
 export class BaseError extends Error {
     private statusCode: number;

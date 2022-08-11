@@ -5,7 +5,7 @@
  * Github:https://github.com/cihan53/
  */
 import {Request, Response} from "../index";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 import {CBaseObject} from "./CBaseObject"
 
 export class ActionFilter extends CBaseObject {

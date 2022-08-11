@@ -55,6 +55,6 @@ export * from "./filters";
 export * from "./filters/auth";
 
 export * from "./decorator";
-export * as utils from "./requiments/Utils";
+export * from "./requiments/Utils";
 export default Chyz;
 

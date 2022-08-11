@@ -7,7 +7,7 @@
 
 import {CBaseObject} from "./CBaseObject";
 import {ActionFilter} from "./ActionFilter";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 
 export class Component extends CBaseObject {
 

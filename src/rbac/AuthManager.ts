@@ -1,6 +1,6 @@
 import {Component, InvalidConfigException, ModelManager} from "../base";
 import {BaseChyz, InvalidArgumentException} from "../index";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 
 
 interface Role {

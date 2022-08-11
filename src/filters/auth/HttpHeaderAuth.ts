@@ -7,7 +7,7 @@
 
 import {AuthMethod} from "./AuthMethod";
 import {WebUser} from "../../web/WebUser";
-import Utils from "../../requiments/Utils";
+import {Utils} from "../../requiments/Utils";
 import {Request, Response} from "express";
 
 export class HttpHeaderAuth extends AuthMethod {

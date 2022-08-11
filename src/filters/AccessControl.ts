@@ -9,7 +9,7 @@ import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
 import {ActionFilter} from "../base/ActionFilter";
 import {AccessRule} from "./AccessRule";
 import {WebUser} from "../web/WebUser";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 
 
 export class AccessControl extends ActionFilter {

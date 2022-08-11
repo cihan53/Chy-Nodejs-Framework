@@ -8,7 +8,7 @@ import {WebUser} from "../web/WebUser";
 import {Component} from "../base/Component";
 import {InvalidConfigException} from "../base/InvalidConfigException";
 import {Request} from "express";
-import Utils from "../requiments/Utils";
+import {Utils} from "../requiments/Utils";
 
 var _ = require('lodash');
 
