@@ -1,15 +1,14 @@
-
-import {Request, Response, NextFunction} from "./base/CRequest";
+import {Request, Response, NextFunction} from "express";
 import {CWebController, ModelManager} from "./base";
 
 import Utils from "./requiments/Utils";
-import {Logger} from "./base/Logger";
+import {Logs} from "./base/Logs";
 
 
 const https = require('https');
 const express = require("express");
 const compression = require('compression')
-const log4js = require("log4js");
+
 const fs = require('fs');
 const validate = require('validate.js');
 
@@ -50,9 +49,9 @@ validate.validators.tokenString = (items: any, itemConstraints: any) => {
     return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
 };
 
-var ip = require('ip');
-var bodyParser = require('body-parser')
-var methodOverride = require('method-override')
+const ip = require('ip');
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const Server = express();
 
 /**
@@ -75,7 +74,6 @@ Object.defineProperty(Server.request, 'identity', {
 })
 
 
-
 export default class BaseChyz {
     private config: any;
     static app: string;
@@ -84,12 +82,13 @@ export default class BaseChyz {
     private _port: number = 3001;
     static db: any;
     static routes: any;
-    static logger: Logger = new Logger();
+    static logs: Logs = new Logs();
     private static _validate: any = validate;
     private _controllerpath: string = "Controllers"
     private static controllers: Array<CWebController> = []
     public static components: any = {}
     public static middlewares: any = {}
+
 
 
     get controllerpath(): string {
@@ -102,8 +101,6 @@ export default class BaseChyz {
 
     init() {
 
-        if (this.config.logger instanceof Logger)
-            BaseChyz.logger = this.config.logger;
 
         /**
          * server port setting
@@ -172,6 +169,13 @@ export default class BaseChyz {
         this.config = config;
 
 
+        /**
+         * log setting
+         */
+        if (this.config.logs instanceof Logs) {
+            BaseChyz.logs = this.config.logs;
+        }
+
         // logger setting
         // this.logProvider().level = log4js.levels.ALL;
         // this.logProvider().configure(this._logConfig);
@@ -197,7 +201,7 @@ export default class BaseChyz {
         if (middlewares) {
             for (const middlewareKey in middlewares) {
                 let middleware1 = middlewares[middlewareKey];
-                BaseChyz.logs().debug("Create middlewares ", middlewareKey)
+                BaseChyz.debug("Create middlewares ", middlewareKey)
                 BaseChyz.middlewares[middlewareKey] = middleware1;
                 // BaseChyz.middlewares[middlewareKey] = Utils.createObject(new middleware1.class, middleware1);
             }
@@ -209,45 +213,33 @@ export default class BaseChyz {
     }
 
 
-    public logProvider() {
-        return log4js;
-    }
-
-    public getLogger() {
-        return this.logProvider().getLogger(this.constructor.name);
-    }
-
-    static logs(...args: any[]) {
-        return log4js.getLogger(this.name);
-    }
-
     public static trace(...args: any[]) {
-        BaseChyz.logs().fatal(...arguments)
+        BaseChyz.logs.fatal(...arguments)
     }
 
     public static debug(...args: any[]) {
-        BaseChyz.logs().debug(...arguments)
+        BaseChyz.logs.debug(...arguments)
     }
 
     public static info(...args: any[]) {
-        BaseChyz.logs().info(...arguments)
+        BaseChyz.logs.info(...arguments)
     }
 
     public static warn(...args: any[]) {
-        BaseChyz.logs().warn(...arguments)
+        BaseChyz.logs.warn(...arguments)
     }
 
     public static error(...args: any[]) {
-        BaseChyz.logs().error(...arguments)
+        BaseChyz.logs.error(...arguments)
     }
 
     public static fatal(...args: any[]) {
-        BaseChyz.logs().fatal(...arguments)
+        BaseChyz.logs.fatal(...arguments)
     }
 
 
     public static warning(...args: any[]) {
-        BaseChyz.logs().warn(...arguments)
+        BaseChyz.logs.warn(...arguments)
     }
 
     public static t(text: string) {
@@ -303,6 +295,9 @@ export default class BaseChyz {
             }
         })
 
+        /**
+         *
+         */
         ModelManager._register(models);
 
         for (const key of Object.keys(ModelManager)) {
@@ -318,9 +313,8 @@ export default class BaseChyz {
     async loadController() {
         // let articlesEndpoints: string[] = [];
         for (const file of fs.readdirSync(`${this._controllerpath}/`)) {
-            let controller = require(`${this._controllerpath}/${file}`);
-            // let controller = await import(`${this._controllerpath}/${file}`);
-
+            // let controller = require(`${this._controllerpath}/${file}`);
+            let controller = (await import(`${this._controllerpath}/${file}`))[file.replace(".ts", "")];
             // This is our instantiated class
             const instance: CWebController = new controller();
 
@@ -332,14 +326,14 @@ export default class BaseChyz {
             // Our `routes` array containing all our routes for this controller
             // @ts-ignore
             const routes: Array<RouteDefinition> = Reflect.getMetadata('routes', controller);
-            BaseChyz.logs().debug("Controller load ", controller.name, `(${prefix})`)
+            BaseChyz.debug("Controller load ", controller.name, `(${prefix})`)
 
             if (routes) {
                 routes.forEach(route => {
 
                     let actionId = route.path == "/" || route.path == "" ? instance.defaultAction : route.path;
                     route.id = actionId;
-                    BaseChyz.logs().debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
+                    BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
 
                     BaseChyz.express[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
                         async (req: Request, res: Response, next: NextFunction) => {
@@ -388,8 +382,6 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
         BaseChyz.express.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
-        BaseChyz.express.use(methodOverride());
-
 
         // CORS
         BaseChyz.express.use(function (req: any, res: Response, next: any) {
@@ -422,7 +414,6 @@ export default class BaseChyz {
         BaseChyz.express.use(this.errorHandler)
     }
 
-
     public Start() {
 
         BaseChyz.info("Express Server Starting")
@@ -447,6 +438,4 @@ export default class BaseChyz {
 
         return this;
     }
-
-
 }

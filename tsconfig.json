@@ -79,11 +79,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
-
   },
   "include": [
     "./src",
-    "./src/types",
     "package.json",
     "README.md"
   ],

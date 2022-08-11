@@ -7,6 +7,18 @@
  *
  */
 
+declare namespace Express {
+    export interface Request {
+        identity?: string
+    }
+}
+
+import { Express } from "express-serve-static-core"
+declare module "express-serve-static-core" {
+    interface Request {
+        identity: any;
+    }
+}
 
 
 import {RestClient} from "./base/RestClient";
@@ -21,6 +33,7 @@ export {RouteDefinition} from "./model/RouteDefinition";
 export {WebUser} from "./web/WebUser";
 export {BaseChyz, RestClient}
 export {
+    Logs,
     ActionFilter,
     BaseError,
     Behavior,

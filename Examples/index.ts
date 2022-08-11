@@ -5,7 +5,8 @@
  * Github:https://github.com/cihan53/
  */
 
-import Chyz ,{WebUser} from "chyz";
+
+import Chyz, {Logs, WebUser} from "../src";
 import {User} from "./Models/User";
 
 
@@ -18,6 +19,7 @@ require('dotenv-flow').config();
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
+    logs: new Logs('Examples', require('./log4js.json')),
     components: {
         // db: {
         //     class: DbConnection,

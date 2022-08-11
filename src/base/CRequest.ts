@@ -6,9 +6,9 @@
  *  Github:https://github.com/cihan53/
  *
  */
-import 'reflect-metadata';
-export {RouteDefinition} from "../model/RouteDefinition";
-export {Request, Response, NextFunction} from "express";
+
+export {Request ,Response, NextFunction} from "express";
+
 
 
 

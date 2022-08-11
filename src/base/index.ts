@@ -1,3 +1,4 @@
+export {Logs} from "./Logs"
 export {BaseError} from "./BaseError"
 export {ActionFilter} from "./ActionFilter"
 export {Behavior} from "./Behavior"
