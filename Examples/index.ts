@@ -20,6 +20,7 @@ let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
     logs: new Logs('Examples', require('./log4js.json')),
+    staticFilePath:'C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples',
     components: {
         db: {
             class: DbConnection,

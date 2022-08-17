@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import {CWebController, InvalidConfigException, ModelManager } from "./base";
+import {CWebController, InvalidConfigException, ModelManager} from "./base";
 
-import t,{Utils} from "./requiments/Utils";
+import t, {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 
 
@@ -36,8 +36,6 @@ validate.validators.array = (arrayItems: any, itemConstraints: any) => {
 
     return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
 };
-
-
 validate.validators.tokenString = (items: any, itemConstraints: any) => {
     let arrayItems = items.split(",");
     const arrayItemErrors = arrayItems.reduce((errors: any, item: any, index: any) => {
@@ -53,6 +51,7 @@ const ip = require('ip');
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const Server = express();
+const cors = require('cors');
 
 /**
  * set request id
@@ -73,9 +72,16 @@ Object.defineProperty(Server.request, 'identity', {
     writable: true
 })
 
+interface BaseChyzConfig {
+    port: string;
+    logs: string;
+    components: string;
+    staticFilePath?: string
+}
+
 
 export default class BaseChyz {
-    private config: any;
+    private config: BaseChyzConfig | any;
     static app: string;
     static httpServer: any;
     static express = Server
@@ -98,8 +104,10 @@ export default class BaseChyz {
         this._controllerpath = value;
     }
 
+    /**
+     *
+     */
     init() {
-
 
         /**
          * server port setting
@@ -175,9 +183,6 @@ export default class BaseChyz {
             BaseChyz.logs = this.config.logs;
         }
 
-        // logger setting
-        // this.logProvider().level = log4js.levels.ALL;
-        // this.logProvider().configure(this._logConfig);
 
         let components = Utils.findKeyValue(config, "components")
         if (components) {
@@ -316,9 +321,9 @@ export default class BaseChyz {
             let controller = (await import(`${this._controllerpath}/${file}`));
             if (controller[file.replace(".ts", "")]) {
                 controller = controller[file.replace(".ts", "")]
-            }else if( controller.default){
+            } else if (controller.default) {
                 controller = controller.default;
-            }else{
+            } else {
                 throw new InvalidConfigException(t("Invalid Controller"))
             }
 
@@ -390,21 +395,41 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
         BaseChyz.express.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
-
-        // CORS
-        BaseChyz.express.use(function (req: any, res: Response, next: any) {
-            // @ts-ignore
-            req.reqId = Utils.uniqueId("chyzzzz_")
-            res.setHeader('Content-Type', 'application/json');
-            res.setHeader("Access-Control-Allow-Origin", "*");
-            res.setHeader("Access-Control-Allow-Credentials", "true");
-            res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-            res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
-            next();
-        });
-
+        //
+        // // CORS
+        // BaseChyz.express.use(function (req: any, res: Response, next: any) {
+        //     // @ts-ignore
+        //     req.reqId = Utils.uniqueId("chyzzzz_")
+        //     res.setHeader('Content-Type', 'application/json');
+        //     res.setHeader("Access-Control-Allow-Origin", "*");
+        //     res.setHeader("Access-Control-Allow-Credentials", "true");
+        //     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+        //     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
+        //     next();
+        // });
+        //
         // compress all responses
-        BaseChyz.express.use(compression())
+        const shouldCompress = (req: Request, res: Response): boolean => {
+            // don't compress responses explicitly asking not
+            if (req.headers["x-no-compression"] || res.getHeader('Content-Type') === 'text/event-stream') {
+                return false;
+            }
+
+            // use compression filter function
+            return compression.filter(req, res);
+        };
+
+        BaseChyz.express.use(compression({ filter: shouldCompress }))
+        //
+        // //static file path
+        if (this.config.staticFilePath) {
+            BaseChyz.info('Static file path', this.config.staticFilePath)
+            BaseChyz.express.use(express.static(this.config.staticFilePath))
+        }
+
+        BaseChyz.express.use(cors());
+        BaseChyz.express.use(bodyParser.json());
+        BaseChyz.express.use(bodyParser.urlencoded({extended: false}));
 
         //Middlewares
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
