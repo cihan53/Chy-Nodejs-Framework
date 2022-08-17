@@ -395,6 +395,7 @@ export default class BaseChyz {
         BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
         BaseChyz.express.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
         BaseChyz.express.use(methodOverride());
+        BaseChyz.express.use(cors());
         //
         // // CORS
         // BaseChyz.express.use(function (req: any, res: Response, next: any) {
@@ -418,7 +419,6 @@ export default class BaseChyz {
             // use compression filter function
             return compression.filter(req, res);
         };
-
         BaseChyz.express.use(compression({ filter: shouldCompress }))
         //
         // //static file path
@@ -427,9 +427,8 @@ export default class BaseChyz {
             BaseChyz.express.use(express.static(this.config.staticFilePath))
         }
 
-        BaseChyz.express.use(cors());
-        BaseChyz.express.use(bodyParser.json());
-        BaseChyz.express.use(bodyParser.urlencoded({extended: false}));
+
+
 
         //Middlewares
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
