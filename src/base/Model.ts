@@ -23,7 +23,8 @@ export interface Relation {
     foreignKey: string,
     name?: string,
     through?: any,
-    as?: string
+    as?: string,
+    on?:any
 }
 
 /**
