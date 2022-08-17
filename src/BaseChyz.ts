@@ -52,6 +52,8 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const Server = express();
 const cors = require('cors');
+const emitter = require('events').EventEmitter;
+const em = new emitter();
 
 /**
  * set request id
@@ -94,7 +96,16 @@ export default class BaseChyz {
     private static controllers: Array<CWebController> = []
     public static components: any = {}
     public static middlewares: any = {}
+    private static _EventEmitter: any = em
 
+
+    static get EventEmitter(): any {
+        return this._EventEmitter;
+    }
+
+    static set EventEmitter(value: any) {
+        this._EventEmitter = value;
+    }
 
     get controllerpath(): string {
         return this._controllerpath;
@@ -419,15 +430,13 @@ export default class BaseChyz {
             // use compression filter function
             return compression.filter(req, res);
         };
-        BaseChyz.express.use(compression({ filter: shouldCompress }))
+        BaseChyz.express.use(compression({filter: shouldCompress}))
         //
         // //static file path
         if (this.config.staticFilePath) {
             BaseChyz.info('Static file path', this.config.staticFilePath)
             BaseChyz.express.use(express.static(this.config.staticFilePath))
         }
-
-
 
 
         //Middlewares
