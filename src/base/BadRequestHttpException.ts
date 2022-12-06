@@ -7,7 +7,7 @@
 
 import {BaseError} from "./BaseError";
 
-export class ValidationHttpException extends BaseError {
+export class BadRequestHttpException extends BaseError {
     constructor ( public message: string) {
         super(message,400);
     }

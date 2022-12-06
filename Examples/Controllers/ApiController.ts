@@ -8,6 +8,7 @@
  */
 
 import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, JwtHttpBearerAuth, ModelManager, post, Request, Response, ValidationHttpException} from "../../src";
+import {StocksClass} from "../Models/Stocks";
 
 @controller("/api")
 export class ApiController extends CWebController {
@@ -16,26 +17,26 @@ export class ApiController extends CWebController {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
-    public behaviors(): any[] {
-        return [{
-            'authenticator': {
-                "class": JwtHttpBearerAuth,
-                // "auth": this.myCheck
-            },
-            // 'access': {
-            //     'class': AccessControl,
-            //     'only': ['order/list' ],
-            //     'rules': [
-            //
-            //         {
-            //             'allow': true,
-            //             'actions': ['order/list' ],
-            //             'roles': ['edis-manager'],
-            //         }
-            //     ]
-            // }
-        }]
-    }
+    // public behaviors(): any[] {
+    //     return [{
+    //         'authenticator': {
+    //             "class": JwtHttpBearerAuth,
+    //             // "auth": this.myCheck
+    //         },
+    //         // 'access': {
+    //         //     'class': AccessControl,
+    //         //     'only': ['order/list' ],
+    //         //     'rules': [
+    //         //
+    //         //         {
+    //         //             'allow': true,
+    //         //             'actions': ['order/list' ],
+    //         //             'roles': ['edis-manager'],
+    //         //         }
+    //         //     ]
+    //         // }
+    //     }]
+    // }
 
     @get("/")
     Index(req: Request, res: Response) {
@@ -44,6 +45,34 @@ export class ApiController extends CWebController {
 
         BaseChyz.info("Site Controller Burası")
         return res.json({message: "index sayfası"})
+    }
+
+
+    @get("stock/:id")
+    async getStock(req: Request, res: Response) {
+        let stock = ModelManager.Stocks;
+
+        try {
+            await stock.save({
+                product_id: 8,
+                properties: {},
+                status: StocksClass.STATUS_ACTIVE,
+                barcode: 2008070000008,
+                stock_code: 'ALPR_8',
+                model_id: 5,
+                created_at: new Date()
+            })
+
+            console.log(stock.errors)
+            if (stock.errors ) {
+                console.log("asfasdfasd")
+            }
+        } catch (e) {
+            console.log("tekil")
+        }
+
+
+        return res.json(await stock.findAll())
     }
 
     @post("orderCreate")

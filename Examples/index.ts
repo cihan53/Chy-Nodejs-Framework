@@ -6,7 +6,7 @@
  */
 
 
-import Chyz, {DbConnection, Logs, WebUser} from "../src";
+import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src";
 import {User} from "./Models/User";
 
 
@@ -32,8 +32,8 @@ let config = {
                 port: process.env.DBPORT ||  '5432',
                 dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
                 // disable logging; default: console.log
-                logging: false
-                // logging: (msg: any) => BaseChyz.debug(msg)
+                // logging: false
+                logging: (msg: any) => BaseChyz.debug(msg)
             }
         },
         // db: {
