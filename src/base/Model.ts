@@ -221,6 +221,8 @@ export class Model extends Component {
 
 
     public async save(params = {}, options = {}) {
+
+        this.errors={};
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
         let result: any;
@@ -255,6 +257,7 @@ export class Model extends Component {
     }
 
     public async bulkCreate(params = {}, options = {}) {
+        this.errors={};
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
         let result: any;
@@ -289,11 +292,13 @@ export class Model extends Component {
     }
 
     public update(params = {}, options = {}) {
+        this.errors={};
         let p = Object.assign(params, this._attributes)
         return this.model().update(p, options)
     }
 
     public delete(params = {}, options = {}) {
+        this.errors={};
         let p = Object.assign(params, this._attributes)
         return this.model().delete(p, options)
     }
@@ -462,6 +467,7 @@ export class Model extends Component {
      * @param query
      */
     public async rawQuery(query: string, options: any = {type: QueryTypes.SELECT, nest: true}) {
+        this.errors={};
         return await this.model().query(query, options);
     }
 
