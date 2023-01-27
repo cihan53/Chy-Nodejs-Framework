@@ -10,8 +10,8 @@ require('dotenv-flow').config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-import Chyz from "../Chyz";
-import {WebUser} from "../web/WebUser";
+import Chyz from "../src";
+import {WebUser} from "../src/web/WebUser";
 import {KeycloakUser as Identity} from "./Models/KeycloakUser";
 // @ts-ignore
 import {DbConnection} from "../base/DbConnection";
@@ -31,7 +31,7 @@ var keycloakConfig = {
     "confidential-port":0,
     "policy-enforcer":{},
     "credentials": {
-        "secret": "0b476571-28ab-49b1-9968-90fce6294d5a"
+        "secret": "zzz"
     }
 
 };
