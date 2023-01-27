@@ -7,9 +7,12 @@
  *
  */
 
-import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, JwtHttpBearerAuth, ModelManager, post, Request, Response, ValidationHttpException} from "../../src";
-import {StocksClass} from "../Models/Stocks";
+import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, ModelManager, post, Request, Response, ValidationHttpException, Utils, AccessControl, JwtHttpBearerAuth} from "../../src";
+import {User} from "../Models/User";
+import {AuthManager} from "../../src/rbac/AuthManager"
 
+const bcrypt = require('bcrypt');
+const JsonWebToken = require("jsonwebtoken");
 @controller("/api")
 export class ApiController extends CWebController {
 
@@ -17,112 +20,108 @@ export class ApiController extends CWebController {
         console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
-    // public behaviors(): any[] {
-    //     return [{
-    //         'authenticator': {
-    //             "class": JwtHttpBearerAuth,
-    //             // "auth": this.myCheck
-    //         },
-    //         // 'access': {
-    //         //     'class': AccessControl,
-    //         //     'only': ['order/list' ],
-    //         //     'rules': [
-    //         //
-    //         //         {
-    //         //             'allow': true,
-    //         //             'actions': ['order/list' ],
-    //         //             'roles': ['edis-manager'],
-    //         //         }
-    //         //     ]
-    //         // }
-    //     }]
-    // }
+    public behaviors(): any[] {
+        return [{
+            'authenticator': {
+                "class": JwtHttpBearerAuth,
+                "except": ["login"]
+                // "auth": this.myCheck
+            },
+            'access': {
+                'class': AccessControl,
+                // 'only': ['hello' ],
+                'rules': [
+
+                    {
+                        'allow': true,
+                        'actions': ['hello' ],
+                        'roles': ['edisboxnew'],
+                    }
+                ]
+            }
+        }]
+    }
 
     @get("/")
     Index(req: Request, res: Response) {
-
-
         // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
         BaseChyz.info("Site Controller Burası")
         return res.json({message: "index sayfası"})
     }
 
+    @get("hello")
+    OrderList(req: Request, res: Response) {
+        // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
-    @get("stock/:id")
-    async getStock(req: Request, res: Response) {
-        let stock = ModelManager.Stocks;
-
-        try {
-            await stock.save({
-                product_id: 8,
-                properties: {},
-                status: StocksClass.STATUS_ACTIVE,
-                barcode: 2008070000008,
-                stock_code: 'ALPR_8',
-                model_id: 5,
-                created_at: new Date()
-            })
-
-            console.log(stock.errors)
-            if (stock.errors ) {
-                console.log("asfasdfasd")
-            }
-        } catch (e) {
-            console.log("tekil")
-        }
-
-
-        return res.json(await stock.findAll())
+        BaseChyz.info("order/list")
+        return res.json({message: "order/list"})
     }
 
-    @post("orderCreate")
-    async orderCreate(req: Request, res: Response) {
-        let data = req.body;
-        data.Customer.status = "true";
-        data.Customer["2fa"] = "true";
+    @post("login")
+    async login(req: Request, res: Response) {
+        let UserModel: User = new User();
+        let token
+        let username = req.body.username;
+        let password = req.body.password;
+        let user = await UserModel.findOne({where: {username: username}})
+        if (user) {
+            BaseChyz.debug("Db found user", username)
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                BaseChyz.debug("Db user verify", username)
+                //login
+                let xForwardedFor: string = (req.headers['x-forwarded-for'] || '').toString().replace(/:\d+$/, '');
+                let ip = xForwardedFor || req.socket.remoteAddress;
+                let source: string = req.headers['user-agent'] || '';
+                if (req.headers['x-ucbrowser-ua']) {  //special case of UC Browser
+                    source = req.headers['x-ucbrowser-ua'].toString();
+                }
 
-        //Customer Model Create
-        let customer = ModelManager.Customer.save();
-        //Order Model Create
-        let order = ModelManager.Order;
+                // let permission = await ModelManager.UserPermission.findOne({where: {id: user.permissions_id}})
+                // let AuthAssignment = await ModelManager.AuthAssignment.findOne({where: {user_id: user.id.toString()}, attributes: ["item_name"]})
+                // let AuthItems = await BaseChyz.getComponent("authManager").getRolesByUser(user.id.toString());
+                let AuthManager: AuthManager = await BaseChyz.getComponent("authManager")
+                let userPermissions = await AuthManager.getPermissionsByUser(user.id)
+                let RolesByUser = await AuthManager.getRolesByUser(user.id);
+                // RolesByUser["permission"] = userPermissions
 
 
-        let transaction
-        try {
-            // get transaction
-            transaction = await BaseChyz.getComponent("db").transaction();
-            customer.load(data, "Customer");//load customer data
-            let cus: any = await customer.save({}, {transaction});
+                let expired = null;
 
-            if (!cus) {
-                throw new ValidationHttpException(customer.errors);
+                if (Utils.isEmpty(RolesByUser)) {
+                    let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
+                    res.status(500).json(error.toJSON())
+                    return;
+                }
+
+
+                token = await JsonWebToken.sign({
+                    user: user.id,
+                    ip: ip,
+                    agent: source,
+                    role: Object.keys(RolesByUser),
+                    permissions: Object.keys(userPermissions),
+                    // AuthAssignment: AuthAssignment,
+                    platform: Object.keys(RolesByUser)[0].toLowerCase() || "guest"
+                }, user.authkey, expired);
+
+                // BaseChyz.debug("Db user create access token", username, "expiresIn", "1h")
+                return res.json({
+                    token: token,
+                    // userPermissions,
+                    // RolesByUser
+                })
+            } else {
+                let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
+                res.status(500).json(error.toJSON())
             }
-
-            data.Order.customer_id = cus.id;
-            // data.Order.total = 0;
-            // data.Order.status = true;
-            order.load(data, "Order");
-            let res1 = await order.save({}, {transaction});
-            if (!res1) {
-                throw new ValidationHttpException(order.errors);
-            }
-
-            // commit
-            await transaction.commit();
-
-        } catch (e: any) {
-            if (transaction) {
-                await transaction.rollback();
-                BaseChyz.warn("Rollback transaction")
-            }
-
-            if (e instanceof ValidationHttpException)
-                throw new ValidationHttpException(e.message)
-            else
-                throw new ForbiddenHttpException(e.message)
+        } else {
+            let error: any = new ForbiddenHttpException(BaseChyz.t('You are not allowed to perform this action.'))
+            res.status(500).json(error.toJSON())
         }
-        return res.send("Post Controller")
+
+
     }
 
 

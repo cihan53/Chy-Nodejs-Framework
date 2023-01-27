@@ -56,6 +56,7 @@ export class ActionFilter extends CBaseObject {
         let id = action.id;
         let onlyMatch: boolean = false;
         let exceptMatch: boolean = false;
+
         if (Utils.isEmpty(this.only)) {
             onlyMatch = true;
         } else {

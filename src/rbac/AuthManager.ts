@@ -44,6 +44,9 @@ export class AuthManager extends Component {
 
     public async checkAccess(userId: number, permissionName: string, params: any[] = []): Promise<boolean> {
         let assignments: any;
+
+        if (!userId) return false;
+
         if (!this.checkAccessAssignments[userId.toString()]) {
             assignments = await this.getAssignments(userId);
             this.checkAccessAssignments[userId.toString()] = assignments;
@@ -82,7 +85,7 @@ export class AuthManager extends Component {
         /**
          * item child
          */
-        let parents = await ModelManager.AuthItemChild.findAll({attributes:["parent"], where: {child: itemname}});
+        let parents = await ModelManager.AuthItemChild.findAll({attributes: ["parent"], where: {child: itemname}});
         for (const parent of parents) {
             let r = await this.checkAccessRecursive(user, parent.parent, params, assignments);
             if (r) {

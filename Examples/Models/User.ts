@@ -9,13 +9,54 @@
 
 import {IdentityInterface} from "../../src/web/IdentityInterface";
 import {DataTypes} from "../../src/base";
-import {BaseChyz} from "../../src";
+import {BaseChyz,Model} from "../../src";
+
 
 const JsonWebToken = require("jsonwebtoken");
 
-export class User implements IdentityInterface {
+export class User  extends Model implements IdentityInterface {
     [x: string]: any;
 
+
+    accessChecker: any = null;
+    _user: any;
+    _access: any = {}
+
+
+    public tableName() {
+        return 'users';
+    }
+
+    public attributes() {
+        return {
+            // Model attributes are defined here
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            username: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+
+            authkey: {
+                type: DataTypes.STRING
+                // allowNull defaults to true
+            },
+            status: {
+                type: DataTypes.STRING
+                // allowNull defaults to true
+            }
+        }
+    }
 
     /**
      *
@@ -48,42 +89,6 @@ export class User implements IdentityInterface {
         throw new Error("Method not implemented.");
     }
 
-    /**
-     *
-     */
-    public attributes() {
-        return {
-            // Model attributes are defined here
-            name: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            username: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            password: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            email: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            permissions_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false
-            },
-            authkey: {
-                type: DataTypes.STRING
-                // allowNull defaults to true
-            },
-            status: {
-                type: DataTypes.STRING
-                // allowNull defaults to true
-            }
-        }
-    }
 
     async findIdentityByAccessToken(token: any, type: any) {
 

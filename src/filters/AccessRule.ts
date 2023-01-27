@@ -105,7 +105,7 @@ export class AccessRule extends Component {
         //     return $this->allow ? true : false;
         // }
 
-        return null;
+        return false;
     }
 
     /**

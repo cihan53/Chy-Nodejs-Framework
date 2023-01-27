@@ -7,6 +7,7 @@
 
 require('dotenv-flow').config();
 import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src";
+import {AuthManager} from "../src/rbac/AuthManager"
 import {User} from "./Models/User";
 
 
@@ -22,6 +23,9 @@ let config = {
     logs: new Logs('Examples', require('./log4js.json')),
     staticFilePath:'C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples',
     components: {
+        authManager: {
+            class: AuthManager
+        },
         db: {
             class: DbConnection,
             database: process.env.DBDATABASE,
