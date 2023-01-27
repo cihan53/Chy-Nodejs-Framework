@@ -5,14 +5,14 @@
  * Github:https://github.com/cihan53/
  */
 
-
+require('dotenv-flow').config();
 import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src";
 import {User} from "./Models/User";
 
 
 //
 //
-require('dotenv-flow').config();
+
 //
 //
 //

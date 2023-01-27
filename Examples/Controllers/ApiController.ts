@@ -41,6 +41,7 @@ export class ApiController extends CWebController {
     @get("/")
     Index(req: Request, res: Response) {
 
+
         // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
         BaseChyz.info("Site Controller Burası")
@@ -76,7 +77,7 @@ export class ApiController extends CWebController {
     }
 
     @post("orderCreate")
-    async Login(req: Request, res: Response) {
+    async orderCreate(req: Request, res: Response) {
         let data = req.body;
         data.Customer.status = "true";
         data.Customer["2fa"] = "true";
