@@ -89,6 +89,7 @@ export class AccessRule extends Component {
 
 
     public async allows(action: any, user: WebUser, request: Request) {
+
         if (
             this.matchAction(action)
             && await this.matchRole(user)
@@ -105,7 +106,7 @@ export class AccessRule extends Component {
         //     return $this->allow ? true : false;
         // }
 
-        return false;
+        return null;
     }
 
     /**
