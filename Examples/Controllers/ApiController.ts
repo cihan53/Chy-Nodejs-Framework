@@ -7,9 +7,10 @@
  *
  */
 
-import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, ModelManager, post, Request, Response, ValidationHttpException, Utils, AccessControl, JwtHttpBearerAuth} from "../../src";
+import {BaseChyz, controller, CWebController, ForbiddenHttpException, get, ModelManager, post, Request, Response, ValidationHttpException, Utils, AccessControl, JwtHttpBearerAuth} from "../../src/index";
 import {User} from "../Models/User";
-import {AuthManager} from "../../src/rbac/AuthManager"
+import {AuthManager} from "../../src/rbac/AuthManager";
+// import {AuthManager} from "../../src/rbac/AuthManager"
 
 const bcrypt = require('bcrypt');
 const JsonWebToken = require("jsonwebtoken");
@@ -24,14 +25,18 @@ export class ApiController extends CWebController {
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
-                "except": ["login"]
+                "except": ["auth/login"]
                 // "auth": this.myCheck
             },
             'access': {
                 'class': AccessControl,
                 // 'only': ['hello' ],
                 'rules': [
-
+                    {
+                        'allow':true,
+                        'action':["auth/login"],
+                        'roles':["?"]
+                    },
                     {
                         'allow': true,
                         'actions': ['hello' ],
@@ -58,7 +63,7 @@ export class ApiController extends CWebController {
         return res.json({message: "order/list"})
     }
 
-    @post("login")
+    @post("auth/login")
     async login(req: Request, res: Response) {
         let UserModel: User = new User();
         let token

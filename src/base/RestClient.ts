@@ -7,7 +7,6 @@
  *
  */
 
-
 import {Component} from "./Component";
 
 const axios = require('axios')

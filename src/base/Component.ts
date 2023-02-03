@@ -5,7 +5,7 @@
  * Github:https://github.com/cihan53/
  */
 
-import {CBaseObject} from "./CBaseObject";
+import {CBaseObject} from "./CBaseObject"
 import {ActionFilter} from "./ActionFilter";
 import {Utils} from "../requiments/Utils";
 
