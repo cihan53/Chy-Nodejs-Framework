@@ -4,13 +4,10 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-// @ts-ignore
-
 
 import {IdentityInterface} from "../../src/web/IdentityInterface";
+import {BaseChyz, Model} from "../../src/";
 import {DataTypes} from "../../src/base";
-import {BaseChyz,Model} from "../../src";
-
 
 const JsonWebToken = require("jsonwebtoken");
 

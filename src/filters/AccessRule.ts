@@ -10,7 +10,6 @@ import {InvalidConfigException} from "../base/InvalidConfigException";
 import {Request} from "express";
 import {Utils} from "../requiments/Utils";
 
-var _ = require('lodash');
 
 export class AccessRule extends Component {
 
@@ -89,7 +88,6 @@ export class AccessRule extends Component {
 
 
     public async allows(action: any, user: WebUser, request: Request) {
-
         if (
             this.matchAction(action)
             && await this.matchRole(user)
@@ -114,7 +112,7 @@ export class AccessRule extends Component {
      * @return bool whether the rule applies to the action
      */
     protected matchAction(action: any) {
-        return _.isEmpty(this.actions) || this.actions.includes(action.id);
+        return Utils.isEmpty(this.actions) || this.actions.includes(action.id);
     }
 
     /**

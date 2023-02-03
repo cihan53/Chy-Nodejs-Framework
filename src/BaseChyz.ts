@@ -3,7 +3,8 @@ import {CWebController, InvalidConfigException, ModelManager} from "./base";
 
 import t, {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
-
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 const https = require('https');
 const express = require("express");
@@ -11,6 +12,7 @@ const compression = require('compression')
 
 const fs = require('fs');
 const validate = require('validate.js');
+dayjs.extend(utc)
 
 /**
  * Use
@@ -47,6 +49,18 @@ validate.validators.tokenString = (items: any, itemConstraints: any) => {
     return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
 };
 
+validate.extend(validate.validators.datetime, {
+    // The value is guaranteed not to be null or undefined but otherwise it
+    // could be anything.
+    parse: function (value: any, options: any) {
+        return +dayjs().utc(value);
+    },
+    // Input is a unix timestamp
+    format: function (value: any, options: any) {
+        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
+        return dayjs().utc(value).format(format);
+    }
+});
 
 const ip = require('ip');
 const bodyParser = require('body-parser')

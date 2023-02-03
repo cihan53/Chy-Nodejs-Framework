@@ -5,11 +5,11 @@
  * Github:https://github.com/cihan53/
  */
 
-import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src/";
+import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "chyz";
 
 require('dotenv-flow').config();
 import {User} from "./Models/User";
-import {AuthManager} from "../src//rbac/AuthManager";
+import {AuthManager} from "chyz/rbac/AuthManager";
 
 
 //
@@ -21,7 +21,7 @@ import {AuthManager} from "../src//rbac/AuthManager";
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
-    // logs: new Logs('Examples', require('./log4js.json')),
+    logs: new Logs('Examples', require('./log4js.json')),
     staticFilePath:__dirname,
     components: {
         authManager: {

@@ -47,7 +47,7 @@ var keycloak = new Keycloak({scope: 'offline_access'}, keycloakConfig);
 
 let config = {
     port: 3000,
-    controllerpath: "C:\\PROJELER\\github\\Chy-Nodejs-Framework\\Examples\\Controllers",
+    controllerpath: __dirname+"/Controllers",
     components: {
         db: {
             class: DbConnection,

@@ -5,8 +5,9 @@
  * Github:https://github.com/cihan53/
  */
 
-import {Configurable} from "./Configurable";
 import {BaseChyz} from "../index";
+import {Configurable} from "./Configurable";
+
 
 export class CBaseObject implements Configurable {
 
