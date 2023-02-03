@@ -12,7 +12,7 @@ import {InvalidConfigException} from "./InvalidConfigException";
 import {DatabaseError, ExclusionConstraintError, ForeignKeyConstraintError, Model as SModel, QueryTypes, TimeoutError, UniqueConstraintError, ValidationError,} from "sequelize";
 import {Exception} from "./db/Exception";
 
-export {DataTypes,NOW} from "sequelize";
+export {DataTypes, NOW} from "sequelize";
 
 
 export interface Relation {
@@ -24,7 +24,7 @@ export interface Relation {
     name?: string,
     through?: any,
     as?: string,
-    on?:any
+    on?: any
 }
 
 /**
@@ -82,7 +82,7 @@ export interface Relation {
  */
 
 export class Model extends Component {
-    _sequelize: any;
+    _provider: any;
     _register: any;
     private _tableName: string;
     private _model: any;
@@ -97,13 +97,13 @@ export class Model extends Component {
         BaseChyz.debug("Model constructor", this._tableName)
         // this._sequelize = BaseChyz.getComponent("db").db;
         if (sequelize != null)
-            this._sequelize = sequelize;
+            this._provider = sequelize;
         else
-            this._sequelize = this.getDb();
+            this._provider = this.getDb();
 
         if (!Utils.isEmpty(this.attributes())) {
 
-            this._model = this._sequelize.define(this._tableName, this.attributes(), {
+            this._model = this._provider.define(this._tableName, this.attributes(), {
                 tableName: this.tableName(),
                 timestamps: false,
                 createdAt: false,
@@ -133,16 +133,12 @@ export class Model extends Component {
         return BaseChyz.getComponent("db");
     }
 
-    get sequelize(): any {
-        return this._sequelize;
+    get provider(): any {
+        return this._provider;
     }
 
-    set sequelize(value: any) {
-        this._sequelize = value;
-    }
-
-    public provider() {
-        return this._sequelize;
+    set provider(value: any) {
+        this._provider = value;
     }
 
 
@@ -222,7 +218,7 @@ export class Model extends Component {
 
     public async save(params = {}, options = {}) {
 
-        this.errors={};
+        this.errors = {};
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
         let result: any;
@@ -257,7 +253,7 @@ export class Model extends Component {
     }
 
     public async bulkCreate(params = {}, options = {}) {
-        this.errors={};
+        this.errors = {};
         // now instantiate an object
         let p = Object.assign(params, this._attributes)
         let result: any;
@@ -292,15 +288,15 @@ export class Model extends Component {
     }
 
     public update(params = {}, options = {}) {
-        this.errors={};
+        this.errors = {};
         let p = Object.assign(params, this._attributes)
         return this.model().update(p, options)
     }
 
     public delete(params = {}, options = {}) {
-        this.errors={};
+        this.errors = {};
         let p = Object.assign(params, this._attributes)
-        return this.model().delete(p, options)
+        return this.model().destroy(p, options)
     }
 
     /**
@@ -467,7 +463,7 @@ export class Model extends Component {
      * @param query
      */
     public async rawQuery(query: string, options: any = {type: QueryTypes.SELECT, nest: true}) {
-        this.errors={};
+        this.errors = {};
         return await this.model().query(query, options);
     }
 
