@@ -1,6 +1,6 @@
 {
   "name": "chyz",
-  "version": "2.0.0-rc.19",
+  "version": "2.0.0-rc.20",
   "description": "Nodejs Micro service Framework",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
