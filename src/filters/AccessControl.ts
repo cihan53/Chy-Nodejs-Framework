@@ -27,7 +27,6 @@ export class AccessControl extends ActionFilter {
 
 
         this.rules.forEach((rule: any, index: number) => {
-            console.log(rule,index)
             if (rule === Object(rule)) {
                 this.rules[index] = Utils.createObject(new AccessRule(), rule);
             }
