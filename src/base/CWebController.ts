@@ -8,6 +8,8 @@
 import {Component} from "./Component";
 import {RouteDefinition} from "../model/RouteDefinition";
 import {Request, Response} from "express";
+import BaseChyz from "../BaseChyz";
+import {CEvents} from "./CEvents";
 
 export class CWebController extends Component {
 
@@ -41,6 +43,8 @@ export class CWebController extends Component {
             await this.getBehaviors[name].beforeFilter(route, req, res);
         }
 
+
+        BaseChyz.EventEmitter.emit(CEvents.ON_BEFORE_ACTION, this, req, res)
     }
 
     /**
@@ -49,6 +53,7 @@ export class CWebController extends Component {
      */
     public afterAction(action: any, req: Request, res: Response) {
 
+        BaseChyz.EventEmitter.emit(CEvents.ON_AFTER_ACTION, this, req, res)
     }
 
     /**

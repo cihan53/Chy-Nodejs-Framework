@@ -5,6 +5,7 @@ import t, {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import {CEvents} from "./base/CEvents";
 
 const https = require('https');
 const express = require("express");
@@ -99,7 +100,7 @@ interface BaseChyzConfig {
 
 export default class BaseChyz {
     private config: BaseChyzConfig | any;
-    static app: string;
+    static app: any;
     static httpServer: any;
     static express = Server
     private _port: number = 3001;
@@ -473,7 +474,7 @@ export default class BaseChyz {
     public Start() {
 
         BaseChyz.info("Express Server Starting")
-
+        BaseChyz.EventEmitter.emit(CEvents.ON_BEFORE_START)
         if (this.config?.ssl) {
             BaseChyz.httpServer = https.createServer(this.config?.ssl, BaseChyz.express);
             BaseChyz.httpServer.listen(this._port, () => {
@@ -481,6 +482,7 @@ export default class BaseChyz {
                 BaseChyz.info(`Liten Port ${this._port}`)
                 BaseChyz.info(`https://localhost:${this._port}`)
                 BaseChyz.info(`https://${ip.address()}:${this._port}`)
+                BaseChyz.EventEmitter.emit(CEvents.ON_START)
             })
         } else {
             BaseChyz.httpServer = BaseChyz.express.listen(this._port, () => {
@@ -488,6 +490,7 @@ export default class BaseChyz {
                 BaseChyz.info(`Liten Port ${this._port}`)
                 BaseChyz.info(`http://localhost:${this._port}`)
                 BaseChyz.info(`http://${ip.address()}:${this._port}`)
+                BaseChyz.EventEmitter.emit(CEvents.ON_START)
             })
         }
 
