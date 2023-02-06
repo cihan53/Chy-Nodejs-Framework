@@ -50,11 +50,13 @@ export {
     ValidationHttpException,
     Model,
     ModelManager,
+    CEvents
 } from "./base";
 export * from "./filters";
 export * from "./filters/auth";
 
 export * from "./decorator";
 export * from "./requiments/Utils";
+
 export default Chyz;
 
