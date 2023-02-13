@@ -7,6 +7,9 @@
  *
  */
 export enum CEvents {
+    ON_INIT_BEFORE='oninitbefore',
+    ON_INIT_AFTER='oninitafter',
+    ON_MIDDLEWARE='onmiddleware',
     ON_BEFORE_START = 'onbeforestart',
     ON_AFTER_START = 'onafterestart',
     ON_START = 'onstart',
