@@ -1,19 +1,60 @@
-import {Request, Response, NextFunction} from "express";
-import {CWebController, InvalidConfigException, ModelManager} from "./base";
+/**
+ * https server
+ */
+import express,{Request, Response, NextFunction} from "express";
+import bodyParser = require('body-parser');
+import { createServer as httpsCreate } from "https";
+import { createServer as httpCreate } from "http";
+import fs = require("fs");
 
+/**
+ * Freamwork
+ */
+import {CWebController, InvalidConfigException, ModelManager} from "./base";
 import t, {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import {CEvents} from "./base/CEvents";
 
-const https = require('https');
-const express = require("express");
+
 const compression = require('compression')
 
-const fs = require('fs');
+// const fs = require('fs');
+
+
+
+const ip = require('ip');
+const methodOverride = require('method-override')
+const Server = express();
+const cors = require('cors');
+const emitter = require('events').EventEmitter;
+const em = new emitter();
+
+/**
+ * set request id
+ */
+Object.defineProperty(Server.request, 'reqId', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+Object.defineProperty(Server.request, 'user', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+Object.defineProperty(Server.request, 'identity', {
+    configurable: true,
+    enumerable: true,
+    writable: true
+})
+
+
 const validate = require('validate.js');
+const dayjs = require('dayjs')
+const utc = require('dayjs/plugin/utc')
+const relative = require('dayjs/plugin/relativeTime')
 dayjs.extend(utc)
+dayjs.extend(relative)
 
 /**
  * Use
@@ -30,7 +71,10 @@ dayjs.extend(utc)
  * @param arrayItems
  * @param itemConstraints
  */
+
+
 validate.validators.array = (arrayItems: any, itemConstraints: any) => {
+    if(!Utils.isArray(arrayItems)) return {errors: [{error:'in not array'}]};
     const arrayItemErrors = arrayItems.reduce((errors: any, item: any, index: any) => {
         const error = validate(item, itemConstraints);
         if (error) errors[index] = {error: error};
@@ -63,33 +107,6 @@ validate.extend(validate.validators.datetime, {
     }
 });
 
-const ip = require('ip');
-const bodyParser = require('body-parser')
-const methodOverride = require('method-override')
-const Server = express();
-const cors = require('cors');
-const emitter = require('events').EventEmitter;
-const em = new emitter();
-
-/**
- * set request id
- */
-Object.defineProperty(Server.request, 'reqId', {
-    configurable: true,
-    enumerable: true,
-    writable: true
-})
-Object.defineProperty(Server.request, 'user', {
-    configurable: true,
-    enumerable: true,
-    writable: true
-})
-Object.defineProperty(Server.request, 'identity', {
-    configurable: true,
-    enumerable: true,
-    writable: true
-})
-
 interface BaseChyzConfig {
     port: string;
     logs: string;
@@ -100,9 +117,8 @@ interface BaseChyzConfig {
 
 export default class BaseChyz {
     private config: BaseChyzConfig | any;
-    static app: any;
     static httpServer: any;
-    static express = Server
+    static propvider: any = Server
     private _port: number = 3001;
     static db: any;
     static routes: any;
@@ -197,6 +213,8 @@ export default class BaseChyz {
 
     app(config: any = {}): BaseChyz {
 
+        BaseChyz.EventEmitter.emit(CEvents.ON_INIT_BEFORE, this, config)
+
         /**
          * Config set
          */
@@ -239,6 +257,8 @@ export default class BaseChyz {
         }
 
         this.init();
+
+        BaseChyz.EventEmitter.emit(CEvents.ON_INIT_AFTER, this, config)
 
         return this;
     }
@@ -375,7 +395,7 @@ export default class BaseChyz {
                     route.id = actionId;
                     BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
 
-                    BaseChyz.express[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
+                    BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
                         async (req: Request, res: Response, next: NextFunction) => {
                             try {
                                 BaseChyz.debug(`Call Request id ${instance.id}`)
@@ -419,10 +439,10 @@ export default class BaseChyz {
 
     public middleware() {
 
-        BaseChyz.express.use(bodyParser.json({limit: '1mb'}));
-        BaseChyz.express.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
-        BaseChyz.express.use(methodOverride());
-        BaseChyz.express.use(cors());
+        BaseChyz.propvider.use(bodyParser.json({limit: '1mb'}));
+        BaseChyz.propvider.use(bodyParser.urlencoded({limit: '1mb', extended: true})); // support encoded bodies
+        BaseChyz.propvider.use(methodOverride());
+        BaseChyz.propvider.use(cors());
         //
         // // CORS
         // BaseChyz.express.use(function (req: any, res: Response, next: any) {
@@ -446,12 +466,12 @@ export default class BaseChyz {
             // use compression filter function
             return compression.filter(req, res);
         };
-        BaseChyz.express.use(compression({filter: shouldCompress}))
+        BaseChyz.propvider.use(compression({filter: shouldCompress}))
         //
         // //static file path
         if (this.config.staticFilePath) {
             BaseChyz.info('Static file path', this.config.staticFilePath)
-            BaseChyz.express.use(express.static(this.config.staticFilePath))
+            BaseChyz.propvider.use(express.static(this.config.staticFilePath))
         }
 
 
@@ -459,38 +479,41 @@ export default class BaseChyz {
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
             if (!Utils.isFunction(middleware1)) {
                 let keycloak = BaseChyz.middlewares[middleware1].keycloak;
-                BaseChyz.express.use(keycloak.middleware(BaseChyz.middlewares[middleware1].config));
+                BaseChyz.propvider.use(keycloak.middleware(BaseChyz.middlewares[middleware1].config));
             } else {
-                BaseChyz.express.use(BaseChyz.middlewares[middleware1]);
+                BaseChyz.propvider.use(BaseChyz.middlewares[middleware1]);
             }
 
         }
 
 
-        BaseChyz.express.use(this.errorResponder)
-        BaseChyz.express.use(this.errorHandler)
+        BaseChyz.propvider.use(this.errorResponder)
+        BaseChyz.propvider.use(this.errorHandler)
+
+        BaseChyz.EventEmitter.emit(CEvents.ON_MIDDLEWARE, this)
     }
 
     public Start() {
 
         BaseChyz.info("Express Server Starting")
-        BaseChyz.EventEmitter.emit(CEvents.ON_BEFORE_START)
+        BaseChyz.EventEmitter.emit(CEvents.ON_BEFORE_START, this)
         if (this.config?.ssl) {
-            BaseChyz.httpServer = https.createServer(this.config?.ssl, BaseChyz.express);
+            BaseChyz.httpServer = httpsCreate(this.config?.ssl, BaseChyz.propvider);
             BaseChyz.httpServer.listen(this._port, () => {
                 BaseChyz.info("Express Server Start ")
                 BaseChyz.info(`Liten Port ${this._port}`)
                 BaseChyz.info(`https://localhost:${this._port}`)
                 BaseChyz.info(`https://${ip.address()}:${this._port}`)
-                BaseChyz.EventEmitter.emit(CEvents.ON_START)
+                BaseChyz.EventEmitter.emit(CEvents.ON_START, this)
             })
         } else {
-            BaseChyz.httpServer = BaseChyz.express.listen(this._port, () => {
+            BaseChyz.httpServer = httpCreate(BaseChyz.propvider);
+            BaseChyz.propvider.listen(this._port, () => {
                 BaseChyz.info("Express Server Start ")
                 BaseChyz.info(`Liten Port ${this._port}`)
                 BaseChyz.info(`http://localhost:${this._port}`)
                 BaseChyz.info(`http://${ip.address()}:${this._port}`)
-                BaseChyz.EventEmitter.emit(CEvents.ON_START)
+                BaseChyz.EventEmitter.emit(CEvents.ON_START, this)
             })
         }
 
