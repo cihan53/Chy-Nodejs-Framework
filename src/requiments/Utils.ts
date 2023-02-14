@@ -110,6 +110,7 @@ export const Utils = {
     sleep,
     matchWildcard,
     toQuery,
+    t,
     ..._
 }
 export {t}
