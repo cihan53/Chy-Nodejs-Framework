@@ -104,12 +104,24 @@ const t = function (text: string) {
     return text;
 }
 
+/**
+ * random string genrate
+ * @param length
+ * @param randomString
+ */
+const generateRandomString = function (length: number, randomString = ""): string {
+    randomString += Math.random().toString(20).substr(2, length);
+    if (randomString.length > length) return randomString.slice(0, length);
+    return generateRandomString(length, randomString);
+};
+
 export const Utils = {
     findKeyValue,
     createObject,
     sleep,
     matchWildcard,
     toQuery,
+    generateRandomString,
     t,
     ..._
 }

@@ -1,10 +1,10 @@
 /**
  * https server
  */
-import express,{Request, Response, NextFunction} from "express";
+import express, {Request, Response, NextFunction} from "express";
 import bodyParser = require('body-parser');
-import { createServer as httpsCreate } from "https";
-import { createServer as httpCreate } from "http";
+import {createServer as httpsCreate} from "https";
+import {createServer as httpCreate} from "http";
 import fs = require("fs");
 
 /**
@@ -19,7 +19,6 @@ import {CEvents} from "./base/CEvents";
 const compression = require('compression')
 
 // const fs = require('fs');
-
 
 
 const ip = require('ip');
@@ -53,8 +52,14 @@ const validate = require('validate.js');
 const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
 const relative = require('dayjs/plugin/relativeTime')
+import calendar from "dayjs/plugin/calendar";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import isTomorrow from "dayjs/plugin/isTomorrow";
 dayjs.extend(utc)
 dayjs.extend(relative)
+dayjs.extend(isTomorrow);
+dayjs.extend(calendar);
+dayjs.extend(weekOfYear);
 
 /**
  * Use
@@ -74,7 +79,7 @@ dayjs.extend(relative)
 
 
 validate.validators.array = (arrayItems: any, itemConstraints: any) => {
-    if(!Utils.isArray(arrayItems)) return {errors: [{error:'in not array'}]};
+    if (!Utils.isArray(arrayItems)) return {errors: [{error: 'in not array'}]};
     const arrayItemErrors = arrayItems.reduce((errors: any, item: any, index: any) => {
         const error = validate(item, itemConstraints);
         if (error) errors[index] = {error: error};
@@ -93,6 +98,19 @@ validate.validators.tokenString = (items: any, itemConstraints: any) => {
 
     return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
 };
+
+validate.validators.extend(validate.validators.validators.datetime, {
+    parse: function (value:any, options:any) {
+        // console.log(value,parse(value, 'DD/MM/YYYY'),options)
+        // return +dayjs.utc(parse(value, 'DD/MM/YYYY'));
+        return +dayjs(value).utc();
+    },
+    // Input is a unix timestamp
+    format: function (value:any, options:any) {
+        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
+        return dayjs(value).utc().format(format);
+    }
+});
 
 validate.extend(validate.validators.datetime, {
     // The value is guaranteed not to be null or undefined but otherwise it
@@ -121,6 +139,7 @@ export default class BaseChyz {
     static propvider: any = Server
     private _port: number = 3001;
     static db: any;
+    static date: any = dayjs;
     static routes: any;
     static logs: Logs = new Logs();
     private static _validate: any = validate;

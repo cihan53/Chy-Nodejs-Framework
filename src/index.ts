@@ -20,9 +20,9 @@ declare module "express-serve-static-core" {
     }
 }
 
-
-import {RestClient} from "./base/RestClient";
 import BaseChyz from "./BaseChyz";
+import {RestClient} from "./base";
+
 
 /**
  *
