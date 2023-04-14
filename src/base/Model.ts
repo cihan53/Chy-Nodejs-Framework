@@ -126,7 +126,7 @@ export class Model extends Component {
      * @return Connection the database connection used by this AR class.
      */
     public getDb() {
-        return BaseChyz.getComponent("db").db
+        return BaseChyz.getComponent("db") ? BaseChyz.getComponent("db").db : null
     }
 
     public getDbConnection() {
