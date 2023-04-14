@@ -7,7 +7,7 @@
 import BaseChyz from "../../BaseChyz";
 import {HttpBearerAuth} from "./HttpBearerAuth";
 import {InvalidConfigException} from "../../base/InvalidConfigException";
-import {Response,Request} from "express";
+import {Response, Request} from "express";
 import {WebUser} from "../../web/WebUser";
 
 const JsonWebToken = require("jsonwebtoken");
@@ -18,7 +18,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
      * itself. By default it's assumes that component of ID "jwt" has been configured.
      */
     public jwt = 'jwt'
-    public auth:any = null;
+    public auth: any = null;
 
 
     /**
@@ -35,7 +35,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     }
 
 
-    public async authenticate(user:WebUser, request:Request, response:Response) // BC signature
+    public async authenticate(user: WebUser, request: Request, response: Response) // BC signature
     {
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
@@ -47,15 +47,21 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
         let identity = null;
         let token = null;
 
-        token = JsonWebToken.decode(autHeader[1], {complete: true})
-        if (!token) {
-            BaseChyz.warning("Your request was made with invalid or expired JSON Web Token.");
+        try {
+            token = JsonWebToken.decode(autHeader[1], {complete: true})
+            if (!token) {
+                BaseChyz.warning("Your request was made with invalid or expired JSON Web Token.");
+                this.fail(response);
+            }
+        } catch (e) {
+            BaseChyz.warning("Your request was made with invalid or expired JSON Web Token.",autHeader,request.path);
             this.fail(response);
         }
 
+
         if (token !== null) {
             if (this.auth != null) {
-                identity = await this.auth(autHeader[1],...arguments)
+                identity = await this.auth(autHeader[1], ...arguments)
             } else {
                 identity = await user.loginByAccessToken(autHeader[1], "JwtHttpBearerAuth")
             }
@@ -71,7 +77,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     /**
      * @throws UnauthorizedHttpException
      */
-    public fail(response:Response): void {
+    public fail(response: Response): void {
         this.challenge(response)
         this.handleFailure(response);
     }
