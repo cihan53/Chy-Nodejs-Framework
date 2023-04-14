@@ -424,8 +424,7 @@ export default class BaseChyz {
                         async (req: Request, res: Response, next: NextFunction) => {
                             try {
                                 BaseChyz.debug(`Call Request id ${actionId}`)
-                                http_request_body("Request body")
-                                http_request_body(req.body)
+                                http_request_body("Request body "+JSON.stringify(req.body))
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e: any) {
