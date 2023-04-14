@@ -16,6 +16,7 @@ import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
 
 
+const http_request_body = require('debug')('http:request:body')
 const compression = require('compression')
 
 // const fs = require('fs');
@@ -55,6 +56,7 @@ const relative = require('dayjs/plugin/relativeTime')
 import calendar from "dayjs/plugin/calendar";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+
 dayjs.extend(utc)
 dayjs.extend(relative)
 dayjs.extend(isTomorrow);
@@ -99,18 +101,6 @@ validate.validators.tokenString = (items: any, itemConstraints: any) => {
     return Utils.isEmpty(arrayItemErrors) ? null : {errors: arrayItemErrors};
 };
 
-validate.validators.extend(validate.validators.validators.datetime, {
-    parse: function (value:any, options:any) {
-        // console.log(value,parse(value, 'DD/MM/YYYY'),options)
-        // return +dayjs.utc(parse(value, 'DD/MM/YYYY'));
-        return +dayjs(value).utc();
-    },
-    // Input is a unix timestamp
-    format: function (value:any, options:any) {
-        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
-        return dayjs(value).utc().format(format);
-    }
-});
 
 validate.extend(validate.validators.datetime, {
     // The value is guaranteed not to be null or undefined but otherwise it
@@ -250,6 +240,22 @@ export default class BaseChyz {
 
         let components = Utils.findKeyValue(config, "components")
         if (components) {
+
+            /**
+             * first initial database component
+             */
+            if (components.db) {
+                let comp = components['db'];
+                BaseChyz.debug("First initial database component ", "db")
+                try {
+                    BaseChyz.components["db"] = Utils.createObject(new comp.class, comp);
+                    BaseChyz.components["db"]?.init();
+                    delete components.db
+                } catch (e) {
+                    BaseChyz.error("Create Component Error", e)
+                }
+            }
+
             for (const componentsKey in components) {
 
                 let comp = components[componentsKey];
@@ -410,14 +416,16 @@ export default class BaseChyz {
             if (routes) {
                 routes.forEach(route => {
 
-                    let actionId = route.path == "/" || route.path == "" ? instance.defaultAction : route.path;
+                    let actionId = (route.path == "/" || route.path == "") ? instance.defaultAction : route.path;
                     route.id = actionId;
                     BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
 
                     BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
                         async (req: Request, res: Response, next: NextFunction) => {
                             try {
-                                BaseChyz.debug(`Call Request id ${instance.id}`)
+                                BaseChyz.debug(`Call Request id ${actionId}`)
+                                http_request_body("Request body")
+                                http_request_body(req.body)
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e: any) {
