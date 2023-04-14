@@ -16,7 +16,9 @@ import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
 
 
-const http_request_body = require('debug')('http:request:body')
+const http_request = require('debug')('http:request')
+const http_request_body = http_request.extend('body')
+const http_request_headers =http_request.extend('headers')
 const compression = require('compression')
 
 // const fs = require('fs');
@@ -425,6 +427,7 @@ export default class BaseChyz {
                             try {
                                 BaseChyz.debug(`Call Request id ${actionId}`)
                                 http_request_body("Request body "+JSON.stringify(req.body))
+                                http_request_headers("Request header "+JSON.stringify(req.headers))
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e: any) {
