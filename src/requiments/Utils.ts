@@ -96,13 +96,7 @@ function wildTest(wildcard: string, str: string) {
 const matchWildcard = (pattern: string, string: string, options: any = {}) => {
     return wildTest(pattern, string)
 }
-/**
- *
- * @param text
- */
-const t = function (text: string) {
-    return text;
-}
+
 
 /**
  * random string genrate
@@ -122,8 +116,6 @@ export const Utils = {
     matchWildcard,
     toQuery,
     generateRandomString,
-    t,
     ..._
 }
-export {t}
-export default t;
+
