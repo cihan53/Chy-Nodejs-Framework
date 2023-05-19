@@ -462,6 +462,7 @@ export class Model extends Component {
      *   }
      * );``
      * @param query
+     * @param options
      */
     public async rawQuery(query: string, options: any = {type: QueryTypes.SELECT, nest: true}) {
         this.errors = {};
