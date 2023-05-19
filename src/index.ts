@@ -7,6 +7,12 @@
  *
  */
 
+declare global {
+    interface String {
+        tokenReplace(obj: any): string;
+    }
+}
+
 declare namespace Express {
     export interface Request {
         identity?: string
@@ -19,6 +25,15 @@ declare module "express-serve-static-core" {
         identity: any;
     }
 }
+
+String.prototype.tokenReplace = function (obj) {
+    let retStr: any = this;
+    for (let x in obj) {
+        // @ts-ignore
+        retStr = retStr.replace(new RegExp("\\:" + x, 'g'), obj[x]).toString();
+    }
+    return retStr;
+};
 
 import BaseChyz from "./BaseChyz";
 import {RestClient} from "./base";

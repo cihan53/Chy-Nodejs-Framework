@@ -10,7 +10,7 @@
 import {BaseError} from "./BaseError";
 
 export class InvalidConfigException extends BaseError {
-    constructor ( public message: string) {
+    constructor ( public message: any) {
         super(message,500);
     }
 }

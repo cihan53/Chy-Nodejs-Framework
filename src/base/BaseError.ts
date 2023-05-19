@@ -31,7 +31,7 @@ import {Utils} from "../requiments/Utils";
 export class BaseError extends Error {
     private statusCode: number;
 
-    constructor(message: string,statusCode=500) {
+    constructor(message: any,statusCode=500) {
         super(message);
         this.message= Utils.isString(message)?message: JSON.stringify(message);
         this.name = this.constructor.name // good practice
