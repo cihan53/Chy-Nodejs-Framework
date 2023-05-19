@@ -19,7 +19,9 @@ declare namespace Express {
     }
 }
 
-import { Express } from "express-serve-static-core"
+import BaseChyz from "./BaseChyz";
+import {RestClient} from "./base";
+
 declare module "express-serve-static-core" {
     interface Request {
         identity: any;
@@ -34,9 +36,6 @@ String.prototype.tokenReplace = function (obj) {
     }
     return retStr;
 };
-
-import BaseChyz from "./BaseChyz";
-import {RestClient} from "./base";
 
 
 /**
