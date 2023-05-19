@@ -11,7 +11,7 @@ import fs = require("fs");
  * Freamwork
  */
 import {CWebController, InvalidConfigException, ModelManager} from "./base";
-import t, {Utils} from "./requiments/Utils";
+import   {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
 
@@ -406,7 +406,7 @@ export default class BaseChyz {
             } else if (controller.default) {
                 controller = controller.default;
             } else {
-                throw new InvalidConfigException(t("Invalid Controller"))
+                throw new InvalidConfigException(BaseChyz.t("Invalid Controller"))
             }
 
 
