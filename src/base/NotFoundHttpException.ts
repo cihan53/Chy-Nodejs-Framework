@@ -8,7 +8,7 @@
 import {BaseError} from "./BaseError";
 
 export class NotFoundHttpException extends BaseError {
-    constructor ( public message: string) {
+    constructor ( public message: any) {
         super(message,404);
     }
 }

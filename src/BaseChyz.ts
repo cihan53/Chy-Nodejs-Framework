@@ -18,7 +18,7 @@ import {CEvents} from "./base/CEvents";
 
 const http_request = require('debug')('http:request')
 const http_request_body = http_request.extend('body')
-const http_request_headers =http_request.extend('headers')
+const http_request_headers = http_request.extend('headers')
 const compression = require('compression')
 
 // const fs = require('fs');
@@ -320,8 +320,16 @@ export default class BaseChyz {
         BaseChyz.logs.warn(...arguments)
     }
 
-    public static t(text: string) {
-        return text;
+    public static t(text: string, params?: any) {
+        if (text == "") return;
+
+        // let lang = require("@root/locales/tr/translation.json");
+        let lang: any = {};
+        if (lang.hasOwnProperty(text)) {
+            text = lang[text];
+        }
+
+        return text.tokenReplace(params);
     }
 
 
@@ -426,8 +434,8 @@ export default class BaseChyz {
                         async (req: Request, res: Response, next: NextFunction) => {
                             try {
                                 BaseChyz.debug(`Call Request id ${actionId}`)
-                                http_request_body("Request body "+JSON.stringify(req.body))
-                                http_request_headers("Request header "+JSON.stringify(req.headers))
+                                http_request_body("Request body " + JSON.stringify(req.body))
+                                http_request_headers("Request header " + JSON.stringify(req.headers))
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e: any) {

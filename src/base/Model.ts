@@ -24,7 +24,8 @@ export interface Relation {
     name?: string,
     through?: any,
     as?: string,
-    on?: any
+    on?: any,
+    scope?: any
 }
 
 /**

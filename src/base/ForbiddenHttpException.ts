@@ -7,7 +7,7 @@
 
 import {BaseError} from "./BaseError";
 export class ForbiddenHttpException extends BaseError {
-    constructor ( message: string) {
+    constructor ( message: any) {
         super(message,403);
     }
 }
