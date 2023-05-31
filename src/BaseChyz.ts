@@ -11,7 +11,7 @@ import fs = require("fs");
  * Freamwork
  */
 import {CWebController, InvalidConfigException, ModelManager} from "./base";
-import   {Utils} from "./requiments/Utils";
+import {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
 
@@ -136,7 +136,7 @@ export default class BaseChyz {
     static logs: Logs = new Logs();
     private static _validate: any = validate;
     private _controllerpath: string = "Controllers"
-    private static controllers: Array<CWebController> = []
+    static controllers: Array<CWebController> = []
     public static components: any = {}
     public static middlewares: any = {}
     private static _EventEmitter: any = em
@@ -556,5 +556,14 @@ export default class BaseChyz {
 
 
         return this;
+    }
+
+    public moduleIsAvailable(path: string) {
+        try {
+            require.resolve(path);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }
