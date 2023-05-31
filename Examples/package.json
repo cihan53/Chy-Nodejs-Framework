@@ -10,9 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^5.1.0",
-    "chyz": "../src",
-    "jsonwebtoken": "^9.0.0"
+    "chyz": "../src"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

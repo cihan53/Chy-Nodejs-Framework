@@ -42,7 +42,7 @@ const toQuery = function (obj: any) {
  */
 const createObject = (object: any, params: any) => {
     let newParams: any = {}
-    Object.keys(params).forEach((param) => {
+    Object.keys(params).filter((item)=>item!="class").forEach((param) => {
         newParams[param] = {}
         Object.assign(newParams[param], {
             writable: true,
@@ -50,6 +50,7 @@ const createObject = (object: any, params: any) => {
             value: params[param]
         });
     })
+
     return Object.create(object, newParams);
 }
 /**

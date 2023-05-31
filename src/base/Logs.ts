@@ -44,28 +44,28 @@ export class Logs implements Configurable {
     }
 
     public debug(...args: any[]) {
-        this.logs().debug(...arguments)
+        this.logs().debug(...args)
     }
 
     public info(...args: any[]) {
-        this.logs().info(...arguments)
+        this.logs().info(...args)
     }
 
     public warn(...args: any[]) {
-        this.logs().warn(...arguments)
+        this.logs().warn(...args)
     }
 
     public error(...args: any[]) {
-        this.logs().error(...arguments)
+        this.logs().error(...args)
     }
 
     public fatal(...args: any[]) {
-        this.logs().fatal(...arguments)
+        this.logs().fatal(...args)
     }
 
 
     public warning(...args: any[]) {
-        this.logs().warn(...arguments)
+        this.logs().warn(...args)
     }
 
 }

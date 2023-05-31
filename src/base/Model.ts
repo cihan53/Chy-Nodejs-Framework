@@ -102,6 +102,11 @@ export class Model extends Component {
         else
             this._provider = this.getDb();
 
+
+        if(this._provider==null ){
+            throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not empty db component"))
+        }
+
         if (!Utils.isEmpty(this.attributes())) {
 
             this._model = this._provider.define(this._tableName, this.attributes(), {
@@ -112,7 +117,7 @@ export class Model extends Component {
             });
 
         } else {
-            throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not emty attributes"))
+            throw new InvalidConfigException(BaseChyz.t("Invalid model configuration, is not empty attributes"))
         }
 
         // this.init();
@@ -475,7 +480,7 @@ export class Model extends Component {
      * @param args
      */
     public findOne(...args: any[]) {
-        return this._model.findOne(...arguments)
+        return this._model.findOne(...args)
     }
 
     /**
@@ -483,7 +488,7 @@ export class Model extends Component {
      * @param args
      */
     public findAll(...args: any[]) {
-        return this._model.findAll(...arguments)
+        return this._model.findAll(...args)
     }
 
     /**
@@ -491,7 +496,7 @@ export class Model extends Component {
      * @param args
      */
     public findAndCountAll(...args: any[]) {
-        return this._model.findAndCountAll(...arguments)
+        return this._model.findAndCountAll(...args)
     }
 
 

@@ -4,70 +4,19 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-
 import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src/";
+import {FastifyServer} from "../src/provider/FastifyServer";
+import {BaseChyzConfig} from "../src/BaseChyz";
 
-require('dotenv-flow').config();
-import {User} from "./Models/User";
-import {AuthManager} from "../src//rbac/AuthManager";
-
-
-let config = {
-    port: process.env.PORT,
-    controllerpath: process.env.CONTROLLER_PATH,
-    // logs: new Logs('Examples', require('./log4js.json')),
-    staticFilePath:__dirname,
-    components: {
-        authManager: {
-            class: AuthManager
-        },
-        db: {
-            class: DbConnection,
-            database: process.env.DBDATABASE,
-            username: process.env.DBUSER,
-            password: process.env.DBPASS,
-            options: {
-                host: process.env.DBHOST,
-                port: process.env.DBPORT ||  '5432',
-                dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-                // disable logging; default: console.log
-                // logging: false
-                logging: (msg: any) => BaseChyz.debug(msg)
-            }
-        },
-        // db: {
-        //     class: DbConnection,
-        //     database: process.env.DBDATABASE,
-        //     username: process.env.DBUSER,
-        //     password: process.env.DBPASS,
-        //
-        //     options: {
-        //         host: process.env.DBHOST,
-        //         dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-        //         // disable logging; default: console.log
-        //         logging: (msg: any) => BaseChyz.debug(msg)
-        //     }
-        // },
-        // db2: {
-        //     class: DbConnection,
-        //     database: process.env.DBDATABASE,
-        //     username: process.env.DBUSER,
-        //     password: process.env.DBPASS,
-        //     options: {
-        //         host: process.env.DBHOST,
-        //         dialect: 'postgres',  /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
-        //         // disable logging; default: console.log
-        //         logging: (msg: any) => BaseChyz.debug('DB2', msg)
-        //     }
-        // },
-        // authManager: {
-        //     class: AuthManager,
-        // },
-        user: {
-            'class': WebUser,
-            'identityClass': User
+let config: BaseChyzConfig = {
+    controllerPath: __dirname + "/Controllers",
+    provider: {
+        class: FastifyServer,
+        config: {
+            port: 3000
         }
-    }
+    },
 
 }
-Chyz.app(config).Start();
+
+Chyz.app(config).Start()

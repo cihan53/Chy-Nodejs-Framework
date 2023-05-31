@@ -8,8 +8,6 @@
  */
 
 export interface ProviderInterface {
-    init(configs: any): void
-
     middleware(): void
 
     loadController(): void

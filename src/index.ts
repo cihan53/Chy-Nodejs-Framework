@@ -12,22 +12,6 @@ declare global {
         tokenReplace(obj: any): string;
     }
 }
-
-declare namespace Express {
-    export interface Request {
-        identity?: string
-    }
-}
-
-import BaseChyz from "./BaseChyz";
-import {RestClient} from "./base";
-
-declare module "express-serve-static-core" {
-    interface Request {
-        identity: any;
-    }
-}
-
 String.prototype.tokenReplace = function (obj) {
     let retStr: any = this;
     for (let x in obj) {
@@ -36,6 +20,12 @@ String.prototype.tokenReplace = function (obj) {
     }
     return retStr;
 };
+
+
+
+import BaseChyz from "./BaseChyz";
+import {RestClient} from "./base";
+
 
 
 /**
