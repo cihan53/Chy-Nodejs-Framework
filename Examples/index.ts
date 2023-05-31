@@ -11,7 +11,6 @@ require('dotenv-flow').config();
 import {User} from "./Models/User";
 import {AuthManager} from "../src//rbac/AuthManager";
 
-
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
