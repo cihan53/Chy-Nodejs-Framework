@@ -58,6 +58,7 @@ const relative = require('dayjs/plugin/relativeTime')
 import calendar from "dayjs/plugin/calendar";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+import {RouteDefinition} from "./model/RouteDefinition";
 
 dayjs.extend(utc)
 dayjs.extend(relative)
@@ -416,10 +417,8 @@ export default class BaseChyz {
             BaseChyz.controllers.push(instance);
 
             // The prefix saved to our controller
-            // @ts-ignore
             const prefix = Reflect.getMetadata('prefix', controller);
             // Our `routes` array containing all our routes for this controller
-            // @ts-ignore
             const routes: Array<RouteDefinition> = Reflect.getMetadata('routes', controller);
             BaseChyz.debug("Controller load ", controller.name, `(${prefix})`)
 
