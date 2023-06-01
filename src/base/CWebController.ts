@@ -11,8 +11,11 @@ import {Request, Response} from "express";
 import BaseChyz from "../BaseChyz";
 import {CEvents} from "./CEvents";
 
-export class CWebController extends Component {
 
+export class CWebController extends Component {
+    [key: string]: any
+    public prefix: string = "";
+    public routes: any = null;
 
     /**
      * @var string the ID of this controller.

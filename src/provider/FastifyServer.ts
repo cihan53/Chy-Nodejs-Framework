@@ -57,41 +57,50 @@ export class FastifyServer extends Component implements ProviderInterface {
 
     async loadController(): Promise<void> {
 
-        for (const controller of BaseChyz.controllers) {
-            console.log(controller)
-            // this.provider.route({
-            //
-            // })
-            const prefix = Reflect.getMetadata('prefix', controller);
-            const ct = Reflect.getMetadata('controller', controller);
-            const pr = Reflect.getMetadata('controller', controller,"method");
-            const routes: Array<RouteDefinition> = Reflect.getMetadata('routes', controller);
-            console.log(pr, "reflect")
-            console.log(ct, "reflect")
-            console.log(routes, "reflect")
+        // this.provider.route({
+        //     method: 'GET',
+        //     url: '/',
+        //     schema: {
+        //         querystring: {
+        //             name: {type: 'string'},
+        //             excitement: {type: 'integer'}
+        //         },
+        //         response: {
+        //             200: {
+        //                 type: 'object',
+        //                 properties: {
+        //                     hello: {type: 'string'}
+        //                 }
+        //             }
+        //         }
+        //     },
+        //     handler: function (request: any, reply: any) {
+        //         reply.send({hello: 'world'})
+        //     }
+        // })
+
+        try{
+            for (const controller of BaseChyz.controllers) {
+
+                for (const route of controller.routes) {
+
+                    switch (route.requestMethod) {
+                        case 'get':
+                            this.provider.get(route.path, async (request: any, reply: any)=>{
+                                 controller[route.methodName](request, reply)
+                            } )
+                            break;
+                    }
+
+                }
+
+            }
+        }catch (e) {
+            BaseChyz.error(e)
         }
 
-        this.provider.route({
-            method: 'GET',
-            url: '/',
-            schema: {
-                querystring: {
-                    name: {type: 'string'},
-                    excitement: {type: 'integer'}
-                },
-                response: {
-                    200: {
-                        type: 'object',
-                        properties: {
-                            hello: {type: 'string'}
-                        }
-                    }
-                }
-            },
-            handler: function (request: any, reply: any) {
-                reply.send({hello: 'world'})
-            }
-        })
+
+
     }
 
     middleware(): void {

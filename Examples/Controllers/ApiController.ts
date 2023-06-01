@@ -50,15 +50,15 @@ export class ApiController extends CWebController {
         // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
         BaseChyz.info("Site Controller Burası")
-        return res.json({message: "index sayfası"})
+        return res.send({message: "index sayfası"})
     }
 
-    @get("hello")
+    @get("/hello")
     OrderList(req: Request, res: Response) {
         // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
         BaseChyz.info("order/list")
-        return res.json({message: "order/list"})
+        return res.send({message: "order/list"})
     }
 
     // @post("auth/login")

@@ -2,7 +2,7 @@
  * https server
  */
 
-import  "reflect-metadata";
+import "reflect-metadata";
 /**
  * Freamwork
  */
@@ -16,9 +16,9 @@ import isTomorrow from "dayjs/plugin/isTomorrow";
 import {AuthManager} from "./rbac/AuthManager";
 import {WebUser} from "./web/WebUser";
 import {IdentityInterface} from "./web/IdentityInterface";
-import {FastifyServer} from "./provider/FastifyServer";
-import fs = require("fs");
 import {ProviderInterface} from "./provider/ProviderInterface";
+import fs = require("fs");
+import {RouteDefinition} from "./model/RouteDefinition";
 
 const emitter = require('events').EventEmitter;
 const em = new emitter();
@@ -177,14 +177,12 @@ export default class BaseChyz {
         /**
          * Load Controller
          */
-        this.loadController().then(() => {
-            // BaseChyz.provider.middleware()
-            BaseChyz.info("Controller load success", BaseChyz.controllers)
-            BaseChyz.provider.init();
-            BaseChyz.initalized = true;
-        });
+        this.loadController()
 
 
+        BaseChyz.debug("Controller load success")
+        BaseChyz.provider.init();
+        BaseChyz.initalized = true;
     }
 
     app(config: BaseChyzConfig): BaseChyz {
@@ -245,8 +243,9 @@ export default class BaseChyz {
 
 
         this.init();
-
+        BaseChyz.initalized=true
         BaseChyz.EventEmitter.emit(CEvents.ON_INIT_AFTER, this, config)
+
 
         return this;
     }
@@ -371,7 +370,7 @@ export default class BaseChyz {
     /**
      * load contoller
      */
-    async loadController() {
+    loadController() {
         // let articlesEndpoints: string[] = [];
         BaseChyz.info("Load Controller ")
         for (const file of fs.readdirSync(`${this.config.controllerPath}/`)) {
@@ -388,6 +387,11 @@ export default class BaseChyz {
 
             // This is our instantiated class
             const instance: CWebController = new controller();
+            const prefix = Reflect.getMetadata('prefix', controller);
+            const routes: Array<RouteDefinition> = Reflect.getMetadata('routes', controller);
+            instance.prefix = prefix;
+            instance.routes = routes;
+
             BaseChyz.controllers.push(instance);
 
         }
