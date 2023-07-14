@@ -134,7 +134,7 @@ export default class BaseChyz {
     static db: any;
     static date: any = dayjs;
     static routes: any;
-    static logs: Logs = new Logs();
+    static logs: Logs ;
     private static _validate: any = validate;
     private _controllerpath: string = "Controllers"
     private static controllers: Array<CWebController> = []
