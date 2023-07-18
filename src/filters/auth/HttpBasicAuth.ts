@@ -26,6 +26,8 @@ export class HttpBasicAuth extends AuthMethod {
     public pattern = /^Basic\s+(.*?)$/;
 
 
+    public auth: any = null;
+
     /**
      * @throws InvalidConfigException
      */
@@ -40,7 +42,7 @@ export class HttpBasicAuth extends AuthMethod {
     }
 
 
-    async authenticate(user: WebUser, request:Request, response:Response) {
+    async authenticate(user: WebUser, request: Request, response: Response) {
 
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
@@ -48,9 +50,19 @@ export class HttpBasicAuth extends AuthMethod {
             return null;
         }
 
-        let basicauth = autHeader[1].split(":")
+        let identity = null;
+        let token = null;
 
-        let identity = await user.loginByAccessToken(basicauth, "HttpBasicAuth");
+        let buff = new Buffer(autHeader[1], "base64");
+        let basicauth = buff.toString().split(":");
+
+        if (this.auth != null) {
+            identity = await this.auth(autHeader[1], ...arguments, basicauth)
+        } else {
+            identity = await user.loginByAccessToken(basicauth, "HttpBasicAuth");
+        }
+
+
         if (identity === null) {
             this.challenge(response);
             this.handleFailure(response);
@@ -58,15 +70,13 @@ export class HttpBasicAuth extends AuthMethod {
 
         return identity;
 
-
-        return null;
     }
 
 
     /**
      * @throws UnauthorizedHttpException
      */
-    public fail(response:Response): void {
+    public fail(response: Response): void {
         this.challenge(response)
         this.handleFailure(response);
     }
