@@ -63,11 +63,7 @@ export class HttpBasicAuth extends AuthMethod {
         }
 
 
-        if (identity === null) {
-            this.challenge(response);
-            this.handleFailure(response);
-        }
-
+        if (identity == null) this.fail(response)
         return identity;
 
     }
