@@ -68,6 +68,7 @@ export {
 } from "./base";
 export * from "./filters";
 export * from "./filters/auth";
+export * from "./rbac/";
 
 export * from "./decorator";
 export * from "./requiments/Utils";

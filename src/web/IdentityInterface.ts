@@ -23,6 +23,7 @@ export interface IdentityInterface {
      * or the identity is not in an active state (disabled, deleted, etc.)
      * @param token
      * @param type
+     * @param any
      */
     findIdentityByAccessToken(token: any, type: string): any;
 
@@ -63,6 +64,6 @@ export interface IdentityInterface {
     /**
      *
      */
-    can(permissionName:string, params: any[]  , allowCaching: boolean  ):Promise<(boolean | null)> ;
+    can(permissionName: string, params: any[], allowCaching: boolean): Promise<(boolean | null)>;
 
 }

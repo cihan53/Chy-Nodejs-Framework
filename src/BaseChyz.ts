@@ -439,9 +439,9 @@ export default class BaseChyz {
                                 next()
                             } catch (e: any) {
                                 BaseChyz.error(e);
-
                                 res.status(e.statusCode || 500)
-                                res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                // res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                res.json(e.toJSON())
                                 // next(e)
                             }
 
@@ -460,7 +460,7 @@ export default class BaseChyz {
                                     // @ts-ignore
                                     res.status(e.statusCode || 500)
                                     // @ts-ignore
-                                    res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                    res.json(e.toJSON())
                                 } else {
                                     res.json(e)
                                 }
@@ -513,7 +513,7 @@ export default class BaseChyz {
 
         //Middlewares
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
-            if (!Utils.isFunction(middleware1)) {
+            if (BaseChyz.middlewares[middleware1]?.keycloak) {
                 let keycloak = BaseChyz.middlewares[middleware1].keycloak;
                 BaseChyz.propvider.use(keycloak.middleware(BaseChyz.middlewares[middleware1].config));
             } else {
