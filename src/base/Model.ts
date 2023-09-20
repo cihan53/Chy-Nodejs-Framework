@@ -16,6 +16,7 @@ export {DataTypes, NOW} from "sequelize";
 
 
 export interface Relation {
+    [key: string]: any;
     type: "hasOne" | "hasMany" | "belongsToMany" | "belongsTo",
     allowNull?: boolean,
     sourceKey?: string,

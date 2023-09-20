@@ -30,20 +30,23 @@ import {Utils} from "../requiments/Utils";
  */
 export class BaseError extends Error {
     private statusCode: number;
+    private success: boolean;
 
-    constructor(message: any,statusCode=500) {
+    constructor(message: any, statusCode = 500) {
         super(message);
-        this.message= Utils.isString(message)?message: JSON.stringify(message);
+        this.success = false;
+        this.message = Utils.isString(message) ? message : JSON.stringify(message);
         this.name = this.constructor.name // good practice
         this.statusCode = statusCode // error code for responding to client
         //Error.captureStackTrace(this)
     }
 
-    toString(){
+    toString() {
         return `${this.name}[${this.statusCode}] ${this.message}`
     }
-    toJSON(){
-        return {code: this?.statusCode, name: this.name, message: this.message}
+
+    toJSON() {
+        return {success: this.success, code: this?.statusCode, name: this.name, message: this.message}
     }
 }
 
