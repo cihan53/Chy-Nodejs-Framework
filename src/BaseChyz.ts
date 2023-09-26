@@ -11,7 +11,7 @@ import fs = require("fs");
  * Freamwork
  */
 import {CWebController, InvalidConfigException, ModelManager} from "./base";
-import   {Utils} from "./requiments/Utils";
+import {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
 
@@ -441,7 +441,12 @@ export default class BaseChyz {
                                 BaseChyz.error(e);
                                 res.status(e.statusCode || 500)
                                 // res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
-                                res.json(e.toJSON())
+                                if(e.hasOwnProperty('toJSON')){
+                                    res.json(e.toJSON())
+                                }else{
+                                    res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                }
+
                                 // next(e)
                             }
 
