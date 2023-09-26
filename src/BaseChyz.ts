@@ -10,7 +10,7 @@ import fs = require("fs");
 /**
  * Freamwork
  */
-import {CWebController, InvalidConfigException, ModelManager} from "./base";
+import {BaseError, CWebController, InvalidConfigException, ModelManager} from "./base";
 import {Utils} from "./requiments/Utils";
 import {Logs} from "./base/Logs";
 import {CEvents} from "./base/CEvents";
@@ -459,7 +459,7 @@ export default class BaseChyz {
                                 await instance[route.methodName](req, res, next);
                                 instance.afterAction(route, req, res);
                             } catch (e) {
-                                if (e instanceof Error) {
+                                if (e instanceof BaseError) {
                                     BaseChyz.error(e)
 
                                     // @ts-ignore
