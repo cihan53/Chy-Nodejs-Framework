@@ -30,15 +30,18 @@ import {Utils} from "../requiments/Utils";
  */
 export class BaseError extends Error {
     statusCode: number;
+    orginal: any;
     private success: boolean;
 
     constructor(message: any, statusCode = 500) {
         super(message);
+
         this.success = false;
         this.message = Utils.isString(message) ? message : JSON.stringify(message);
         this.name = this.constructor.name // good practice
         this.statusCode = statusCode // error code for responding to client
         //Error.captureStackTrace(this)
+        this.orginal = Utils.isString(message) ? message : message
     }
 
     toString() {
@@ -46,7 +49,18 @@ export class BaseError extends Error {
     }
 
     toJSON() {
-        return {success: this.success, code: this?.statusCode, name: this.name.toString(), message: this.message.toString()}
+        if (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "dev") {
+            return {success: this.success, code: this?.statusCode, name: this.name.toString(),
+                message: this.message.toString(),
+                stack: this.stack,
+                orginal: this.orginal
+            }
+        } else {
+            return {success: this.success, code: this?.statusCode, name: this.name.toString(),
+                message: this.message.toString()
+            }
+        }
+
     }
 }
 

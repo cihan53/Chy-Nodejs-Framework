@@ -10,6 +10,7 @@ import {Utils} from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
 import {
+    BaseError,
     DatabaseError,
     ExclusionConstraintError,
     ForeignKeyConstraintError,
@@ -133,12 +134,19 @@ export class Model extends Component {
         // };
 
         this._provider.query = function (sql: string | { query: string; values: unknown[] }, options?: QueryOptions | QueryOptionsWithType<QueryTypes.RAW> | undefined,) {
-            return Sequelize.prototype.query.apply(this, [sql, options]).catch((err) => {
+            return Sequelize.prototype.query.apply(this, [sql, options]).catch((err ) => {
 
-                let e = new Error(err.message)
-                e.message= err.message
 
-                throw new DataErrorDbException(e);
+                if( process.env.NODE_ENV=="development" || process.env.NODE_ENV=="dev"){
+                    // e.stack = e.original;
+                    if( err instanceof  DatabaseError){
+                        // @ts-ignore
+                        delete err.parent;
+                        // @ts-ignore
+                        delete err.original;
+                    }
+                }
+                throw new DataErrorDbException(err);
             })
             // try {
             //       let r =
