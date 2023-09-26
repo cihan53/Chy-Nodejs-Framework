@@ -25,7 +25,7 @@ export class ApiController extends CWebController {
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
-                "except": ["auth/login"]
+                "except": ["auth/login",'stock']
                 // "auth": this.myCheck
             },
             'access': {
@@ -34,13 +34,13 @@ export class ApiController extends CWebController {
                 'rules': [
                     {
                         'allow':true,
-                        'action':["auth/login"],
+                        'action':["auth/login",'stock'],
                         'roles':["?"]
                     },
                     {
                         'allow': true,
-                        'actions': ['hello' ],
-                        'roles': ['edisboxnew'],
+                        'actions': ['hello'  ],
+                        'roles': ['manager'],
                     }
                 ]
             }
@@ -56,11 +56,25 @@ export class ApiController extends CWebController {
     }
 
     @get("hello")
-    OrderList(req: Request, res: Response) {
+    async OrderList(req: Request, res: Response) {
         // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
 
+        let orders = await ModelManager.Orders.findAll();
         BaseChyz.info("order/list")
-        return res.json({message: "order/list"})
+        return res.json(orders)
+    }
+
+    @get("stock")
+    async StockList(req: Request, res: Response) {
+
+        let stocks = await ModelManager.Stocks.findAll({
+            limit:20,
+            where:{
+                den:1
+            }
+        });
+        BaseChyz.info("order/list")
+        return res.json(stocks)
     }
 
     @post("auth/login")

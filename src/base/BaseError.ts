@@ -29,7 +29,7 @@ import {Utils} from "../requiments/Utils";
  *    10.4.18   417 Expectation Failed ..................................70
  */
 export class BaseError extends Error {
-    private statusCode: number;
+    statusCode: number;
     private success: boolean;
 
     constructor(message: any, statusCode = 500) {
@@ -46,7 +46,7 @@ export class BaseError extends Error {
     }
 
     toJSON() {
-        return {success: this.success, code: this?.statusCode, name: this.name, message: this.message}
+        return {success: this.success, code: this?.statusCode, name: this.name.toString(), message: this.message.toString()}
     }
 }
 

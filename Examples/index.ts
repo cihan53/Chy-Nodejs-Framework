@@ -4,10 +4,8 @@
  * E-mail: cihan@chy.com.tr
  * Github:https://github.com/cihan53/
  */
-
-import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src/";
-
 require('dotenv-flow').config();
+import Chyz, {BaseChyz, DbConnection, Logs, WebUser} from "../src/";
 import {User} from "./Models/User";
 import {AuthManager} from "../src//rbac/AuthManager";
 

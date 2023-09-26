@@ -238,6 +238,8 @@ export default class BaseChyz {
          */
         if (this.config.logs instanceof Logs) {
             BaseChyz.logs = this.config.logs;
+        }else if( !this.config.hasOwnProperty('logs')){
+            BaseChyz.logs = new Logs();
         }
 
 
@@ -438,13 +440,12 @@ export default class BaseChyz {
                                 await instance.beforeAction(route, req, res)
                                 next()
                             } catch (e: any) {
-                                BaseChyz.error(e);
-                                res.status(e.statusCode || 500)
-                                // res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
-                                if(e.hasOwnProperty('toJSON')){
+                                BaseChyz.error(e)
+                                if (e instanceof BaseError) {
+                                    res.status(e?.statusCode || 500)
                                     res.json(e.toJSON())
-                                }else{
-                                    res.json({error: {code: e.statusCode || 500, name: e.name, message: e.message}})
+                                } else {
+                                    res.json(e)
                                 }
 
                                 // next(e)
@@ -459,12 +460,9 @@ export default class BaseChyz {
                                 await instance[route.methodName](req, res, next);
                                 instance.afterAction(route, req, res);
                             } catch (e) {
+                                BaseChyz.error(e)
                                 if (e instanceof BaseError) {
-                                    BaseChyz.error(e)
-
-                                    // @ts-ignore
                                     res.status(e.statusCode || 500)
-                                    // @ts-ignore
                                     res.json(e.toJSON())
                                 } else {
                                     res.json(e)
