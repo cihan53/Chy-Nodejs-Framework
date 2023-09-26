@@ -89,3 +89,4 @@ node_modules
 
 /dist/
 /Doc/dd/
+/Examples/Models/Stocks.ts
