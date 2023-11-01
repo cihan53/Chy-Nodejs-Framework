@@ -134,7 +134,7 @@ export default class BaseChyz {
     static db: any;
     static date: any = dayjs;
     static routes: any;
-    static logs: Logs ;
+    static logs: Logs = new Logs() ;
     private static _validate: any = validate;
     private _controllerpath: string = "Controllers"
     private static controllers: Array<CWebController> = []
@@ -299,28 +299,28 @@ export default class BaseChyz {
     }
 
     public static debug(...args: any[]) {
-        BaseChyz.logs.debug(...arguments)
+        BaseChyz.logs.debug(...args)
     }
 
     public static info(...args: any[]) {
-        BaseChyz.logs.info(...arguments)
+        BaseChyz.logs.info(...args)
     }
 
     public static warn(...args: any[]) {
-        BaseChyz.logs.warn(...arguments)
+        BaseChyz.logs.warn(...args)
     }
 
     public static error(...args: any[]) {
-        BaseChyz.logs.error(...arguments)
+        BaseChyz.logs.error(...args)
     }
 
     public static fatal(...args: any[]) {
-        BaseChyz.logs.fatal(...arguments)
+        BaseChyz.logs.fatal(...args)
     }
 
 
     public static warning(...args: any[]) {
-        BaseChyz.logs.warn(...arguments)
+        BaseChyz.logs.warn(...args)
     }
 
     public static t(text: string, params?: any) {

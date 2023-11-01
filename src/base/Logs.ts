@@ -27,7 +27,6 @@ export class Logs implements Configurable {
     }
 
     init() {
-
         this.Provider().configure(this.configs);
     }
 
