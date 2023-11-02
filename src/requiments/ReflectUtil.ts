@@ -13,8 +13,8 @@
  */
 // @ts-ignore
 Reflect.newInstance = function (strClass: string) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    var clsClass = eval(strClass);
+    const args = Array.prototype.slice.call(arguments, 1);
+    const clsClass = eval(strClass);
 
     const F = () => {
         return clsClass.apply(this, args);

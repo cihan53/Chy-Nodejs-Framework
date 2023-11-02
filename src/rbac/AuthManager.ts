@@ -272,16 +272,14 @@ export class AuthManager extends Component {
      * @param userId
      */
     public async getItemsByUser(userId: number) {
-        let items = await ModelManager.AuthAssignment.findAll({
+        return await ModelManager.AuthAssignment.findAll({
             where: {
                 user_id: userId.toString()
             },
             include: [{
                 model: ModelManager.AuthItem.model()
             }]
-        })
-
-        return items;
+        });
     }
 
 

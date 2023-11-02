@@ -6,7 +6,7 @@
  */
 import BaseChyz from "../../BaseChyz";
 import {HttpBearerAuth} from "./HttpBearerAuth";
-import {InvalidConfigException} from "../../base/InvalidConfigException";
+import {InvalidConfigException} from "../../base";
 import {Response, Request} from "express";
 import {WebUser} from "../../web/WebUser";
 

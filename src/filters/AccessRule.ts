@@ -5,8 +5,8 @@
  * Github:https://github.com/cihan53/
  */
 import {WebUser} from "../web/WebUser";
-import {Component} from "../base/Component";
-import {InvalidConfigException} from "../base/InvalidConfigException";
+import {Component} from "../base";
+import {InvalidConfigException} from "../base";
 import {Request} from "express";
 import {Utils} from "../requiments/Utils";
 
@@ -14,7 +14,7 @@ import {Utils} from "../requiments/Utils";
 export class AccessRule extends Component {
 
     /**
-     * @var bool whether this is an 'allow' rule or 'deny' rule.
+     * @var allow whether this is an 'allow' rule or 'deny' rule.
      */
     public allow: any;
     /**
@@ -108,7 +108,7 @@ export class AccessRule extends Component {
     }
 
     /**
-     * @param Action $action the action
+     * @param action $action the action
      * @return bool whether the rule applies to the action
      */
     protected matchAction(action: any) {
@@ -116,7 +116,7 @@ export class AccessRule extends Component {
     }
 
     /**
-     * @param Controller $controller the controller
+     * @param controller $controller the controller
      * @return bool whether the rule applies to the controller
      */
     protected matchController(controller: any) {
@@ -163,7 +163,7 @@ export class AccessRule extends Component {
                     return true;
                 }
             } else {
-                //roleparams
+                //role-params
                 if (!Utils.isEmpty(this.roleParams)) {
                     roleParams = !Utils.isArray(this.roleParams) ? this.roleParams.apply(this) : this.roleParams;
                 }

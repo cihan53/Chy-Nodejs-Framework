@@ -25,7 +25,8 @@ export class HttpBearerAuth extends HttpHeaderAuth {
     /**
      * {@inheritdoc}
      */
-    public challenge(response: Response) {
+    public challenge(response: Response):Response {
         response.set('WWW-Authenticate', `Bearer realm="${this.realm}"`);
+        return response;
     }
 }

@@ -12,7 +12,7 @@ import {AuthManager} from "../src//rbac/AuthManager";
 let config = {
     port: process.env.PORT,
     controllerpath: process.env.CONTROLLER_PATH,
-    // logs: new Logs('Examples', require('./log4js.json')),
+    logs: new Logs('Examples', require('./log4js.json')),
     staticFilePath:__dirname,
     components: {
         authManager: {
@@ -67,4 +67,4 @@ let config = {
     }
 
 }
-Chyz.app(config).Start();
+Chyz.app(config).then(server=>server.Start());
