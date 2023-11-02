@@ -5,8 +5,8 @@
  * Github:https://github.com/cihan53/
  */
 import {Request,Response,BaseChyz} from "../index";
-import {ForbiddenHttpException} from "../base/ForbiddenHttpException";
-import {ActionFilter} from "../base/ActionFilter";
+import {ForbiddenHttpException} from "../base";
+import {ActionFilter} from "../base";
 import {AccessRule} from "./AccessRule";
 import {WebUser} from "../web/WebUser";
 import {Utils} from "../requiments/Utils";

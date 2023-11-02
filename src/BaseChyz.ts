@@ -12,8 +12,8 @@ import fs = require("fs");
  */
 import {BaseError, CWebController, InvalidConfigException, ModelManager} from "./base";
 import {Utils} from "./requiments/Utils";
-import {Logs} from "./base/Logs";
-import {CEvents} from "./base/CEvents";
+import {Logs} from "./base";
+import {CEvents} from "./base";
 
 
 const http_request = require('debug')('http:request')
@@ -113,7 +113,7 @@ validate.extend(validate.validators.datetime, {
     },
     // Input is a unix timestamp
     format: function (value: any, options: any) {
-        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
+        const format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
         return dayjs().utc(value).format(format);
     }
 });
@@ -162,7 +162,7 @@ export default class BaseChyz {
     /**
      *
      */
-    init() {
+    async init() {
 
         /**
          * server port setting
@@ -192,7 +192,7 @@ export default class BaseChyz {
         /**
          * Load Controller
          */
-        this.loadController();
+        await this.loadController();
 
 
     }
@@ -223,7 +223,7 @@ export default class BaseChyz {
         this._validate = value;
     }
 
-    app(config: any = {}): BaseChyz {
+    async app(config: any = {}): Promise<BaseChyz> {
 
         BaseChyz.EventEmitter.emit(CEvents.ON_INIT_BEFORE, this, config)
 
@@ -238,7 +238,7 @@ export default class BaseChyz {
          */
         if (this.config.logs instanceof Logs) {
             BaseChyz.logs = this.config.logs;
-        }else if( !this.config.hasOwnProperty('logs')){
+        } else if (!this.config.hasOwnProperty('logs')) {
             BaseChyz.logs = new Logs();
         }
 
@@ -286,10 +286,9 @@ export default class BaseChyz {
             }
         }
 
-        this.init();
+        await this.init();
 
         BaseChyz.EventEmitter.emit(CEvents.ON_INIT_AFTER, this, config)
-
         return this;
     }
 
@@ -371,7 +370,7 @@ export default class BaseChyz {
     /**
      * load model
      */
-    async loadModels() {
+      loadModels() {
         let models: any = {}
         let path = `${this._controllerpath}/../Models`;
         fs.readdirSync(path).forEach((file: string) => {
@@ -409,7 +408,7 @@ export default class BaseChyz {
             } else if (controller.default) {
                 controller = controller.default;
             } else {
-                throw new InvalidConfigException(BaseChyz.t("Invalid Controller"))
+                throw new InvalidConfigException(BaseChyz.t(`Invalid Controller ${file}`))
             }
 
 

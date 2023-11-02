@@ -31,7 +31,7 @@ import {Utils} from "../requiments/Utils";
 export class BaseError extends Error {
     statusCode: number;
     orginal: any;
-    private success: boolean;
+    private readonly success: boolean;
 
     constructor(message: any, statusCode = 500) {
         super(message);

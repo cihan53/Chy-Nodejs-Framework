@@ -10,7 +10,6 @@ import {Utils} from "../requiments/Utils";
 import {Component} from "./Component";
 import {InvalidConfigException} from "./InvalidConfigException";
 import {
-    BaseError,
     DatabaseError,
     ExclusionConstraintError,
     ForeignKeyConstraintError,
@@ -101,7 +100,7 @@ export interface Relation {
 export class Model extends Component {
     _provider: any;
     _register: any;
-    private _tableName: string;
+    private readonly _tableName: string;
     private _model: any;
     private _attributes: any = {};
     private _errors: any = {}

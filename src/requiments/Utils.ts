@@ -13,7 +13,7 @@ const _ = require('lodash');
  * @param val
  * @param top
  */
-var buildParams = function (prefix: string, val: any, top?: boolean) {
+const buildParams = function (prefix: string, val: any, top?: boolean) {
     if (_.isUndefined(top)) top = true;
     if (_.isArray(val)) {
         return _.map(val, function (value: any, key: string) {
@@ -71,7 +71,7 @@ const findKeyValue = (object: any, findKey: string) => {
  * @param seconds
  */
 const sleep = (seconds = 1) => {
-    var waitTill = new Date(new Date().getTime() + seconds * 1000);
+    const waitTill = new Date(new Date().getTime() + seconds * 1000);
     while (waitTill > new Date()) {
     }
 }
@@ -104,7 +104,7 @@ const matchWildcard = (pattern: string, string: string, options: any = {}) => {
  * @param randomString
  */
 const generateRandomString = function (length: number, randomString = ""): string {
-    randomString += Math.random().toString(20).substr(2, length);
+    randomString += Math.random().toString(20).substring(2, length);
     if (randomString.length > length) return randomString.slice(0, length);
     return generateRandomString(length, randomString);
 };

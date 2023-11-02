@@ -5,16 +5,16 @@
  * Github:https://github.com/cihan53/
  */
 
-import {ActionFilter} from "../../base/ActionFilter";
+import {ActionFilter} from "../../base";
 import {AuthInterface} from "./AuthInterface";
-import {UnauthorizedHttpException} from "../../base/UnauthorizedHttpException";
+import {UnauthorizedHttpException} from "../../base";
 import {WebUser} from "../../web/WebUser";
 import {Request, Response} from "express";
 
 export abstract class AuthMethod extends ActionFilter implements AuthInterface {
 
     /**
-     * @var User the user object representing the user authentication status. If not set, the `user` application component will be used.
+     * @var user the user object representing the user authentication status. If not set, the `user` application component will be used.
      */
     public user: WebUser | undefined;
 
@@ -38,7 +38,7 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
      * @param response
      */
     public async beforeAction(action: any, request: Request, response: Response) {
-        let identity = await this.authenticate(
+        let identity = this.authenticate(
             this.user ?? new WebUser(),
             request,
             response
@@ -68,12 +68,12 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
     }
 
     // @ts-ignore
-    challenge(response: Response): void {
+    challenge(response: Response): Response {
 
     }
 
     // @ts-ignore
-    handleFailure(response: Response) {
+    handleFailure(response: Response): Response {
         throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
     }
 
@@ -86,7 +86,7 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
         return null
     }
 
-    patternCheck(headerText:any, pattern:RegExp) {
+    patternCheck(headerText: any, pattern: RegExp) {
         if (pattern) {
             let matches = headerText.match(pattern)
             if (matches && matches.length > 0) {
