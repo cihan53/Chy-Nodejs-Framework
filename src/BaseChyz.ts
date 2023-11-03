@@ -517,6 +517,7 @@ export default class BaseChyz {
         for (const middleware1 of Object.keys(BaseChyz.middlewares)) {
             if (BaseChyz.middlewares[middleware1]?.keycloak) {
                 let keycloak = BaseChyz.middlewares[middleware1].keycloak;
+                //@ts-ignore
                 BaseChyz.propvider.use(keycloak.middleware(BaseChyz.middlewares[middleware1].config));
             } else {
                 BaseChyz.propvider.use(BaseChyz.middlewares[middleware1]);
