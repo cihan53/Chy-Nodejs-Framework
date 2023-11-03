@@ -52,7 +52,7 @@ let config = {
     }
 
 }
-Chyz.app(config).Start();
+Chyz.app(config).then((server)=>server.Start());
 ```
 
 ##Controller 
