@@ -41,7 +41,7 @@ String.prototype.tokenReplace = function (obj) {
 /**
  *
  */
-export  const Chyz_Version="2.0.0-rc.43";
+export  const Chyz_Version="2.0.0-rc.44";
 const Chyz = new BaseChyz();
 export {Request, Response, NextFunction} from "./base/CRequest";
 export {RouteDefinition} from "./model/RouteDefinition";
