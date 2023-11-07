@@ -37,12 +37,11 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
 
     public async authenticate(user: WebUser, request: Request, response: Response) // BC signature
     {
-
         let autHeader = this.getHeaderByKey(request.headers, this.header)
         if (autHeader == null || (autHeader = this.patternCheck(autHeader, this.pattern)) == null) {
-            return null;
-        }
 
+            return this.fail(response);
+        }
 
         let identity = null;
         let token = null;

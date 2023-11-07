@@ -35,6 +35,7 @@ export class CWebController extends Component {
      * @param $action
      */
     public async beforeAction(route: RouteDefinition, req: Request, res: Response) {
+
         if (route.id == "" || route.id == "/")
             this.id = this.defaultAction
 
