@@ -35,7 +35,7 @@ export class HttpHeaderAuth extends AuthMethod {
                     if (matches && matches.length > 0) {
                         authHeader = matches[1];
                     } else {
-                        return null;
+                        return this.fail(response);
                     }
                 }
 
@@ -48,6 +48,14 @@ export class HttpHeaderAuth extends AuthMethod {
                 return identity;
             }
         }
-        return null;
+        return this.fail(response);
+    }
+
+    /**
+     * @throws UnauthorizedHttpException
+     */
+    public fail(response: Response): void {
+        this.challenge(response)
+        this.handleFailure(response);
     }
 }

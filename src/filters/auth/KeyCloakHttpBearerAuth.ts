@@ -54,7 +54,7 @@ export class KeyCloakHttpBearerAuth extends HttpBearerAuth {
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
         if (autHeader == null || (autHeader = this.patternCheck(autHeader, this.pattern)) == null) {
-            return null;
+            return this.fail(response);
         }
 
         token = JsonWebToken.decode(autHeader[1], {complete: true})
@@ -108,7 +108,7 @@ export class KeyCloakHttpBearerAuth extends HttpBearerAuth {
      */
     public fail(response: Response): void {
         // this.challenge(response)
-        // this.handleFailure(response);
+        this.handleFailure(response);
     }
 
 }

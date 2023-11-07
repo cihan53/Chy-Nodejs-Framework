@@ -47,7 +47,7 @@ export class HttpBasicAuth extends AuthMethod {
 
         let autHeader = this.getHeaderByKey(request.headers, this.header)
         if (autHeader == null || (autHeader = this.patternCheck(autHeader, this.pattern)) == null) {
-            return null;
+            return  this.fail(response);
         }
 
         let identity = null;
