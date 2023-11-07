@@ -29,4 +29,6 @@ export class HttpBearerAuth extends HttpHeaderAuth {
         response.set('WWW-Authenticate', `Bearer realm="${this.realm}"`);
         return response;
     }
+
+
 }
