@@ -28,22 +28,22 @@ export class ApiController extends CWebController {
                 "except": ["auth/login",'stock']
                 // "auth": this.myCheck
             },
-            'access': {
-                'class': AccessControl,
-                // 'only': ['hello' ],
-                'rules': [
-                    {
-                        'allow':true,
-                        'action':["auth/login",'stock'],
-                        'roles':["?"]
-                    },
-                    {
-                        'allow': true,
-                        'actions': ['hello'  ],
-                        'roles': ['manager'],
-                    }
-                ]
-            }
+            // 'access': {
+            //     'class': AccessControl,
+            //     // 'only': ['hello' ],
+            //     'rules': [
+            //         {
+            //             'allow':true,
+            //             'action':["auth/login",'stock'],
+            //             'roles':["?"]
+            //         },
+            //         {
+            //             'allow': true,
+            //             'actions': ['hello'  ],
+            //             'roles': ['manager'],
+            //         }
+            //     ]
+            // }
         }]
     }
 
@@ -53,6 +53,14 @@ export class ApiController extends CWebController {
 
         BaseChyz.info("Site Controller Burası")
         return res.json({message: "index sayfası"})
+    }
+
+    @get("/item")
+    Item(req: Request, res: Response) {
+        // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
+
+        BaseChyz.info("Item Controller Burası");
+        return res.json({message: "Item sayfası"});
     }
 
     @get("hello")
