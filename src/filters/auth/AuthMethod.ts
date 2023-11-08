@@ -38,12 +38,11 @@ export abstract class AuthMethod extends ActionFilter implements AuthInterface {
      * @param response
      */
     public async beforeAction(action: any, request: Request, response: Response) {
-        let identity = this.authenticate(
+        let identity =await this.authenticate(
             this.user ?? new WebUser(),
             request,
             response
         )
-
 
         // @ts-ignore
         request.identity = identity;

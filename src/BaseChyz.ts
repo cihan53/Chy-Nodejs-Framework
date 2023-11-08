@@ -1,19 +1,21 @@
 /**
  * https server
  */
-import express, {Request, Response, NextFunction} from "express";
-import bodyParser = require('body-parser');
+import express, {NextFunction, Request, Response} from "express";
 import {createServer as httpsCreate} from "https";
 import {createServer as httpCreate} from "http";
-import fs = require("fs");
 
 /**
  * Freamwork
  */
-import {BaseError, CWebController, InvalidConfigException, ModelManager} from "./base";
+import {BaseError, CEvents, CWebController, InvalidConfigException, Logs, ModelManager} from "./base";
 import {Utils} from "./requiments/Utils";
-import {Logs} from "./base";
-import {CEvents} from "./base";
+import calendar from "dayjs/plugin/calendar";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import isTomorrow from "dayjs/plugin/isTomorrow";
+import {RouteDefinition} from "./model/RouteDefinition";
+import bodyParser = require('body-parser');
+import fs = require("fs");
 
 
 const http_request = require('debug')('http:request')
@@ -55,10 +57,6 @@ const validate = require('validate.js');
 const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
 const relative = require('dayjs/plugin/relativeTime')
-import calendar from "dayjs/plugin/calendar";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import isTomorrow from "dayjs/plugin/isTomorrow";
-import {RouteDefinition} from "./model/RouteDefinition";
 
 dayjs.extend(utc)
 dayjs.extend(relative)
@@ -134,7 +132,7 @@ export default class BaseChyz {
     static db: any;
     static date: any = dayjs;
     static routes: any;
-    static logs: Logs = new Logs() ;
+    static logs: Logs = new Logs();
     private static _validate: any = validate;
     private _controllerpath: string = "Controllers"
     private static controllers: Array<CWebController> = []
@@ -370,7 +368,7 @@ export default class BaseChyz {
     /**
      * load model
      */
-      loadModels() {
+    loadModels() {
         let models: any = {}
         let path = `${this._controllerpath}/../Models`;
         fs.readdirSync(path).forEach((file: string) => {
@@ -392,6 +390,61 @@ export default class BaseChyz {
             if (key != "_register") {
                 ModelManager[key].init();
             }
+        }
+    }
+
+
+    async beforeMiddleware(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
+        BaseChyz.debug(`${instance.id+route.path}->beforeMiddleware trigger`);
+        http_request_body("Request body " + JSON.stringify(req.body))
+        http_request_headers("Request header " + JSON.stringify(req.headers))
+        try {
+            await instance.beforeAction(route, req, res)
+            next();
+        } catch (e) {
+            BaseChyz.error(e)
+            if (e instanceof BaseError) {
+                res.status(e?.statusCode || 500)
+                res.json(e.toJSON())
+            } else {
+                res.json(e)
+            }
+
+        }
+
+    }
+
+    async responseHandler(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
+        BaseChyz.debug(`${instance.id+route.path}->responseHandler trigger`);
+        try {
+            // @ts-ignore
+            await instance[route.methodName](req, res, next);
+            next();
+        } catch (e) {
+            BaseChyz.error(e)
+            if (e instanceof BaseError) {
+                res.status(e?.statusCode || 500)
+                res.json(e.toJSON())
+            } else {
+                res.json(e)
+            }
+        }
+
+    }
+
+    async afterMiddleware(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
+        BaseChyz.debug(`${instance.id+route.path}->afterMiddleware trigger`);
+        try {
+            await instance.afterAction(route, req, res);
+        } catch (e) {
+            BaseChyz.error(e)
+            if (e instanceof BaseError) {
+                res.status(e?.statusCode || 500)
+                res.json(e.toJSON())
+            } else {
+                res.json(e)
+            }
+
         }
     }
 
@@ -425,51 +478,52 @@ export default class BaseChyz {
 
             if (routes) {
                 routes.forEach(route => {
-
-                    let actionId = (route.path == "/" || route.path == "") ? instance.defaultAction : route.path;
-                    route.id = actionId;
+                    route.id = (route.path == "/" || route.path == "") ? instance.defaultAction : route.path;
                     BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
-
                     BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
-                        async (req: Request, res: Response, next: NextFunction) => {
-                            try {
-                                BaseChyz.debug(`Call Request id ${actionId}`)
-                                http_request_body("Request body " + JSON.stringify(req.body))
-                                http_request_headers("Request header " + JSON.stringify(req.headers))
-                                await instance.beforeAction(route, req, res)
-                                next()
-                            } catch (e: any) {
-                                BaseChyz.error(e)
-                                if (e instanceof BaseError) {
-                                    res.status(e?.statusCode || 500)
-                                    res.json(e.toJSON())
-                                } else {
-                                    res.json(e)
-                                }
-
-                                // next(e)
-                            }
-
-                        },
-                        async (req: Request, res: Response, next: NextFunction) => {
-                            try {
-                                // @ts-ignore
-                                BaseChyz.debug("Request ID ", req.reqId)
-                                // @ts-ignore
-                                await instance[route.methodName](req, res, next);
-                                instance.afterAction(route, req, res);
-                            } catch (e) {
-                                BaseChyz.error(e)
-                                if (e instanceof BaseError) {
-                                    res.status(e.statusCode || 500)
-                                    res.json(e.toJSON())
-                                } else {
-                                    res.json(e)
-                                }
-                            }
-                        })
-
-
+                        (req: Request, res: Response, next: NextFunction) => this.beforeMiddleware(req, res, next, instance, route),
+                        (req: Request, res: Response, next: NextFunction) => this.responseHandler(req, res, next, instance, route),
+                        (req: Request, res: Response, next: NextFunction) => this.afterMiddleware(req, res, next, instance, route),
+                    );
+                    // BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
+                    //     async (req: Request, res: Response, next: NextFunction) => {
+                    //         try {
+                    //             BaseChyz.debug(`Call Request id ${actionId}`)
+                    //             http_request_body("Request body " + JSON.stringify(req.body))
+                    //             http_request_headers("Request header " + JSON.stringify(req.headers))
+                    //             await instance.beforeAction(route, req, res);
+                    //             next()
+                    //         } catch (e: any) {
+                    //
+                    //             BaseChyz.error(e)
+                    //             if (e instanceof BaseError) {
+                    //                 res.status(e?.statusCode || 500)
+                    //                 res.json(e.toJSON())
+                    //             } else {
+                    //                 res.json(e)
+                    //             }
+                    //
+                    //             // / next(e)
+                    //         }
+                    //
+                    //     },
+                    //     async (req: Request, res: Response, next: NextFunction) => {
+                    //         try {
+                    //             // @ts-ignore
+                    //             BaseChyz.debug("Request ID ", req.reqId)
+                    //             // @ts-ignore
+                    //             await instance[route.methodName](req, res, next);
+                    //             instance.afterAction(route, req, res);
+                    //         } catch (e) {
+                    //             BaseChyz.error(e)
+                    //             if (e instanceof BaseError) {
+                    //                 res.status(e.statusCode || 500)
+                    //                 res.json(e.toJSON())
+                    //             } else {
+                    //                 res.json(e)
+                    //             }
+                    //         }
+                    //     })
                 });
             }
         }

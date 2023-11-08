@@ -39,8 +39,7 @@ export class JwtHttpBearerAuth extends HttpBearerAuth {
     {
         let autHeader = this.getHeaderByKey(request.headers, this.header)
         if (autHeader == null || (autHeader = this.patternCheck(autHeader, this.pattern)) == null) {
-
-            return this.fail(response);
+            return  null ;
         }
 
         let identity = null;
