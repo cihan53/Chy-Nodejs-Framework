@@ -395,7 +395,7 @@ export default class BaseChyz {
 
 
     async beforeMiddleware(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
-        BaseChyz.debug(`${instance.id+route.path}->beforeMiddleware trigger`);
+        BaseChyz.debug(`${instance.id}/${route.path}->beforeMiddleware trigger`);
         http_request_body("Request body " + JSON.stringify(req.body))
         http_request_headers("Request header " + JSON.stringify(req.headers))
         try {
@@ -415,7 +415,7 @@ export default class BaseChyz {
     }
 
     async responseHandler(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
-        BaseChyz.debug(`${instance.id+route.path}->responseHandler trigger`);
+        BaseChyz.debug(`${instance.id}/${route.path}->responseHandler trigger`);
         try {
             // @ts-ignore
             await instance[route.methodName](req, res, next);
@@ -433,7 +433,7 @@ export default class BaseChyz {
     }
 
     async afterMiddleware(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
-        BaseChyz.debug(`${instance.id+route.path}->afterMiddleware trigger`);
+        BaseChyz.debug(`${instance.id}/${route.path}->afterMiddleware trigger`);
         try {
             await instance.afterAction(route, req, res);
         } catch (e) {
