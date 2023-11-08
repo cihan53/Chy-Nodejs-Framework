@@ -25,7 +25,7 @@ export class ApiController extends CWebController {
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
-                "except": ["auth/login",'stock']
+                "except": ["auth/login",'stock','item']
                 // "auth": this.myCheck
             },
             // 'access': {

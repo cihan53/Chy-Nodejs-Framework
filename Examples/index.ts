@@ -68,3 +68,11 @@ let config = {
 
 }
 Chyz.app(config).then(server=>server.Start());
+// process
+//     .on('unhandledRejection', (reason, p) => {
+//         BaseChyz.fatal(reason, 'Unhandled Rejection at Promise', p);
+//     })
+//     .on('uncaughtException', err => {
+//         BaseChyz.fatal(err, 'Uncaught Exception thrown');
+//         // process.exit(1);
+//     });
