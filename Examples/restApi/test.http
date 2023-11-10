@@ -2,3 +2,14 @@ GET http://localhost:3001/api/item?id=99
 Accept: application/json
 
 ###
+
+GET http://localhost:3001/api/hello
+Accept: application/json
+###
+
+GET http://localhost:3001/api/item-secure
+Accept: application/json
+###
+
+GET http://localhost:3001/api/item-secure-2
+Accept: application/json

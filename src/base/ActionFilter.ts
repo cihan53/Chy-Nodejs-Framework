@@ -30,6 +30,7 @@ export class ActionFilter extends CBaseObject {
      * @param res
      */
     public async beforeFilter(route: any, req: Request, res: Response) {
+        console.log("route ",route)
         if (!this.isActive(route)) {
             return;
         }
@@ -70,9 +71,10 @@ export class ActionFilter extends CBaseObject {
         }
 
         for (const exceptKey in this.except) {
-            let pattern = this.except[exceptKey];
-            let match = id.match(pattern)
-            if (match && match.length > 0) {
+            let pattern:string = this.except[exceptKey];
+            // let match = id.match(`/(${pattern})/g$`)
+            let match = id.startsWith(pattern);
+            if (match ) {
                 exceptMatch = true;
             }
         }

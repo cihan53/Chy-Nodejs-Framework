@@ -25,7 +25,7 @@ export class ApiController extends CWebController {
         return [{
             'authenticator': {
                 "class": JwtHttpBearerAuth,
-                "except": ["auth/login",'stock','item']
+                "except": ["auth/login",'stock','/item']
                 // "auth": this.myCheck
             },
             // 'access': {
@@ -61,6 +61,20 @@ export class ApiController extends CWebController {
 
         BaseChyz.info("Item Controller Burası");
         return res.json({message: "Item sayfası"});
+    }
+    @get("/item-secure")
+    ItemSecure(req: Request, res: Response) {
+        // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
+
+        BaseChyz.info("Item Secure Controller Burası");
+        return res.json({message: "Secure Item sayfası"});
+    }
+    @get("item-secure-2")
+    ItemSecure2(req: Request, res: Response) {
+        // BaseChyz.info(Util.format("Serial Found [user_id %s] [serial %s]", req?.identity.id ))
+
+        BaseChyz.info("Item ItemSecure2 Controller Burası");
+        return res.json({message: "ItemSecure2 Item sayfası"});
     }
 
     @get("hello")
