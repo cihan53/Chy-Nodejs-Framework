@@ -18,18 +18,18 @@ import bodyParser = require('body-parser');
 import fs = require("fs");
 
 
-const http_request = require('debug')('http:request')
-const http_request_body = http_request.extend('body')
-const http_request_headers = http_request.extend('headers')
-const compression = require('compression')
+// const http_request = require('debug')('http:request')
+// const http_request_body = http_request.extend('body')
+// const http_request_headers = http_request.extend('headers')
+import compression from 'compression';
 
 // const fs = require('fs');
 
 
-const ip = require('ip');
+import ip from 'ip';
+import cors from 'cors';
 const methodOverride = require('method-override')
 const Server = express();
-const cors = require('cors');
 const emitter = require('events').EventEmitter;
 const em = new emitter();
 
@@ -396,8 +396,8 @@ export default class BaseChyz {
 
     async beforeMiddleware(req: Request, res: Response, next: NextFunction, instance: CWebController, route: RouteDefinition) {
         BaseChyz.debug(`${instance.id}/${route.path}->beforeMiddleware trigger`);
-        http_request_body("Request body " + JSON.stringify(req.body))
-        http_request_headers("Request header " + JSON.stringify(req.headers))
+        // http_request_body("Request body " + JSON.stringify(req.body))
+        // http_request_headers("Request header " + JSON.stringify(req.headers))
         try {
             await instance.beforeAction(route, req, res)
             next();
