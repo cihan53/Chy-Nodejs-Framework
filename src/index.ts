@@ -22,6 +22,7 @@ declare namespace Express {
 import BaseChyz from "./BaseChyz";
 import {RestClient} from "./base";
 
+
 declare module "express-serve-static-core" {
     interface Request {
         identity: any;
@@ -41,7 +42,8 @@ String.prototype.tokenReplace = function (obj) {
 /**
  *
  */
-export  const Chyz_Version="2.0.1-rc.2";
+const pjson = require('./package.json');
+export const Chyz_Version = pjson.version;
 const Chyz = new BaseChyz();
 export {Request, Response, NextFunction} from "./base/CRequest";
 export {RouteDefinition} from "./model/RouteDefinition";

@@ -8,6 +8,7 @@
  */
 
 import {Configurable} from "./Configurable";
+import {Utils} from "../requiments/Utils";
 
 const log4js = require("log4js");
 
@@ -20,9 +21,29 @@ export class Logs implements Configurable {
     constructor(name?: string, configs?: any) {
         if (name)
             this.name = name;
-        if (configs)
-            this.configs = configs;
 
+        if (configs) {
+            this.configs = configs;
+        }
+
+        // let _conf = Utils.clone(this.configs);
+        // Object.keys(_conf.appenders).forEach(function (appender: string) {
+        //     let _base;
+        //     if (_conf.appenders[appender].layout) {
+        //         if ((_base = _conf.appenders[appender].layout).tokens == null) {
+        //             _base.tokens = {};
+        //         }
+        //         //
+        //         _conf.appenders[appender].layout.tokens = Utils.extend(_conf.appenders[appender].layout.tokens, {
+        //             singleLine: function (logEvent: any) {
+        //                 console.log("singglleeee")
+        //                 // logEvent.data is an array that contains the arguments to the log.info() call
+        //                 return logEvent.data[0] + ', ' + logEvent.data[1].toString();
+        //             }
+        //         });
+        //
+        //     }
+        // });
         this.Provider().configure(this.configs);
     }
 
