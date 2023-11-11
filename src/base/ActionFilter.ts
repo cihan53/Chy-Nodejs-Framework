@@ -7,6 +7,7 @@
 import {Request, Response} from "../index";
 import {Utils} from "../requiments/Utils";
 import {CBaseObject} from "./CBaseObject"
+import BaseChyz from "../BaseChyz";
 
 export class ActionFilter extends CBaseObject {
 
@@ -30,7 +31,8 @@ export class ActionFilter extends CBaseObject {
      * @param res
      */
     public async beforeFilter(route: any, req: Request, res: Response) {
-        console.log("route ",route)
+        BaseChyz.debug("Controller->beforeFilter ",route)
+
         if (!this.isActive(route)) {
             return;
         }
