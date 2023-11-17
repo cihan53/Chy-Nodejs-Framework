@@ -218,7 +218,7 @@ export class Model extends Component {
 
             if (relation.type == "hasOne") {
                 // @ts-ignore
-                delete relation.model
+                delete relation.model;
                 this.model().hasOne(m, relation);
             }
             //
