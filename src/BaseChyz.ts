@@ -28,6 +28,7 @@ import compression from 'compression';
 
 import ip from 'ip';
 import cors from 'cors';
+
 const methodOverride = require('method-override')
 const Server = express();
 const emitter = require('events').EventEmitter;
@@ -371,25 +372,29 @@ export default class BaseChyz {
     loadModels() {
         let models: any = {}
         let path = `${this._controllerpath}/../Models`;
-        fs.readdirSync(path).forEach((file: string) => {
-            if (file !== "index.ts") {
-                let model = require(`${path}/${file}`);
-                // @ts-ignore
-                let className = file.split(".")[0] + "Class";
-                if (model[className])
-                    models[className.replace("Class", "")] = new model[className];
-            }
-        })
+        if (fs.existsSync(path)) {
+            fs.readdirSync(path).forEach((file: string) => {
+                if (file !== "index.ts") {
+                    let model = require(`${path}/${file}`);
+                    // @ts-ignore
+                    let className = file.split(".")[0] + "Class";
+                    if (model[className])
+                        models[className.replace("Class", "")] = new model[className];
+                }
+            })
 
-        /**
-         *
-         */
-        ModelManager._register(models);
+            /**
+             *
+             */
+            ModelManager._register(models);
 
-        for (const key of Object.keys(ModelManager)) {
-            if (key != "_register") {
-                ModelManager[key].init();
+            for (const key of Object.keys(ModelManager)) {
+                if (key != "_register") {
+                    ModelManager[key].init();
+                }
             }
+        }else{
+            BaseChyz.error("Model folder not found");
         }
     }
 
