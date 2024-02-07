@@ -29,7 +29,7 @@ import compression from 'compression';
 import ip from 'ip';
 import cors from 'cors';
 
-const methodOverride = require('method-override')
+import methodOverride from 'method-override';
 const Server = express();
 const emitter = require('events').EventEmitter;
 const em = new emitter();
@@ -54,10 +54,10 @@ Object.defineProperty(Server.request, 'identity', {
 })
 
 
-const validate = require('validate.js');
-const dayjs = require('dayjs')
-const utc = require('dayjs/plugin/utc')
-const relative = require('dayjs/plugin/relativeTime')
+import validate from 'validate.js';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import relative from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(utc)
 dayjs.extend(relative)
