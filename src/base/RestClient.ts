@@ -13,11 +13,11 @@ const axios = require('axios')
 
 export class RestClient extends Component {
     public post(url: string, args?: any,headers?:any) {
-        return axios.post(url, args,headers)
+        return axios.post(url, {...args,headers:headers})
     }
 
     public get(url: string, args?: any,headers?:any) {
-        return axios.get(url, args ,headers )
+        return axios.get(url, {...args,headers:headers}  )
     }
 
     public Rest(params: any) {
