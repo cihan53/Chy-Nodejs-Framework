@@ -70,8 +70,11 @@ export class ActionFilter extends CBaseObject {
         }
 
         for (const exceptKey in this.except) {
-            let pattern = this.except[exceptKey];
-            let match = id.match(pattern)
+            let pattern:string = this.except[exceptKey];
+            let reg = new RegExp(`${pattern}$`, "g");
+            let match = id.match(reg)
+            // let match = id.startsWith(pattern);
+            //console.log(id,pattern,match , this.except)
             if (match && match.length > 0) {
                 exceptMatch = true;
             }

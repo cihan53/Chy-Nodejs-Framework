@@ -16,7 +16,6 @@ import {BaseChyz, controller, CWebController, get, Request, Response} from "../.
 export class ApiController extends CWebController {
 
     public myCheck(token: any) {
-        console.log("myyyyyyyyyyyyyyyyyyyyy")
     }
 
     // public behaviors(): any[] {
