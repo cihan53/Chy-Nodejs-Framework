@@ -2,7 +2,8 @@
   "scripts": {
     "debug": "ts-node src/index.ts",
     "build2": "npx tsc -p tsconfig.json",
-    "build": "rmdir /S /Q .\\dist && npx tsc -p tsconfig.json  && xcopy .\\src\\log .\\dist\\log /e /i /h /Y && copy .\\src\\package.json .\\dist\\package.json  && copy .\\src\\README.md .\\dist\\README.md",
+    "build-win": "rmdir /S /Q .\\dist && npx tsc -p tsconfig.json  && xcopy .\\src\\log .\\dist\\log /e /i /h /Y && copy .\\src\\package.json .\\dist\\package.json  && copy .\\src\\README.md .\\dist\\README.md",
+    "build": "rm -rf .\\dist && npx tsc -p tsconfig.json  && cp -r ./src/log ./dist/log   && cp ./src/package.json ./dist/package.json  && cp ./src/README.md ./dist/README.md",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deprecate": "node ./deprecate.js",
     "postversion": "git push && git push --tags"
@@ -20,7 +21,6 @@
     "core-js": "^3.30.1",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
-
     "dotenv-flow": "^3.2.0",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -40,13 +40,14 @@
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.5",
     "@types/express": "^4.17.17",
     "@types/method-override": "^0.0.35",
     "@types/node": "^18.15.11",
     "@types/validator": "^13.7.15",
+    "debug": "^4.3.4",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4",
-    "debug": "^4.3.4"
+    "typescript": "^5.0.4"
   }
 }

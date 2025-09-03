@@ -606,7 +606,7 @@ export default class BaseChyz {
             })
         } else {
             BaseChyz.httpServer = httpCreate(BaseChyz.propvider);
-            BaseChyz.propvider.listen(this._port, () => {
+            BaseChyz.httpServer.listen(this._port, () => {
                 BaseChyz.info("Express Server Start ")
                 BaseChyz.info(`Liten Port ${this._port}`)
                 BaseChyz.info(`http://localhost:${this._port}`)
