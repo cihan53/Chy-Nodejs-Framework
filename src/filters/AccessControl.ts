@@ -42,9 +42,7 @@ export class AccessControl extends ActionFilter {
         user.identity = request.identity ?? null;
 
         for (const rulesKey in this.rules) {
-
             let rule = this.rules[rulesKey];
-
             if ((allow = await rule.allows(action, user, request))) {
                 return true;
             } else if (allow === false) {

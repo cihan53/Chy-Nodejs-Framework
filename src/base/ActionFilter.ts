@@ -31,7 +31,7 @@ export class ActionFilter extends CBaseObject {
      * @param res
      */
     public async beforeFilter(route: any, req: Request, res: Response) {
-        BaseChyz.debug("Controller->beforeFilter ",route)
+        BaseChyz.debug("Controller->ActionFilter->beforeFilter ", JSON.stringify(route))
 
         if (!this.isActive(route)) {
             return;
@@ -73,11 +73,11 @@ export class ActionFilter extends CBaseObject {
         }
 
         for (const exceptKey in this.except) {
-            let pattern:string = this.except[exceptKey];
+            let pattern: string = this.except[exceptKey];
             let reg = new RegExp(`${pattern}$`, "g");
             let match = id.match(reg)
             // let match = id.startsWith(pattern);
-            console.log(id,pattern,match , this.except)
+            BaseChyz.debug("Controller->ActionFilter->isActive ", "id:",id, "patern:",pattern,"match:" ,match, JSON.stringify(this.except))
             if (match && match.length > 0) {
                 exceptMatch = true;
             }

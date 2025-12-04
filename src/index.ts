@@ -42,9 +42,9 @@ String.prototype.tokenReplace = function (obj) {
 /**
  *
  */
+const Chyz = new BaseChyz();
 const pjson = require('./package.json');
 export const Chyz_Version = pjson.version;
-const Chyz = new BaseChyz();
 export {Request, Response, NextFunction} from "./base/CRequest";
 export {RouteDefinition} from "./model/RouteDefinition";
 export {WebUser} from "./web/WebUser";
