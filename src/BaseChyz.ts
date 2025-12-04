@@ -18,6 +18,7 @@ import bodyParser = require('body-parser');
 import fs = require("fs");
 
 
+
 // const http_request = require('debug')('http:request')
 // const http_request_body = http_request.extend('body')
 // const http_request_headers = http_request.extend('headers')
@@ -561,8 +562,10 @@ export default class BaseChyz {
             }
 
             // use compression filter function
+            // @ts-ignore
             return compression.filter(req, res);
         };
+        // @ts-ignore
         BaseChyz.propvider.use(compression({filter: shouldCompress}))
         //
         // //static file path
