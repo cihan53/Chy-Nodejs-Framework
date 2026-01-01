@@ -12,8 +12,13 @@ import {Model} from "./Model"
 //     _register(o: Model): void;
 // }
 
-export const ModelManager: any = {
-    _register(map: Model) {
+export interface IModelManager {
+    _register(map: { [key: string]: Model }): void;
+    [key: string]: any; // Dinamik erişim için hala gerekli olabilir
+}
+
+export const ModelManager: IModelManager = {
+    _register(map: { [key: string]: Model }) {
         Object.assign(this, map)
     }
 }

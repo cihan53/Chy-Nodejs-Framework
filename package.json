@@ -4,6 +4,7 @@
     "build2": "npx tsc -p tsconfig.json",
     "build-win": "rmdir /S /Q .\\dist && npx tsc -p tsconfig.json  && xcopy .\\src\\log .\\dist\\log /e /i /h /Y && copy .\\src\\package.json .\\dist\\package.json  && copy .\\src\\README.md .\\dist\\README.md",
     "build": "rm -rf .\\dist && npx tsc -p tsconfig.json  && cp -r ./src/log ./dist/log   && cp ./src/package.json ./dist/package.json  && cp ./src/README.md ./dist/README.md",
+    "publish-dist": "npm run build && cd dist && npm publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deprecate": "node ./deprecate.js",
     "postversion": "git push && git push --tags"
