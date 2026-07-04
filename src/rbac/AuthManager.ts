@@ -174,7 +174,7 @@ export class AuthManager extends Component {
      * @param roleName
      */
     public async getPermissionsByRole(roleName: string) {
-        let childrenList = this.getChildrenList();
+        let childrenList = await this.getChildrenList();
         const result = {result: {}}
         let permissions: any = {}
         await this.getChildrenRecursive(roleName, childrenList, result);
