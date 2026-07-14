@@ -475,21 +475,24 @@ export default class BaseChyz {
 
             BaseChyz.controllers.push(instance);
 
-            // The prefix saved to our controller
-            const prefix = Reflect.getMetadata('prefix', controller);
+            // The prefix saved to our controller (support multiple prefixes)
+            const prefixes: string[] = Reflect.getMetadata('prefixes', controller) || [Reflect.getMetadata('prefix', controller) || ''];
             // Our `routes` array containing all our routes for this controller
             const routes: Array<RouteDefinition> = Reflect.getMetadata('routes', controller);
-            BaseChyz.debug("Controller load ", controller.name, `(${prefix})`)
+            BaseChyz.debug("Controller load ", controller.name, `(${prefixes.join(', ')})`)
 
             if (routes) {
-                routes.forEach(route => {
-                    route.id = (route.path == "/" || route.path == "") ? instance.defaultAction : route.path;
-                    BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
-                    BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
-                        (req: Request, res: Response, next: NextFunction) => this.beforeMiddleware(req, res, next, instance, route),
-                        (req: Request, res: Response, next: NextFunction) => this.responseHandler(req, res, next, instance, route),
-                        (req: Request, res: Response, next: NextFunction) => this.afterMiddleware(req, res, next, instance, route),
-                    );
+                for (const prefix of prefixes) {
+                    routes.forEach(route => {
+                        route.id = (route.path == "/" || route.path == "") ? instance.defaultAction : route.path;
+                        BaseChyz.debug("Controller route Path", prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`))
+                        BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
+                            (req: Request, res: Response, next: NextFunction) => this.beforeMiddleware(req, res, next, instance, route),
+                            (req: Request, res: Response, next: NextFunction) => this.responseHandler(req, res, next, instance, route),
+                            (req: Request, res: Response, next: NextFunction) => this.afterMiddleware(req, res, next, instance, route),
+                        );
+                    });
+                }
                     // BaseChyz.propvider[route.requestMethod](prefix + (route.path.startsWith("/") ? route.path : `/${route.path}`),
                     //     async (req: Request, res: Response, next: NextFunction) => {
                     //         try {
@@ -529,7 +532,6 @@ export default class BaseChyz {
                     //             }
                     //         }
                     //     })
-                });
             }
         }
     }
