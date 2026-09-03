@@ -1,0 +1,345 @@
+# Chyz Framework (Node.js & TypeScript Microservice Framework)
+
+> Chyz is an enterprise-grade, modular, decorator-driven Node.js & TypeScript microservice framework inspired by Yii2 architecture. It features component-based configuration, Active-Record-style Sequelize models, hierarchical Role-Based Access Control (RBAC), and pluggable ActionFilter authentication behaviors.
+
+---
+
+## 1. Quick Technical Summary for AI / LLM Agents
+
+- **Runtime & Language**: Node.js (>= 18), TypeScript (>= 5.0).
+- **Core Dependencies**: Express 4, Sequelize 6, reflect-metadata, jsonwebtoken, log4js, validate.js, dayjs.
+- **Architectural Paradigm**: Component-based service locator (`BaseChyz.getComponent`), lifecycle action filters (`beforeAction`/`afterAction`), active record models with auto-registration (`ModelManager`), and declarative routing decorators (`@controller`, `@get`, `@post`, etc.).
+- **Required TSConfig**:
+  ```json
+  {
+    "compilerOptions": {
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true,
+      "target": "ES2022",
+      "moduleResolution": "node"
+    }
+  }
+  ```
+
+---
+
+## 2. Essential Architectural Rules & Conventions
+
+### Rule 1: Model Naming & Auto-Discovery Convention
+- Models reside in the `Models/` directory relative to `controllerpath/../Models`.
+- File naming: `<ModelName>.ts` (e.g., `Product.ts`).
+- Class naming: MUST end with `Class` (e.g., `export class ProductClass extends Model`).
+- Auto-Discovery: `BaseChyz` automatically discovers these files and registers them under `ModelManager` without the `Class` suffix (e.g., `ModelManager.Product`).
+
+### Rule 2: Controller Structure & Multiple Prefixes
+- Controllers MUST extend `CWebController`.
+- Controllers use `@controller('/prefix')`.
+- **Multiple Prefixes**: Multiple `@controller` decorators can be stacked on a single class to support API multi-versioning (e.g., `@controller('/api/subaccount')` and `@controller('/api/v4/subaccount')`).
+- File naming: `<Name>Controller.ts` placed inside the directory configured in `controllerpath`.
+
+### Rule 3: Action Filters & Behaviors (Yii2-style)
+- Controllers declare cross-cutting concerns (authentication, authorization) using the `behaviors()` method returning an array of filter definitions:
+  - `authenticator`: Strategy class (`JwtHttpBearerAuth`, `KeyCloakHttpBearerAuth`, `HttpBearerAuth`, `HttpBasicAuth`, `HttpHeaderAuth`).
+  - `access`: `AccessControl` with an array of `rules` (`allow: true|false`, `actions: string[]`, `roles: string[]` where `'?'` = guest, `'@'` = authenticated user, or custom RBAC role names).
+
+### Rule 4: Safe Data Loading (`load()`)
+- NEVER blindly assign untrusted request bodies to database models.
+- Use `model.load(req.body, 'FormScope')`:
+  ```typescript
+  const customer = ModelManager.Customer;
+  if (customer.load(req.body, 'Customer')) {
+    const saved = await customer.save({}, { transaction });
+    if (!saved) throw new ValidationHttpException(customer.errors);
+  }
+  ```
+
+### Rule 5: Database Transactions
+- Obtain transactions via:
+  ```typescript
+  const transaction = await BaseChyz.getComponent('db').transaction();
+  try {
+    // ... operations passing { transaction } to save() or update()
+    await transaction.commit();
+  } catch (err) {
+    if (transaction) await transaction.rollback();
+    throw err;
+  }
+  ```
+
+---
+
+## 3. Standard Code Patterns & Templates
+
+### Pattern A: Application Bootstrap (`index.ts`)
+
+```typescript
+import 'reflect-metadata';
+import dotenvFlow from 'dotenv-flow';
+dotenvFlow.config();
+
+import Chyz, { BaseChyz, DbConnection, WebUser, Logs } from 'chyz';
+import { AuthManager } from 'chyz/rbac/AuthManager';
+import { UserClass as User } from './Models/User';
+
+const config = {
+  port: process.env.PORT || 3001,
+  controllerpath: __dirname + '/Controllers',
+  staticFilePath: __dirname + '/public',
+  components: {
+    db: {
+      class: DbConnection,
+      database: process.env.DB_NAME || 'app_db',
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || '',
+      options: {
+        host: process.env.DB_HOST || '127.0.0.1',
+        port: parseInt(process.env.DB_PORT || '5432'),
+        dialect: 'postgres', // 'mysql' | 'mariadb' | 'postgres' | 'mssql'
+        logging: (msg: string) => BaseChyz.debug('[SQL]', msg)
+      }
+    },
+    authManager: {
+      class: AuthManager
+    },
+    user: {
+      class: WebUser,
+      identityClass: User
+    }
+  }
+};
+
+Chyz.app(config).then((server) => server.Start());
+```
+
+---
+
+### Pattern B: Full Controller with Behaviors & Multiple Prefixes
+
+```typescript
+import {
+  CWebController,
+  controller,
+  get,
+  post,
+  put,
+  delete as del,
+  Request,
+  Response,
+  JwtHttpBearerAuth,
+  AccessControl,
+  ModelManager,
+  ValidationHttpException,
+  NotFoundHttpException
+} from 'chyz';
+
+@controller('/api/orders')
+@controller('/api/v2/orders')
+export class OrderController extends CWebController {
+
+  public behaviors(): any[] {
+    return [
+      {
+        authenticator: {
+          class: JwtHttpBearerAuth,
+          except: ['publicFeed']
+        },
+        access: {
+          class: AccessControl,
+          rules: [
+            {
+              allow: true,
+              actions: ['publicFeed'],
+              roles: ['?'] // guest access
+            },
+            {
+              allow: true,
+              actions: ['list', 'create', 'view'],
+              roles: ['@'] // authenticated users
+            },
+            {
+              allow: true,
+              actions: ['deleteOrder'],
+              roles: ['admin'] // requires 'admin' RBAC role
+            }
+          ]
+        }
+      }
+    ];
+  }
+
+  @get('/feed')
+  public async publicFeed(req: Request, res: Response) {
+    return res.json({ status: 'ok', feed: [] });
+  }
+
+  @get('/')
+  public async list(req: Request, res: Response) {
+    const orders = await ModelManager.Order.findAll();
+    return res.json(orders);
+  }
+
+  @get('/:id')
+  public async view(req: Request, res: Response) {
+    const order = await ModelManager.Order.findOne({ where: { id: req.params.id } });
+    if (!order) throw new NotFoundHttpException('Order not found');
+    return res.json(order);
+  }
+
+  @post('/')
+  public async create(req: Request, res: Response) {
+    const order = ModelManager.Order;
+    if (order.load(req.body, 'Order')) {
+      const saved = await order.save();
+      if (!saved) throw new ValidationHttpException(order.errors);
+      return res.status(201).json(saved);
+    }
+    throw new ValidationHttpException('Invalid payload');
+  }
+
+  @del('/:id')
+  public async deleteOrder(req: Request, res: Response) {
+    await ModelManager.Order.delete({ where: { id: req.params.id } });
+    return res.json({ success: true });
+  }
+}
+
+export default OrderController;
+```
+
+---
+
+### Pattern C: Active Record Model with Relations
+
+```typescript
+// Models/Product.ts
+import { Model, DataTypes, Relation } from 'chyz/base/Model';
+import { ModelManager } from 'chyz';
+
+export class ProductClass extends Model {
+  public tableName(): string {
+    return 'products';
+  }
+
+  public attributes() {
+    return {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { len: [3, 255] }
+      },
+      price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+      },
+      category_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      }
+    };
+  }
+
+  public relations(): Relation[] {
+    return [
+      {
+        type: 'belongsTo',
+        model: ModelManager.Category.model(),
+        foreignKey: 'category_id',
+        as: 'category'
+      }
+    ];
+  }
+}
+```
+
+---
+
+### Pattern D: Identity Model (`IdentityInterface`)
+
+```typescript
+// Models/User.ts
+import { Model, DataTypes } from 'chyz/base/Model';
+import { IdentityInterface } from 'chyz/web/IdentityInterface';
+import { BaseChyz } from 'chyz';
+import jwt from 'jsonwebtoken';
+
+export class UserClass extends Model implements IdentityInterface {
+  public tableName(): string {
+    return 'users';
+  }
+
+  public attributes() {
+    return {
+      username: { type: DataTypes.STRING, allowNull: false },
+      password: { type: DataTypes.STRING, allowNull: false },
+      authkey:  { type: DataTypes.STRING, allowNull: true },
+      status:   { type: DataTypes.STRING, defaultValue: 'active' }
+    };
+  }
+
+  public async findIdentityByAccessToken(token: string, type: string) {
+    const decoded: any = jwt.decode(token, { complete: true });
+    if (!decoded?.payload?.user) return null;
+
+    const identity = await this.findOne({ where: { id: decoded.payload.user } });
+    if (identity) {
+      try {
+        jwt.verify(token, identity.authkey);
+        this.setIdentity(identity);
+        return this;
+      } catch (err) {
+        BaseChyz.debug('Token verify failed', err);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  public getId(): number {
+    return this.model().id;
+  }
+
+  public getAuthKey(): string {
+    return this.model().authkey;
+  }
+
+  public validateAuthKey(authKey: string): boolean {
+    return this.getAuthKey() === authKey;
+  }
+}
+```
+
+---
+
+## 4. API Reference Summary
+
+### Decorators
+- `@controller(prefix: string)`: Target Class. Stacking allowed for multiple prefixes.
+- `@get(path: string)`: Target Method. HTTP GET.
+- `@post(path: string)`: Target Method. HTTP POST.
+- `@put(path: string)`: Target Method. HTTP PUT.
+- `@delete(path: string)`: Target Method. HTTP DELETE.
+- `@Middleware(handlers: RequestHandler[])`: Target Method. Express middleware execution.
+
+### Built-in HTTP Exceptions
+- `BadRequestHttpException(message: string)` -> HTTP 400
+- `UnauthorizedHttpException(message: string)` -> HTTP 401
+- `ForbiddenHttpException(message: string)` -> HTTP 403
+- `NotFoundHttpException(message: string)` -> HTTP 404
+- `ValidationHttpException(errors: any)` -> HTTP 422 / Validation Failure
+
+### Component Locator
+- `BaseChyz.getComponent('db')`: Database connection & Sequelize instance (`db.transaction()`).
+- `BaseChyz.getComponent('user')`: User context (`WebUser`).
+- `BaseChyz.getComponent('authManager')`: RBAC Manager (`checkAccess(userId, permission)`).
+
+### Logging Facade
+- `BaseChyz.debug(...)`
+- `BaseChyz.info(...)`
+- `BaseChyz.warn(...)`
+- `BaseChyz.error(...)`
+- `BaseChyz.fatal(...)`
+
+### Lifecycle Events (`CEvents`)
+- `CEvents.ON_INIT_BEFORE`, `CEvents.ON_INIT_AFTER`, `CEvents.ON_MIDDLEWARE`, `CEvents.ON_BEFORE_START`, `CEvents.ON_START`, `CEvents.ON_BEFORE_ACTION`, `CEvents.ON_AFTER_ACTION`, `CEvents.ON_DB_CONNECTION`, `CEvents.ON_DB_DISCONNECT`.
+- Listen with: `BaseChyz.EventEmitter.on(CEvents.ON_START, (app) => { ... })`.
