@@ -22,18 +22,17 @@ var memoryStore = new session.MemoryStore();
 
 
 var keycloakConfig = {
-    "realm": "CameraBox",
-    "auth-server-url": "https://keycloak.hubbox.io:8080/auth/",
+    "realm": process.env.KEYCLOAK_REALM || "quickstart",
+    "auth-server-url": process.env.KEYCLOAK_AUTH_SERVER_URL || "https://sso.example.com/auth/",
     //"ssl-required": "external",
-    "resource": "izanami",
+    "resource": process.env.KEYCLOAK_RESOURCE || "service-nodejs",
     "verify-token-audience": true,
     "bearerOnly": true,
-    "confidential-port":0,
-    "policy-enforcer":{},
+    "confidential-port": 0,
+    "policy-enforcer": {},
     "credentials": {
-        "secret": "zzz"
+        "secret": process.env.KEYCLOAK_SECRET || "your-client-secret"
     }
-
 };
 
 
