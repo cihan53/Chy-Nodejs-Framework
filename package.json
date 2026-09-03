@@ -8,7 +8,6 @@
     "build:raw": "rm -rf ./dist && npx tsc -p tsconfig.json && cp -r ./src/log ./dist/log && cp ./src/package.json ./dist/package.json && cp ./src/README.md ./dist/README.md",
     "publish:dist": "npm run build && npm publish ./dist --access public",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deprecate": "node ./deprecate.js",
     "postversion": "git push && git push --tags"
   },
   "resolutions": {
